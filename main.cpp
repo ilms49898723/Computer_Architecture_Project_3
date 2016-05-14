@@ -14,7 +14,7 @@
 #include "InstImageReader.hpp"
 
 int main() {
-    // constant string filenames
+    // constant string filename
     const std::string iimageFilename = "iimage.bin";
     const std::string dimageFilename = "dimage.bin";
     const std::string snapshotFilename = "snapshot.rpt";
