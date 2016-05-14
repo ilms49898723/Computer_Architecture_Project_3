@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstErrorDetector.h"
+#include "InstErrorDetector.hpp"
 
-namespace lb {
+namespace inst {
 
 bool InstErrorDetector::isRegWritable(const unsigned& reg) {
     return reg != 0u;
@@ -50,4 +50,4 @@ bool InstErrorDetector::isAlignedAddr(const unsigned& addr, const InstSize& type
     }
 }
 
-} /* namespace lb */
+} /* namespace inst */

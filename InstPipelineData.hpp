@@ -1,17 +1,17 @@
 /*
- * InstPipelineData.h
+ * InstPipelineData.hpp
  *
  *  Created on: 2016/04/23
  *      Author: LittleBird
  */
 
-#ifndef INSTPIPELINEDATA_H_
-#define INSTPIPELINEDATA_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTPIPELINEDATA_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTPIPELINEDATA_HPP_
 
-#include "InstDataBin.h"
-#include "InstDecoder.h"
+#include "InstDataBin.hpp"
+#include "InstDecoder.hpp"
 
-namespace lb {
+namespace inst {
 
 class InstPipelineData {
 public:
@@ -79,6 +79,6 @@ private:
     bool flushed;
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTPIPELINEDATA_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTPIPELINEDATA_HPP_ */

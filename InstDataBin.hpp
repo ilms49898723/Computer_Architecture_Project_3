@@ -1,20 +1,20 @@
 /*
- * InstDataBin.h
+ * InstDataBin.hpp
  *
  *  Created on: 2016/03/13
  *      Author: LittleBird
  */
 
-#ifndef INSTDATABIN_H_
-#define INSTDATABIN_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTDATABIN_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTDATABIN_HPP_
 
 #include <string>
 #include <vector>
-#include "InstLookUp.h"
-#include "InstUtility.h"
-#include "InstType.h"
+#include "InstLookUp.hpp"
+#include "InstUtility.hpp"
+#include "InstType.hpp"
 
-namespace lb {
+namespace inst {
 
 class InstDataBin {
 public:
@@ -80,6 +80,6 @@ private:
     std::vector<InstElement> regWrite;
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTDATABIN_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTDATABIN_HPP_ */

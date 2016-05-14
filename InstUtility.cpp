@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstUtility.h"
+#include "InstUtility.hpp"
 
-namespace lb {
+namespace inst {
 std::string toUpperString(std::string val) {
     for (unsigned long long i = 0; i < val.length(); ++i) {
         val[i] = static_cast<char>(toupper(static_cast<int>(val[i])));
@@ -49,4 +49,4 @@ unsigned getBitsInRange(const unsigned& src, const int& l, const int& r) {
     return (src << (32 - r)) >> (l + (32 - r));
 }
 
-} /* namespace lb */
+} /* namespace inst */

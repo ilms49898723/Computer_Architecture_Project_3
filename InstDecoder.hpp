@@ -1,21 +1,21 @@
 /*
- * InstDecoder.h
+ * InstDecoder.hpp
  *
  *  Created on: 2016/03/09
  *      Author: LittleBird
  */
 
-#ifndef INSTDECODER_H_
-#define INSTDECODER_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTDECODER_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTDECODER_HPP_
 
 #include <string>
-#include "InstDataBin.h"
-#include "InstDataStr.h"
-#include "InstLookUp.h"
-#include "InstUtility.h"
-#include "InstType.h"
+#include "InstDataBin.hpp"
+#include "InstDataStr.hpp"
+#include "InstLookUp.hpp"
+#include "InstUtility.hpp"
+#include "InstType.hpp"
 
-namespace lb {
+namespace inst {
 
 /**
  * Decode hex-decimal format instruction set to readable string
@@ -38,6 +38,6 @@ public:
     static InstDataBin decodeInstBin(const unsigned& src);
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTDECODER_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTDECODER_HPP_ */

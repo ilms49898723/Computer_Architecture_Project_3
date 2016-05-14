@@ -1,19 +1,19 @@
 /*
- * InstUtility.h
+ * InstUtility.hpp
  *
  *  Created on: 2016/03/10
  *      Author: LittleBird
  */
 
-#ifndef INSTUTILITY_H_
-#define INSTUTILITY_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTUTILITY_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTUTILITY_HPP_
 
 #include <cctype>
 #include <sstream>
 #include <string>
-#include "InstType.h"
+#include "InstType.hpp"
 
-namespace lb {
+namespace inst {
 
 /**
  * to std::string, if has number, use decimal
@@ -56,7 +56,7 @@ int toSigned(const unsigned& src);
  * @param src number to change
  * @param type source number valid bits(WORD, HALFWORD, BYTE)
  */
-int toSigned(const unsigned& src, const lb::InstSize& type);
+int toSigned(const unsigned& src, const inst::InstSize& type);
 
 /**
  * extend number from unsigned to 32 bits signed,
@@ -81,6 +81,6 @@ unsigned toUnsigned(const int& src);
  */
 unsigned getBitsInRange(const unsigned& src, const int& l, const int& r);
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTUTILITY_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTUTILITY_HPP_ */

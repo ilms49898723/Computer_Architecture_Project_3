@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstPipelineData.h"
+#include "InstPipelineData.hpp"
 
-namespace lb {
+namespace inst {
 
 const InstPipelineData InstPipelineData::nop = InstPipelineData(InstDecoder::decodeInstBin(0u));
 
@@ -150,4 +150,4 @@ const InstDataBin& InstPipelineData::getInst() const {
     return inst;
 }
 
-} /* namespace lb */
+} /* namespace inst */

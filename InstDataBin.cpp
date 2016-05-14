@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstDataBin.h"
+#include "InstDataBin.hpp"
 
-namespace lb {
+namespace inst {
 
 InstDataBin::InstDataBin() {
     this->instType = InstType::UNDEF;
@@ -130,4 +130,4 @@ void InstDataBin::setRegWrite(const InstElement& reg) {
     regWrite.push_back(reg);
 }
 
-} /* namespace lb */
+} /* namespace inst */

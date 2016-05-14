@@ -7,26 +7,26 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall -Wextra")
 
 set(SOURCE_FILES
         InstDataBin.cpp
-        InstDataBin.h
+        InstDataBin.hpp
         InstDataStr.cpp
-        InstDataStr.h
+        InstDataStr.hpp
         InstDecoder.cpp
-        InstDecoder.h
+        InstDecoder.hpp
         InstErrorDetector.cpp
-        InstErrorDetector.h
+        InstErrorDetector.hpp
         InstImageReader.cpp
-        InstImageReader.h
+        InstImageReader.hpp
         InstLookUp.cpp
-        InstLookUp.h
+        InstLookUp.hpp
         InstMemory.cpp
-        InstMemory.h
+        InstMemory.hpp
         InstPipelineData.cpp
-        InstPipelineData.h
+        InstPipelineData.hpp
         InstSimulator.cpp
-        InstSimulator.h
-        InstType.h
+        InstSimulator.hpp
+        InstType.hpp
         InstUtility.cpp
-        InstUtility.h
+        InstUtility.hpp
         main.cpp)
 
 add_executable(CMP ${SOURCE_FILES})

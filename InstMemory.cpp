@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstMemory.h"
+#include "InstMemory.hpp"
 
-namespace lb {
+namespace inst {
 
 InstMemory::InstMemory() {
     memset(this->reg, 0, sizeof(unsigned) * 32);
@@ -78,4 +78,4 @@ void InstMemory::setMemory(const unsigned& addr, const unsigned& val, const Inst
     }
 }
 
-} /* namespace lb */
+} /* namespace inst */

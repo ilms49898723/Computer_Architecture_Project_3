@@ -1,14 +1,14 @@
 /*
- * InstType.h
+ * InstType.hpp
  *
  *  Created on: 2016/03/25
  *      Author: LittleBird
  */
 
-#ifndef INSTTYPE_H_
-#define INSTTYPE_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTTYPE_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTTYPE_HPP_
 
-namespace lb {
+namespace inst {
 
 /**
  * enum class for instruction elements
@@ -72,6 +72,6 @@ struct InstElement {
             val(val), type(type) { }
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTTYPE_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTTYPE_HPP_ */

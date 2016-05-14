@@ -1,21 +1,20 @@
 /*
- * InstErrorDetector.h
+ * InstErrorDetector.hpp
  *
  *  Created on: 2016/03/23
  *      Author: LittleBird
  */
 
-#ifndef INSTERRORDETECTOR_H_
-#define INSTERRORDETECTOR_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTERRORDETECTOR_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTERRORDETECTOR_HPP_
 
-#include "InstDataBin.h"
-#include "InstDataStr.h"
-#include "InstUtility.h"
-#include "InstMemory.h"
-#include "InstType.h"
+#include "InstDataBin.hpp"
+#include "InstDataStr.hpp"
+#include "InstUtility.hpp"
+#include "InstMemory.hpp"
+#include "InstType.hpp"
 
-namespace lb {
-
+namespace inst {
 
 /**
  * detect error
@@ -56,6 +55,6 @@ public:
     static bool isAlignedAddr(const unsigned& addr, const InstSize& type);
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTERRORDETECTOR_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTERRORDETECTOR_HPP_ */

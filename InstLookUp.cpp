@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstLookUp.h"
+#include "InstLookUp.hpp"
 
-namespace lb {
+namespace inst {
 
 const std::string InstLookUp::opCodeLookUpTable[] = {
         "R-Type", // 0x00
@@ -126,4 +126,4 @@ std::string InstLookUp::registerLookUpNumber(const unsigned& src) {
     return toString(src);
 }
 
-} /* namespace lb */
+} /* namespace inst */

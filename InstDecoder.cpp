@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstDecoder.h"
+#include "InstDecoder.hpp"
 
-namespace lb {
+namespace inst {
 
 InstDataStr InstDecoder::decodeInstStr(const unsigned& src) {
     unsigned opCode;
@@ -179,4 +179,4 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned& src) {
     }
 }
 
-} /* namespace lb */
+} /* namespace inst */

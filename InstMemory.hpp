@@ -1,19 +1,19 @@
 /*
- * InstMemory.h
+ * InstMemory.hpp
  *
  *  Created on: 2016/03/10
  *      Author: LittleBird
  */
 
-#ifndef INSTMEMORY_H_
-#define INSTMEMORY_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTMEMORY_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTMEMORY_HPP_
 
 #include <cstring>
 #include <string>
-#include "InstUtility.h"
-#include "InstType.h"
+#include "InstUtility.hpp"
+#include "InstType.hpp"
 
-namespace lb {
+namespace inst {
 
 /**
  * memory, 1024 bytes and 32 registers
@@ -65,6 +65,6 @@ private:
     unsigned reg[32];
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTMEMORY_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTMEMORY_HPP_ */

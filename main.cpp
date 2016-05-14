@@ -10,8 +10,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
-#include "InstSimulator.h"
-#include "InstImageReader.h"
+#include "InstSimulator.hpp"
+#include "InstImageReader.hpp"
 
 int main() {
     // constant string filenames
@@ -23,8 +23,8 @@ int main() {
     unsigned iLen, dLen;
     unsigned pc, sp;
     unsigned inst[2048], memory[2048];
-    iLen = lb::InstImageReader::readImageI(iimageFilename.c_str(), inst, &pc);
-    dLen = lb::InstImageReader::readImageD(dimageFilename.c_str(), memory, &sp);
+    iLen = inst::InstImageReader::readImageI(iimageFilename.c_str(), inst, &pc);
+    dLen = inst::InstImageReader::readImageD(dimageFilename.c_str(), memory, &sp);
     // open output file
     FILE* snapShot;
     FILE* errorDump;
@@ -39,7 +39,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
     // set simulator, start simulate
-    lb::InstSimulator simulator;
+    inst::InstSimulator simulator;
     simulator.loadImageI(inst, iLen, pc);
     simulator.loadImageD(memory, dLen, sp);
     simulator.setLogFile(snapShot, errorDump);

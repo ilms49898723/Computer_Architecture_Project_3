@@ -1,21 +1,21 @@
 /*
- * InstData.h
+ * InstData.hpp
  *
  *  Created on: 2016/03/09
  *      Author: LittleBird
  */
 
-#ifndef INSTDATASTR_H_
-#define INSTDATASTR_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTDATASTR_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTDATASTR_HPP_
 
 #include <string>
-#include "InstUtility.h"
-#include "InstType.h"
+#include "InstUtility.hpp"
+#include "InstType.hpp"
 
-namespace lb {
+namespace inst {
 
 /**
- * Data structure to translate to readable Instruction set, stored by std::string
+ * Translate instruction to readable string, stored by std::string
  */
 class InstDataStr {
 public:
@@ -63,6 +63,6 @@ private:
     std::string funct;
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTDATASTR_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTDATASTR_HPP_ */

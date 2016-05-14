@@ -1,24 +1,24 @@
 /*
- * InstSimulator.h
+ * InstSimulator.hpp
  *
  *  Created on: 2016/03/11
  *      Author: LittleBird
  */
 
-#ifndef INSTSIMULATOR_H_
-#define INSTSIMULATOR_H_
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTSIMULATOR_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTSIMULATOR_HPP_
 
 #include <cstdio>
 #include <cstdlib>
 #include <deque>
-#include "InstDecoder.h"
-#include "InstMemory.h"
-#include "InstDataBin.h"
-#include "InstErrorDetector.h"
-#include "InstType.h"
-#include "InstPipelineData.h"
+#include "InstDecoder.hpp"
+#include "InstMemory.hpp"
+#include "InstDataBin.hpp"
+#include "InstErrorDetector.hpp"
+#include "InstType.hpp"
+#include "InstPipelineData.hpp"
 
-namespace lb {
+namespace inst {
 
 class InstSimulator {
 private:
@@ -136,6 +136,6 @@ private:
     InstAction detectDataMisaligned(const unsigned& addr, const InstDataBin& inst);
 };
 
-} /* namespace lb */
+} /* namespace inst */
 
-#endif /* INSTSIMULATOR_H_ */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTSIMULATOR_HPP_ */

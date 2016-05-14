@@ -5,9 +5,9 @@
  *      Author: LittleBird
  */
 
-#include "InstSimulator.h"
+#include "InstSimulator.hpp"
 
-namespace lb {
+namespace inst {
 
 const unsigned InstSimulator::IF = 0u;
 const unsigned InstSimulator::ID = 1u;
@@ -733,4 +733,4 @@ InstAction InstSimulator::detectDataMisaligned(const unsigned& addr, const InstD
     }
 }
 
-} /* namespace lb */
+} /* namespace inst */

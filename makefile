@@ -1,4 +1,4 @@
-# makefile for Computer_Architecture_Project_2
+# makefile for Computer_Architecture_Project_3
 
 CC := g++
 
@@ -16,16 +16,16 @@ OBJS := InstDataBin.o \
         InstUtility.o \
         main.o
 
-OUTPUT := pipeline
+OUTPUT := CMP
 
 .SUFFIXS:
 .SUFFIXS: .cpp .o
 
-.PHONY: all pipeline clean
+.PHONY: all CMP clean
 
-all: pipeline
+all: CMP
 
-pipeline: ${OBJS}
+CMP: ${OBJS}
 	${CC} ${CXXFLAGS} -o $@ ${OBJS}
 
 .cpp.o:
