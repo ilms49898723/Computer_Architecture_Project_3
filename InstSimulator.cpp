@@ -107,7 +107,7 @@ void InstSimulator::instMemStore(const unsigned& addr, const unsigned& val, cons
     }
 }
 
-bool InstSimulator::isNOP(const InstDataBin& inst) {
+bool InstSimulator::isNop(const InstDataBin& inst) {
     return !inst.getOpCode() &&
            !inst.getRt() &&
            !inst.getRd() &&

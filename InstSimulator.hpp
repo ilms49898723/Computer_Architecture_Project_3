@@ -55,7 +55,7 @@ private:
 
     void instMemStore(const unsigned& addr, const unsigned& val, const InstDataBin& inst);
 
-    bool isNOP(const InstDataBin& inst);
+    bool isNop(const InstDataBin& inst);
 
     bool isHalt(const InstDataBin& inst);
 
