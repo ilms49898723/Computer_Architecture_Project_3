@@ -18,8 +18,6 @@ set(SOURCE_FILES
         InstLookUp.hpp
         InstMemory.cpp
         InstMemory.hpp
-        InstPipelineData.cpp
-        InstPipelineData.hpp
         InstSimulator.cpp
         InstSimulator.hpp
         InstType.hpp

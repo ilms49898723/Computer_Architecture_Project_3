@@ -15,7 +15,6 @@
 #include "InstMemory.hpp"
 #include "InstDataBin.hpp"
 #include "InstType.hpp"
-#include "InstPipelineData.hpp"
 
 namespace inst {
 
