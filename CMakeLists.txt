@@ -12,8 +12,6 @@ set(SOURCE_FILES
         InstDataStr.hpp
         InstDecoder.cpp
         InstDecoder.hpp
-        InstErrorDetector.cpp
-        InstErrorDetector.hpp
         InstImageReader.cpp
         InstImageReader.hpp
         InstLookUp.cpp
