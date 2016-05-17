@@ -19,14 +19,6 @@ enum class InstElementType : unsigned {
 };
 
 /**
- * enum class for pipeline states
- * NONE, STALL, FORWARD
- */
-enum class InstState : unsigned {
-    NONE, STALL, FORWARD
-};
-
-/**
  * enum class for basic operation type
  * add, sub
  */

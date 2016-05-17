@@ -14,7 +14,6 @@
 #include "InstDecoder.hpp"
 #include "InstMemory.hpp"
 #include "InstDataBin.hpp"
-#include "InstErrorDetector.hpp"
 #include "InstType.hpp"
 #include "InstPipelineData.hpp"
 
@@ -23,13 +22,6 @@ namespace inst {
 class InstSimulator {
 private:
     constexpr static int MAXN = 4096;
-
-private:
-    const static unsigned IF;
-    const static unsigned ID;
-    const static unsigned EX;
-    const static unsigned DM;
-    const static unsigned WB;
 
 public:
     InstSimulator();
@@ -48,8 +40,8 @@ public:
 
 private:
     bool alive;
-    unsigned pc;
-    unsigned pcOriginal;
+    unsigned currentPc;
+    unsigned originalPc;
     unsigned cycle;
     FILE* snapshot;
     FILE* errorDump;
@@ -57,46 +49,7 @@ private:
     InstDataBin instList[MAXN];
 
 private:
-    std::deque<InstPipelineData> pipeline;
-    std::deque<InstElement> idForward;
-    std::deque<InstElement> exForward;
-
-private:
     void dumpSnapshot(FILE* fp);
-
-    void dumpPipelineInfo(FILE* fp, const int stage);
-
-    void instIF();
-
-    void instID();
-
-    void instEX();
-
-    void instDM();
-
-    void instWB();
-
-    void instPop();
-
-    void instStall();
-
-    void instUnstall();
-
-    void instFlush();
-
-    void instSetDependency();
-
-    void instSetDependencyID();
-
-    void instSetDependencyEX();
-
-    bool instPredictBranch();
-
-    unsigned instALUR(const InstDataBin& inst);
-
-    unsigned instALUI(const InstDataBin& inst);
-
-    unsigned instALUJ(const unsigned& instPc);
 
     unsigned instMemLoad(const unsigned& addr, const InstDataBin& inst);
 
@@ -105,8 +58,6 @@ private:
     bool isNOP(const InstDataBin& inst);
 
     bool isHalt(const InstDataBin& inst);
-
-    bool isFinished();
 
     bool isMemoryLoad(const InstDataBin& inst);
 
@@ -119,21 +70,6 @@ private:
     bool isBranchI(const InstDataBin& inst);
 
     bool isBranchJ(const InstDataBin& inst);
-
-    bool hasToStall(const unsigned& dependency, const std::vector<unsigned>& dEX,
-                    const std::vector<unsigned>& dDM);
-
-    unsigned getDependency(std::vector<unsigned>& dEX, std::vector<unsigned>& dDM);
-
-    InstState checkIDDependency();
-
-    InstAction detectWriteRegZero(const unsigned& addr);
-
-    InstAction detectNumberOverflow(const int& a, const int& b, const InstDataBin& inst);
-
-    InstAction detectMemAddrOverflow(const unsigned& addr, const InstDataBin& inst);
-
-    InstAction detectDataMisaligned(const unsigned& addr, const InstDataBin& inst);
 };
 
 } /* namespace inst */
