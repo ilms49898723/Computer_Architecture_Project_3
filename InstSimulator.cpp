@@ -67,7 +67,7 @@ void InstSimulator::simulate() {
     }
 }
 
-void InstSimulator::dumpSnapshot(FILE* fp) {
+void InstSimulator::dumpSnapshot(FILE* fp) const {
     fprintf(fp, "cycle %u\n", cycle);
     for (unsigned i = 0; i < 32; ++i) {
         fprintf(fp, "$%02d: 0x%08X\n", i, reg.getRegister(i));
@@ -75,7 +75,7 @@ void InstSimulator::dumpSnapshot(FILE* fp) {
     fprintf(fp, "PC: 0x%08X\n", currentPc);
 }
 
-unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& inst) {
+unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& inst) const {
     switch (inst.getOpCode()) {
         case 0x23u:
             return mem.getMemory(addr, InstSize::WORD);
@@ -108,7 +108,7 @@ void InstSimulator::instMemStore(const unsigned& addr, const unsigned& val, cons
     }
 }
 
-bool InstSimulator::isNop(const InstDataBin& inst) {
+bool InstSimulator::isNop(const InstDataBin& inst) const {
     return !inst.getOpCode() &&
            !inst.getRt() &&
            !inst.getRd() &&
@@ -116,11 +116,11 @@ bool InstSimulator::isNop(const InstDataBin& inst) {
            !inst.getFunct();
 }
 
-bool InstSimulator::isHalt(const InstDataBin& inst) {
+bool InstSimulator::isHalt(const InstDataBin& inst) const {
     return inst.getOpCode() == 0x3Fu;
 }
 
-bool InstSimulator::isMemoryLoad(const InstDataBin& inst) {
+bool InstSimulator::isMemoryLoad(const InstDataBin& inst) const {
     switch (inst.getOpCode()) {
         case 0x23u:
         case 0x21u:
@@ -133,7 +133,7 @@ bool InstSimulator::isMemoryLoad(const InstDataBin& inst) {
     }
 }
 
-bool InstSimulator::isMemoryStore(const InstDataBin& inst) {
+bool InstSimulator::isMemoryStore(const InstDataBin& inst) const {
     switch (inst.getOpCode()) {
         case 0x2Bu:
         case 0x29u:
@@ -144,24 +144,24 @@ bool InstSimulator::isMemoryStore(const InstDataBin& inst) {
     }
 }
 
-bool InstSimulator::isBranch(const InstDataBin& inst) {
+bool InstSimulator::isBranch(const InstDataBin& inst) const {
     return isBranchR(inst) ||
            isBranchI(inst) ||
            isBranchJ(inst);
 }
 
-bool InstSimulator::isBranchR(const InstDataBin& inst) {
+bool InstSimulator::isBranchR(const InstDataBin& inst) const {
     return inst.getInstType() == InstType::R && inst.getFunct() == 0x08u;
 }
 
-bool InstSimulator::isBranchI(const InstDataBin& inst) {
+bool InstSimulator::isBranchI(const InstDataBin& inst) const {
     if (inst.getInstType() != InstType::I) {
         return false;
     }
     return inst.getOpCode() == 0x04u || inst.getOpCode() == 0x05u || inst.getOpCode() == 0x07u;
 }
 
-bool InstSimulator::isBranchJ(const InstDataBin& inst) {
+bool InstSimulator::isBranchJ(const InstDataBin& inst) const {
     if (inst.getInstType() != InstType::J) {
         return false;
     }

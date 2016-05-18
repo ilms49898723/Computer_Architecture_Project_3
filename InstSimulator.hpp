@@ -53,27 +53,27 @@ private:
     InstDataBin instList[MAXN];
 
 private:
-    void dumpSnapshot(FILE* fp);
+    void dumpSnapshot(FILE* fp) const;
 
-    unsigned instMemLoad(const unsigned& addr, const InstDataBin& inst);
+    unsigned instMemLoad(const unsigned& addr, const InstDataBin& inst) const;
 
     void instMemStore(const unsigned& addr, const unsigned& val, const InstDataBin& inst);
 
-    bool isNop(const InstDataBin& inst);
+    bool isNop(const InstDataBin& inst) const;
 
-    bool isHalt(const InstDataBin& inst);
+    bool isHalt(const InstDataBin& inst) const;
 
-    bool isMemoryLoad(const InstDataBin& inst);
+    bool isMemoryLoad(const InstDataBin& inst) const;
 
-    bool isMemoryStore(const InstDataBin& inst);
+    bool isMemoryStore(const InstDataBin& inst) const;
 
-    bool isBranch(const InstDataBin& inst);
+    bool isBranch(const InstDataBin& inst) const;
 
-    bool isBranchR(const InstDataBin& inst);
+    bool isBranchR(const InstDataBin& inst) const;
 
-    bool isBranchI(const InstDataBin& inst);
+    bool isBranchI(const InstDataBin& inst) const;
 
-    bool isBranchJ(const InstDataBin& inst);
+    bool isBranchJ(const InstDataBin& inst) const;
 };
 
 } /* namespace inst */

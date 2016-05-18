@@ -5,8 +5,8 @@
  *      Author: LittleBird
  */
 
-#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTREGISTER_HPP
-#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTREGISTER_HPP
+#ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTREGISTER_HPP_
+#define COMPUTER_ARCHITECTURE_PROJECT_3_INSTREGISTER_HPP_
 
 #include <cstring>
 #include "InstType.hpp"
@@ -26,11 +26,11 @@ public:
 
     unsigned getRegister(const unsigned& addr, const unsigned& size = 4u) const;
 
-    unsigned getRegister(const unsigned& addr, const InstSize& type = InstSize::WORD) const;
+    unsigned getRegister(const unsigned& addr, const InstSize& type) const;
 
     void setRegister(const unsigned& addr, const unsigned& val, const unsigned& size = 4u);
 
-    void setRegister(const unsigned& addr, const unsigned& val, const InstSize& type = InstSize::WORD);
+    void setRegister(const unsigned& addr, const unsigned& val, const InstSize& type);
 
 private:
     unsigned reg[32];
@@ -38,4 +38,4 @@ private:
 
 } /* namespace inst */
 
-#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTREGISTER_HPP */
+#endif /* COMPUTER_ARCHITECTURE_PROJECT_3_INSTREGISTER_HPP_ */
