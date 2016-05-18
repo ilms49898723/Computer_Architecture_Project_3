@@ -19,22 +19,6 @@ enum class InstElementType : unsigned {
 };
 
 /**
- * enum for basic operation type
- * add, sub
- */
-enum class InstOpType : unsigned {
-    ADD, SUB
-};
-
-/**
- * enum for simulate operation
- * continue, halt
- */
-enum class InstAction : unsigned {
-    CONTINUE, HALT
-};
-
-/**
  * enum for instruction type
  * R-type, I-type, J-type, Specialized, Undefined
  */

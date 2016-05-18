@@ -16,7 +16,7 @@
 namespace inst {
 
 /**
- * memory, 1024 bytes and 32 registers
+ * Memory, 1024 bytes
  */
 class InstMemory {
 public:
@@ -25,10 +25,6 @@ public:
     virtual ~InstMemory();
 
     void init();
-
-    unsigned getRegister(const unsigned& addr, const InstSize& type = InstSize::WORD) const;
-
-    void setRegister(const unsigned& addr, const unsigned& val, const InstSize& type = InstSize::WORD);
 
     unsigned getMemory(const unsigned& addr, const unsigned& size) const;
 

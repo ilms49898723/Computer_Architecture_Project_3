@@ -23,33 +23,6 @@ void InstMemory::init() {
     memset(mem, 0, sizeof(unsigned char) * 1024);
 }
 
-unsigned InstMemory::getRegister(const unsigned& addr, const InstSize& type) const {
-    if (type == InstSize::WORD) {
-        return reg[addr];
-    }
-    else if (type == InstSize::HALF) {
-        return reg[addr] & 0x0000FFFFu;
-    }
-    else {
-        return reg[addr] & 0x000000FFu;
-    }
-}
-
-void InstMemory::setRegister(const unsigned& addr, const unsigned& val, const InstSize& type) {
-    if (addr == 0u) {
-        return;
-    }
-    if (type == InstSize::WORD) {
-        reg[addr] = val;
-    }
-    else if (type == InstSize::HALF) {
-        reg[addr] = val & 0x0000FFFFu;
-    }
-    else {
-        reg[addr] = val & 0x000000FFu;
-    }
-}
-
 unsigned InstMemory::getMemory(const unsigned& addr, const unsigned& size) const {
     switch (size) {
         case 4u:

@@ -13,6 +13,7 @@
 #include <deque>
 #include "InstDecoder.hpp"
 #include "InstMemory.hpp"
+#include "InstRegister.hpp"
 #include "InstDataBin.hpp"
 #include "InstType.hpp"
 
@@ -47,7 +48,8 @@ private:
     unsigned cycle;
     FILE* snapshot;
     FILE* errorDump;
-    InstMemory memory;
+    InstRegister reg;
+    InstMemory mem;
     InstDataBin instList[MAXN];
 
 private:

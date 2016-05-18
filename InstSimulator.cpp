@@ -18,7 +18,8 @@ InstSimulator::~InstSimulator() {
 }
 
 void InstSimulator::init() {
-    memory.init();
+    reg.init();
+    mem.init();
     originalPc = 0u;
     snapshot = nullptr;
     errorDump = nullptr;
@@ -37,9 +38,9 @@ void InstSimulator::loadImageI(const unsigned* src, const unsigned& len, const u
 }
 
 void InstSimulator::loadImageD(const unsigned* src, const unsigned& len, const unsigned& sp) {
-    memory.setRegister(29, sp, InstSize::WORD);
+    reg.setRegister(29, sp, InstSize::WORD);
     for (unsigned i = 0; i < len; ++i) {
-        memory.setMemory(i * 4, src[i], InstSize::WORD);
+        mem.setMemory(i * 4, src[i], InstSize::WORD);
     }
 }
 
@@ -69,7 +70,7 @@ void InstSimulator::simulate() {
 void InstSimulator::dumpSnapshot(FILE* fp) {
     fprintf(fp, "cycle %u\n", cycle);
     for (unsigned i = 0; i < 32; ++i) {
-        fprintf(fp, "$%02d: 0x%08X\n", i, memory.getRegister(i));
+        fprintf(fp, "$%02d: 0x%08X\n", i, reg.getRegister(i));
     }
     fprintf(fp, "PC: 0x%08X\n", currentPc);
 }
@@ -77,15 +78,15 @@ void InstSimulator::dumpSnapshot(FILE* fp) {
 unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& inst) {
     switch (inst.getOpCode()) {
         case 0x23u:
-            return memory.getMemory(addr, InstSize::WORD);
+            return mem.getMemory(addr, InstSize::WORD);
         case 0x21u:
-            return toUnsigned(toSigned(memory.getMemory(addr, InstSize::HALF), InstSize::HALF));
+            return toUnsigned(toSigned(mem.getMemory(addr, InstSize::HALF), InstSize::HALF));
         case 0x25u:
-            return memory.getMemory(addr, InstSize::HALF);
+            return mem.getMemory(addr, InstSize::HALF);
         case 0x20u:
-            return toUnsigned(toSigned(memory.getMemory(addr, InstSize::BYTE), InstSize::BYTE));
+            return toUnsigned(toSigned(mem.getMemory(addr, InstSize::BYTE), InstSize::BYTE));
         case 0x24u:
-            return memory.getMemory(addr, InstSize::BYTE);
+            return mem.getMemory(addr, InstSize::BYTE);
         default:
             return 0u;
     }
@@ -94,13 +95,13 @@ unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& ins
 void InstSimulator::instMemStore(const unsigned& addr, const unsigned& val, const InstDataBin& inst) {
     switch (inst.getOpCode()) {
         case 0x2Bu:
-            memory.setMemory(addr, val, InstSize::WORD);
+            mem.setMemory(addr, val, InstSize::WORD);
             return;
         case 0x29u:
-            memory.setMemory(addr, val, InstSize::HALF);
+            mem.setMemory(addr, val, InstSize::HALF);
             return;
         case 0x28u:
-            memory.setMemory(addr, val, InstSize::BYTE);
+            mem.setMemory(addr, val, InstSize::BYTE);
             return;
         default:
             return;
