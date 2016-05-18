@@ -16,6 +16,9 @@
 
 namespace inst {
 
+/**
+ * A data structure to store instruction with native value
+ */
 class InstDataBin {
 public:
     InstDataBin();

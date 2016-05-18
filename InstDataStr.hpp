@@ -15,7 +15,7 @@
 namespace inst {
 
 /**
- * Translate instruction to readable string, stored by std::string
+ * A data structure to store instruction with readable string
  */
 class InstDataStr {
 public:

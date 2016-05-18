@@ -11,7 +11,7 @@
 namespace inst {
 
 /**
- * enum class for instruction elements
+ * enum for instruction elements
  * OPCODE, RS, RT, RD, C, FUNCT
  */
 enum class InstElementType : unsigned {
@@ -19,7 +19,7 @@ enum class InstElementType : unsigned {
 };
 
 /**
- * enum class for basic operation type
+ * enum for basic operation type
  * add, sub
  */
 enum class InstOpType : unsigned {
@@ -27,7 +27,7 @@ enum class InstOpType : unsigned {
 };
 
 /**
- * enum class for simulate operation
+ * enum for simulate operation
  * continue, halt
  */
 enum class InstAction : unsigned {
@@ -35,7 +35,7 @@ enum class InstAction : unsigned {
 };
 
 /**
- * enum class for instruction type
+ * enum for instruction type
  * R-type, I-type, J-type, Specialized, Undefined
  */
 enum class InstType : unsigned {
@@ -43,7 +43,7 @@ enum class InstType : unsigned {
 };
 
 /**
- * enum class for memory size type
+ * enum for memory size type
  * WORD: 4 bytes
  * HALFWORD: 2 bytes
  * BYTE: 1 byte
@@ -53,7 +53,7 @@ enum class InstSize : unsigned {
 };
 
 /**
- * structure for record inst elements
+ * structure for recording instruction elements
  * rs, rt, rd, etc.
  */
 struct InstElement {

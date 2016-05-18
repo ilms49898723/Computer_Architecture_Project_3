@@ -18,6 +18,9 @@
 
 namespace inst {
 
+/**
+ * Simulator
+ */
 class InstSimulator {
 private:
     constexpr static int MAXN = 4096;
