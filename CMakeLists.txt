@@ -18,6 +18,8 @@ set(SOURCE_FILES
         InstLookUp.hpp
         InstMemory.cpp
         InstMemory.hpp
+        InstRegister.cpp
+        InstRegister.hpp
         InstSimulator.cpp
         InstSimulator.hpp
         InstType.hpp
