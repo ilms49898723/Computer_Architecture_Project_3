@@ -22,7 +22,7 @@ void InstSimulator::init() {
     mem.init();
     originalPc = 0u;
     snapshot = nullptr;
-    errorDump = nullptr;
+    report = nullptr;
     for (int i = 0; i < InstSimulator::MAXN; ++i) {
         instList[i] = InstDecoder::decodeInstBin(0u);
     }
@@ -44,13 +44,13 @@ void InstSimulator::loadImageD(const unsigned* src, const unsigned& len, const u
     }
 }
 
-void InstSimulator::setLogFile(FILE* snapshot, FILE* errorDump) {
+void InstSimulator::setLogFile(FILE* snapshot, FILE* report) {
     this->snapshot = snapshot;
-    this->errorDump = errorDump;
+    this->report = report;
 }
 
 void InstSimulator::simulate() {
-    if (!snapshot || !errorDump) {
+    if (!snapshot || !report) {
         fprintf(stderr, "Can\'t open output files\n");
         return;
     }

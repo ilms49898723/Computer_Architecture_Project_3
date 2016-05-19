@@ -37,20 +37,9 @@ public:
 
     void loadImageD(const unsigned* src, const unsigned& len, const unsigned& sp);
 
-    void setLogFile(FILE* snapshot, FILE* errorDump);
+    void setLogFile(FILE* snapshot, FILE* report);
 
     void simulate();
-
-private:
-    bool alive;
-    unsigned currentPc;
-    unsigned originalPc;
-    unsigned cycle;
-    FILE* snapshot;
-    FILE* errorDump;
-    InstRegister reg;
-    InstMemory mem;
-    InstDataBin instList[MAXN];
 
 private:
     void dumpSnapshot(FILE* fp) const;
@@ -74,6 +63,17 @@ private:
     bool isBranchI(const InstDataBin& inst) const;
 
     bool isBranchJ(const InstDataBin& inst) const;
+
+private:
+    bool alive;
+    unsigned currentPc;
+    unsigned originalPc;
+    unsigned cycle;
+    FILE* snapshot;
+    FILE* report;
+    InstRegister reg;
+    InstMemory mem;
+    InstDataBin instList[MAXN];
 };
 
 } /* namespace inst */
