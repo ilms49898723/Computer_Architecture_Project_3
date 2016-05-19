@@ -18,7 +18,7 @@ int main(int argc, const char** argv) {
     const std::string iimageFilename = "iimage.bin";
     const std::string dimageFilename = "dimage.bin";
     const std::string snapshotFilename = "snapshot.rpt";
-    const std::string errorDumpFilename = "error_dump.rpt";
+    const std::string reportFilename = "report.rpt";
     // load iimage, dimage
     unsigned pc, sp;
     unsigned instructions[2048], memory[2048];
@@ -32,9 +32,9 @@ int main(int argc, const char** argv) {
         fprintf(stderr, "%s: %s\n", snapshotFilename.c_str(), strerror(errno));
         exit(EXIT_FAILURE);
     }
-    errorDump = fopen(errorDumpFilename.c_str(), "w");
+    errorDump = fopen(reportFilename.c_str(), "w");
     if (!errorDump) {
-        fprintf(stderr, "%s: %s\n", errorDumpFilename.c_str(), strerror(errno));
+        fprintf(stderr, "%s: %s\n", reportFilename.c_str(), strerror(errno));
         exit(EXIT_FAILURE);
     }
     // set simulator, start simulate
