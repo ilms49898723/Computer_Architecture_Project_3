@@ -48,9 +48,17 @@ void InstSimulator::setProperty(const int& argc, const char**& argv) {
     // TODO: command line arguments
 }
 
-void InstSimulator::setLogFile(FILE* snapshot, FILE* report) {
-    this->snapshot = snapshot;
-    this->report = report;
+void InstSimulator::setLogFile(const std::string& snapshotFilename, const std::string& reportFilename) {
+    this->snapshot = fopen(snapshotFilename.c_str(), "w");
+    if (!this->snapshot) {
+        fprintf(stderr, "%s: %s\n", snapshotFilename.c_str(), strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    this->report = fopen(reportFilename.c_str(), "w");
+    if (!this->report) {
+        fprintf(stderr, "%s: %s\n", reportFilename.c_str(), strerror(errno));
+        exit(EXIT_FAILURE);
+    }
 }
 
 void InstSimulator::simulate() {
@@ -69,6 +77,8 @@ void InstSimulator::simulate() {
         ++cycle;
         currentPc += 4;
     }
+    fclose(snapshot);
+    fclose(report);
 }
 
 void InstSimulator::dumpSnapshot(FILE* fp) const {

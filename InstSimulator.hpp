@@ -39,7 +39,7 @@ public:
 
     void setProperty(const int& argc, const char**& argv);
 
-    void setLogFile(FILE* snapshot, FILE* report);
+    void setLogFile(const std::string& snapshot, const std::string& report);
 
     void simulate();
 
