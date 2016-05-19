@@ -13,7 +13,7 @@
 #include "InstSimulator.hpp"
 #include "InstImageReader.hpp"
 
-int main(int argc, const char** argv) {
+int main(const int argc, const char** argv) {
     // constant string filename
     const std::string iimageFilename = "iimage.bin";
     const std::string dimageFilename = "dimage.bin";
@@ -37,11 +37,12 @@ int main(int argc, const char** argv) {
         fprintf(stderr, "%s: %s\n", reportFilename.c_str(), strerror(errno));
         exit(EXIT_FAILURE);
     }
-    // set simulator, start simulate
+    // set simulator, start simulation
     inst::InstSimulator simulator;
+    simulator.setProperty(argc, argv);
+    simulator.setLogFile(snapShot, errorDump);
     simulator.loadImageI(instructions, iLen, pc);
     simulator.loadImageD(memory, dLen, sp);
-    simulator.setLogFile(snapShot, errorDump);
     simulator.simulate();
     fclose(snapShot);
     fclose(errorDump);

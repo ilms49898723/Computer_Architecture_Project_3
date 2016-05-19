@@ -44,6 +44,10 @@ void InstSimulator::loadImageD(const unsigned* src, const unsigned& len, const u
     }
 }
 
+void InstSimulator::setProperty(const int& argc, const char**& argv) {
+    // TODO: command line arguments
+}
+
 void InstSimulator::setLogFile(FILE* snapshot, FILE* report) {
     this->snapshot = snapshot;
     this->report = report;

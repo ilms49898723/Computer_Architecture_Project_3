@@ -37,6 +37,8 @@ public:
 
     void loadImageD(const unsigned* src, const unsigned& len, const unsigned& sp);
 
+    void setProperty(const int& argc, const char**& argv);
+
     void setLogFile(FILE* snapshot, FILE* report);
 
     void simulate();
