@@ -13,18 +13,17 @@
 #include "InstSimulator.hpp"
 #include "InstImageReader.hpp"
 
-int main() {
+int main(int argc, const char** argv) {
     // constant string filename
     const std::string iimageFilename = "iimage.bin";
     const std::string dimageFilename = "dimage.bin";
     const std::string snapshotFilename = "snapshot.rpt";
     const std::string errorDumpFilename = "error_dump.rpt";
     // load iimage, dimage
-    unsigned iLen, dLen;
     unsigned pc, sp;
-    unsigned inst[2048], memory[2048];
-    iLen = inst::InstImageReader::readImageI(iimageFilename.c_str(), inst, &pc);
-    dLen = inst::InstImageReader::readImageD(dimageFilename.c_str(), memory, &sp);
+    unsigned instructions[2048], memory[2048];
+    unsigned iLen = inst::InstImageReader::readImageI(iimageFilename.c_str(), instructions, &pc);
+    unsigned dLen = inst::InstImageReader::readImageD(dimageFilename.c_str(), memory, &sp);
     // open output file
     FILE* snapShot;
     FILE* errorDump;
@@ -40,7 +39,7 @@ int main() {
     }
     // set simulator, start simulate
     inst::InstSimulator simulator;
-    simulator.loadImageI(inst, iLen, pc);
+    simulator.loadImageI(instructions, iLen, pc);
     simulator.loadImageD(memory, dLen, sp);
     simulator.setLogFile(snapShot, errorDump);
     simulator.simulate();
