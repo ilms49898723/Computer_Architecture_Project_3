@@ -6,7 +6,6 @@
  */
 
 #include <cstdio>
-#include <cerrno>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -28,8 +27,8 @@ int main(const int argc, const char** argv) {
     inst::InstSimulator simulator;
     simulator.setProperty(argc, argv);
     simulator.setLogFile(snapshotFilename,reportFilename);
-    simulator.loadImageI(instructions, iLen, pc);
-    simulator.loadImageD(memory, dLen, sp);
+    simulator.loadInstruction(instructions, iLen, pc);
+    simulator.loadData(memory, dLen, sp);
     simulator.simulate();
     return 0;
 }

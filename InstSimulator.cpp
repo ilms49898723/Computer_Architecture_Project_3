@@ -28,7 +28,7 @@ void InstSimulator::init() {
     }
 }
 
-void InstSimulator::loadImageI(const unsigned* src, const unsigned& len, const unsigned& pc) {
+void InstSimulator::loadInstruction(const unsigned* src, const unsigned& len, const unsigned& pc) {
     this->originalPc = pc;
     unsigned instSetIdx = pc >> 2;
     for (unsigned i = 0; i < len; ++i) {
@@ -37,7 +37,7 @@ void InstSimulator::loadImageI(const unsigned* src, const unsigned& len, const u
     }
 }
 
-void InstSimulator::loadImageD(const unsigned* src, const unsigned& len, const unsigned& sp) {
+void InstSimulator::loadData(const unsigned* src, const unsigned& len, const unsigned& sp) {
     reg.setRegister(29, sp, InstSize::WORD);
     for (unsigned i = 0; i < len; ++i) {
         mem.setMemory(i * 4, src[i], InstSize::WORD);

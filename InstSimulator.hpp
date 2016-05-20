@@ -33,9 +33,9 @@ public:
 
     void init();
 
-    void loadImageI(const unsigned* src, const unsigned& len, const unsigned& pc);
+    void loadInstruction(const unsigned* src, const unsigned& len, const unsigned& pc);
 
-    void loadImageD(const unsigned* src, const unsigned& len, const unsigned& sp);
+    void loadData(const unsigned* src, const unsigned& len, const unsigned& sp);
 
     void setProperty(const int& argc, const char**& argv);
 
