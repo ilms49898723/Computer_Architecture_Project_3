@@ -28,7 +28,7 @@ int main(const int argc, const char** argv) {
     unsigned dLen = inst::InstImageReader::readDataImage(dimageFilename.c_str(), memory, &sp);
     // set simulator, start simulation
     inst::InstSimulator simulator;
-    simulator.setProperty(argc, argv);
+    simulator.setProperty(iMemArgs, dMemArgs);
     simulator.setLogFile(snapshotFilename,reportFilename);
     simulator.loadInstruction(instructions, iLen, pc);
     simulator.loadData(memory, dLen, sp);
