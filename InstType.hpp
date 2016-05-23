@@ -11,7 +11,7 @@
 namespace inst {
 
 /**
- * enum for instruction elements
+ * Enum for instruction elements
  * OPCODE, RS, RT, RD, C, FUNCT
  */
 enum class InstElementType : unsigned {
@@ -19,7 +19,7 @@ enum class InstElementType : unsigned {
 };
 
 /**
- * enum for instruction type
+ * Enum for instruction type
  * R-type, I-type, J-type, Specialized, Undefined
  */
 enum class InstType : unsigned {
@@ -27,7 +27,7 @@ enum class InstType : unsigned {
 };
 
 /**
- * enum for memory size type
+ * Enum for memory size type
  * WORD: 4 bytes
  * HALFWORD: 2 bytes
  * BYTE: 1 byte
@@ -37,7 +37,32 @@ enum class InstSize : unsigned {
 };
 
 /**
- * structure for recording instruction elements
+ * Structure to store command-line arguments
+ */
+struct InstParameter {
+    unsigned memSize;
+    unsigned memPageSize;
+    unsigned cacheSize;
+    unsigned cacheBlockSize;
+    unsigned cacheSet;
+    InstParameter() {
+        memSize = 0u;
+        memPageSize = 0u;
+        cacheSize = 0u;
+        cacheBlockSize = 0u;
+        cacheSet = 0u;
+    }
+    InstParameter(unsigned ms, unsigned mps, unsigned cs, unsigned cbs, unsigned cst) {
+        memSize = ms;
+        memPageSize = mps;
+        cacheSize = cs;
+        cacheBlockSize = cbs;
+        cacheSet = cst;
+    }
+};
+
+/**
+ * Structure to store instruction elements
  * rs, rt, rd, etc.
  */
 struct InstElement {
