@@ -18,18 +18,53 @@ namespace inst {
  */
 class InstRegister {
 public:
+    /**
+     * Default constructor
+     */
     InstRegister();
 
+    /**
+     * Default destructor
+     */
     virtual ~InstRegister();
 
+    /**
+     * Initialize
+     */
     void init();
 
+    /**
+     * Get register value at specified address
+     *
+     * @param addr address to get
+     * @param size size to get
+     */
     unsigned getRegister(const unsigned& addr, const unsigned& size = 4u) const;
 
+    /**
+     * Get register value at specified address
+     *
+     * @param addr address to get
+     * @param size size to get
+     */
     unsigned getRegister(const unsigned& addr, const InstSize& type) const;
 
+    /**
+     * Set register value at specified address
+     *
+     * @param addr address to set
+     * @param val value to set
+     * @param size size to set
+     */
     void setRegister(const unsigned& addr, const unsigned& val, const unsigned& size = 4u);
 
+    /**
+     * Set register value at specified address
+     *
+     * @param addr address to set
+     * @param val value to set
+     * @param size size to set
+     */
     void setRegister(const unsigned& addr, const unsigned& val, const InstSize& type);
 
 private:
