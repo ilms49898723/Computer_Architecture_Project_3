@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include "InstType.hpp"
 #include "InstSimulator.hpp"
 #include "InstImageReader.hpp"
 
@@ -18,6 +19,8 @@ int main(const int argc, const char** argv) {
     const std::string dimageFilename = "dimage.bin";
     const std::string snapshotFilename = "snapshot.rpt";
     const std::string reportFilename = "report.rpt";
+    inst::InstParameter iMemArgs, dMemArgs;
+    inst::parseArgument(iMemArgs, dMemArgs, argc, argv);
     // load iimage, dimage
     unsigned pc, sp;
     unsigned instructions[2048], memory[2048];
