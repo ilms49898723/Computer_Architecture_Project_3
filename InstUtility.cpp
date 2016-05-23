@@ -8,6 +8,30 @@
 #include "InstUtility.hpp"
 
 namespace inst {
+
+void parseArgument(InstParameter& iMemArgs, InstParameter& dMemArgs, const int& argc, const char** argv) {
+    if (argc == 1) {
+        iMemArgs = InstParameter(64, 8, 16, 4, 4);
+        dMemArgs = InstParameter(32, 16, 16, 4, 1);
+        return;
+    }
+    if (argc != 10) {
+        iMemArgs = InstParameter();
+        dMemArgs = InstParameter();
+        return;
+    }
+    iMemArgs = InstParameter(static_cast<unsigned>(atoi(argv[1])),
+                             static_cast<unsigned>(atoi(argv[3])),
+                             static_cast<unsigned>(atoi(argv[5])),
+                             static_cast<unsigned>(atoi(argv[6])),
+                             static_cast<unsigned>(atoi(argv[7])));
+    dMemArgs = InstParameter(static_cast<unsigned>(atoi(argv[2])),
+                             static_cast<unsigned>(atoi(argv[4])),
+                             static_cast<unsigned>(atoi(argv[8])),
+                             static_cast<unsigned>(atoi(argv[9])),
+                             static_cast<unsigned>(atoi(argv[10])));
+}
+
 std::string toUpperString(std::string val) {
     for (unsigned long long i = 0; i < val.length(); ++i) {
         val[i] = static_cast<char>(toupper(static_cast<int>(val[i])));

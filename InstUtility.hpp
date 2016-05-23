@@ -16,7 +16,10 @@
 namespace inst {
 
 /**
- * to std::string, if has number, use decimal
+ * Convert val to std::string
+ * If has number, use decimal
+ *
+ * @param val value to convert
  */
 template<typename Tp>
 std::string toString(const Tp& val) {
@@ -26,7 +29,10 @@ std::string toString(const Tp& val) {
 }
 
 /**
- * to std::string, if has number, use hex-decimal
+ * Convert val to std::string
+ * If has number, use hex-decimal
+ *
+ * @param val value to convert
  */
 template<typename Tp>
 std::string toHexString(const Tp& val) {
@@ -36,36 +42,58 @@ std::string toHexString(const Tp& val) {
 }
 
 /**
- * to upper string, "abc" -> "ABC"
+ * Parse command-line arguments
+ *
+ * @param iMemArgs i-Memory Parameter to set
+ * @param dMemArgs d-Memory Parameter to set
+ * @param argc argc in main function
+ * @param argv argv in main function
+ */
+void parseArgument(InstParameter& iMemArgs, InstParameter& dMemArgs, const int& argc, const char** argv);
+
+/**
+ * Convert val to upper string
+ *
+ * @param val string to convert
  */
 std::string toUpperString(std::string val);
 
 /**
- * extend number from unsigned to 32 bits signed,
- * no sign-extended
+ * Extend number from unsigned to 32 bits signed, no sign-extended
+ *
+ * @param src source to convert
  */
 int toSigned(const unsigned& src);
 
 /**
- * extend number from unsigned to 32 bits signed,
- * sign-extended
+ * Extend number from unsigned to 32 bits signed, sign-extended
+ *
+ * @param src source to convert
+ * @param type source type(size)
  */
 int toSigned(const unsigned& src, const inst::InstSize& type);
 
 /**
- * extend number from unsigned to 32 bits signed,
- * sign-extended
+ * Extend number from unsigned to 32 bits signed, sign-extended
+ *
+ * @param src source to convert
+ * @param bits source bits length
  */
 int toSigned(const unsigned& src, const int& bits);
 
 /**
- * change signed number to unsigned number
+ * Convert signed number to unsigned number
+ *
+ * @param src source to convert
  */
 unsigned toUnsigned(const int& src);
 
 /**
- * get bits from range [l, r)
- * index starts from 0
+ * Get bits from range [l, r), index starts from 0
+ *
+ * @param src source number
+ * @param l lower loundary
+ * @param r upper boundary
  */
 unsigned getBitsInRange(const unsigned& src, const int& l, const int& r);
 
