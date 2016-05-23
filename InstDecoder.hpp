@@ -22,8 +22,18 @@ namespace inst {
  */
 class InstDecoder {
 public:
+    /**
+     * Decode Instruction. Store with InstDataStr
+     *
+     * @param src Instruction to decode
+     */
     static InstDataStr decodeInstStr(const unsigned& src);
 
+    /**
+     * Decode Instruction. Store with InstDataBin
+     *
+     * @param src Instruction to decode
+     */
     static InstDataBin decodeInstBin(const unsigned& src);
 };
 
