@@ -61,7 +61,7 @@ void InstSimulator::setLogFile(const std::string& snapshotFilename, const std::s
     }
 }
 
-void InstSimulator::simulate() {
+void InstSimulator::start() {
     if (!snapshot || !report) {
         fprintf(stderr, "Can\'t open output files\n");
         return;

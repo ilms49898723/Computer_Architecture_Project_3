@@ -79,7 +79,7 @@ public:
     /**
      * Start simulate
      */
-    void simulate();
+    void start();
 
 private:
     void dumpSnapshot(FILE* fp) const;
