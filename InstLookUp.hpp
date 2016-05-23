@@ -14,14 +14,29 @@
 namespace inst {
 
 /**
- * Look-up table for opcode, register, funct
+ * Translate opcode, funct, register
  */
 class InstLookUp {
 public:
+    /**
+     * Translate opcode to readable string
+     *
+     * @param src opcode to translate
+     */
     static std::string opCodeLookUp(const unsigned& src);
 
+    /**
+     * Translate funct to readable string
+     *
+     * @param src funct to translate
+     */
     static std::string functLookUp(const unsigned& src);
 
+    /**
+     * Translate register to readable string
+     *
+     * @param src register to translate
+     */
     static std::string registerLookUpNumber(const unsigned& src);
 
 private:
