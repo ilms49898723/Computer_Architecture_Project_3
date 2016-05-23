@@ -9,19 +9,19 @@
 
 namespace inst {
 
-unsigned InstImageReader::readImageI(const std::string& filePath, unsigned* dst, unsigned* pc) {
+unsigned InstImageReader::readInstImage(const std::string& filePath, unsigned* dst, unsigned* pc) {
     FILE* iimage = fopen(filePath.c_str(), "rb");
     if (!iimage) {
         *pc = 0u;
         fprintf(stderr, "%s: %s\n", filePath.c_str(), strerror(errno));
         return 0u;
     }
-    unsigned ret = readImageI(iimage, dst, pc);
+    unsigned ret = readInstImage(iimage, dst, pc);
     fclose(iimage);
     return ret;
 }
 
-unsigned InstImageReader::readImageI(FILE* iimage, unsigned* dst, unsigned* pc) {
+unsigned InstImageReader::readInstImage(FILE* iimage, unsigned* dst, unsigned* pc) {
     unsigned readPc = readWordFromBin(iimage);
     unsigned len = readWordFromBin(iimage);
     unsigned wordRead = 0;
@@ -32,19 +32,19 @@ unsigned InstImageReader::readImageI(FILE* iimage, unsigned* dst, unsigned* pc) 
     return wordRead;
 }
 
-unsigned InstImageReader::readImageD(const std::string& filePath, unsigned* dst, unsigned* sp) {
+unsigned InstImageReader::readDataImage(const std::string& filePath, unsigned* dst, unsigned* sp) {
     FILE* dimage = fopen(filePath.c_str(), "rb");
     if (!dimage) {
         *sp = 0u;
         fprintf(stderr, "%s: %s\n", filePath.c_str(), strerror(errno));
         return 0u;
     }
-    unsigned ret = readImageD(dimage, dst, sp);
+    unsigned ret = readDataImage(dimage, dst, sp);
     fclose(dimage);
     return ret;
 }
 
-unsigned InstImageReader::readImageD(FILE* dimage, unsigned* dst, unsigned* sp) {
+unsigned InstImageReader::readDataImage(FILE* dimage, unsigned* dst, unsigned* sp) {
     unsigned readSp = readWordFromBin(dimage);
     unsigned len = readWordFromBin(dimage);
     unsigned wordRead = 0;

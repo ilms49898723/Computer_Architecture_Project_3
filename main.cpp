@@ -24,8 +24,8 @@ int main(const int argc, const char** argv) {
     // load iimage, dimage
     unsigned pc, sp;
     unsigned instructions[2048], memory[2048];
-    unsigned iLen = inst::InstImageReader::readImageI(iimageFilename.c_str(), instructions, &pc);
-    unsigned dLen = inst::InstImageReader::readImageD(dimageFilename.c_str(), memory, &sp);
+    unsigned iLen = inst::InstImageReader::readInstImage(iimageFilename.c_str(), instructions, &pc);
+    unsigned dLen = inst::InstImageReader::readDataImage(dimageFilename.c_str(), memory, &sp);
     // set simulator, start simulation
     inst::InstSimulator simulator;
     simulator.setProperty(argc, argv);

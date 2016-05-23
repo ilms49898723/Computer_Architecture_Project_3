@@ -17,17 +17,45 @@
 namespace inst {
 
 /**
- * A reader to read iimage.bin, dimage.bin by using C I/O
+ * A reader to read iimage.bin, dimage.bin using C I/O
  */
 class InstImageReader {
 public:
-    static unsigned readImageI(const std::string& filePath, unsigned* dst, unsigned* pc);
+    /**
+     * Read iimage.bin
+     *
+     * @param filePath path to iimage.bin
+     * @param dst pointer to store data
+     * @param pc initial pc
+     */
+    static unsigned readInstImage(const std::string& filePath, unsigned* dst, unsigned* pc);
 
-    static unsigned readImageI(FILE* iimage, unsigned* dst, unsigned* pc);
+    /**
+     * Read iimage.bin
+     *
+     * @param iimage FILE* to iimage.bin
+     * @param dst pointer to store data
+     * @param pc initial pc
+     */
+    static unsigned readInstImage(FILE* iimage, unsigned* dst, unsigned* pc);
 
-    static unsigned readImageD(const std::string& filePath, unsigned* dst, unsigned* sp);
+    /**
+     * Read dimage.bin
+     *
+     * @param filePath path to dimage.bin
+     * @param dst pointer to store data
+     * @param sp initial sp
+     */
+    static unsigned readDataImage(const std::string& filePath, unsigned* dst, unsigned* sp);
 
-    static unsigned readImageD(FILE* dimage, unsigned* dst, unsigned* sp);
+    /**
+     * Read dimage.bin
+     *
+     * @param dimage FILE* to dimage.bin
+     * @param dst pointer to store data
+     * @param sp initial sp
+     */
+    static unsigned readDataImage(FILE* dimage, unsigned* dst, unsigned* sp);
 
 public:
     static unsigned readWordFromBin(FILE* fin);
