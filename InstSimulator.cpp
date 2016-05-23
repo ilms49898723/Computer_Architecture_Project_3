@@ -44,7 +44,7 @@ void InstSimulator::loadData(const unsigned* src, const unsigned& len, const uns
     }
 }
 
-void InstSimulator::setProperty(const int& argc, const char**& argv) {
+void InstSimulator::setProperty(const InstParameter& iMemArgu, const InstParameter& dMemArgu) {
     // TODO: command line arguments
 }
 

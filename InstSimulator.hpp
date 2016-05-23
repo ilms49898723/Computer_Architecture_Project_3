@@ -27,20 +27,58 @@ private:
     constexpr static int MAXN = 4096;
 
 public:
+    /**
+     * Default constructor
+     */
     InstSimulator();
 
+    /**
+     * Default destructor
+     */
     virtual ~InstSimulator();
 
+    /**
+     * Initialize
+     */
     void init();
 
+    /**
+     * Load iimage.bin
+     *
+     * @param src pointer to instruction data
+     * @param len length of src
+     * @param pc initial pc
+     */
     void loadInstruction(const unsigned* src, const unsigned& len, const unsigned& pc);
 
+    /**
+     * Load dimage.bin
+     *
+     * @param src pointer to data
+     * @param len length of src
+     * @param sp initial sp
+     */
     void loadData(const unsigned* src, const unsigned& len, const unsigned& sp);
 
-    void setProperty(const int& argc, const char**& argv);
+    /**
+     * Set property(command-line arguments)
+     *
+     * @param iMemArgu i-memory parameters
+     * @param dMemArgu d-memory parameters
+     */
+    void setProperty(const InstParameter& iMemArgu, const InstParameter& dMemArgu);
 
+    /**
+     * Set log file(snapshot, report)
+     *
+     * @param snapshot snapshot filename
+     * @param report report filename
+     */
     void setLogFile(const std::string& snapshot, const std::string& report);
 
+    /**
+     * Start simulate
+     */
     void simulate();
 
 private:
