@@ -44,20 +44,22 @@ struct InstParameter {
     unsigned memPageSize;
     unsigned cacheSize;
     unsigned cacheBlockSize;
-    unsigned cacheSet;
+    unsigned cacheSetAssociativity;
+
     InstParameter() {
         memSize = 0u;
         memPageSize = 0u;
         cacheSize = 0u;
         cacheBlockSize = 0u;
-        cacheSet = 0u;
+        cacheSetAssociativity = 0u;
     }
+
     InstParameter(unsigned ms, unsigned mps, unsigned cs, unsigned cbs, unsigned cst) {
         memSize = ms;
         memPageSize = mps;
         cacheSize = cs;
         cacheBlockSize = cbs;
-        cacheSet = cst;
+        cacheSetAssociativity = cst;
     }
 };
 
