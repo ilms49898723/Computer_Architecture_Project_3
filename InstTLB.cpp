@@ -9,4 +9,16 @@
 
 namespace inst {
 
+InstTLB::InstTLB() {
+    this->size = 0u;
+}
+
+InstTLB::~InstTLB() {
+
+}
+
+void InstTLB::init(const unsigned TLBSize) {
+
+}
+
 } /* namespace inst */

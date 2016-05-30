@@ -11,7 +11,15 @@
 namespace inst {
 
 class InstTLB {
+public:
+    InstTLB();
 
+    virtual ~InstTLB();
+
+    void init(const unsigned TLBSize);
+
+private:
+    unsigned size;
 };
 
 } /* namespace inst */

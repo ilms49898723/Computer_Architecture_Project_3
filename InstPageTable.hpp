@@ -11,7 +11,20 @@
 namespace inst {
 
 class InstPageTable {
+public:
+    InstPageTable();
 
+    virtual ~InstPageTable();
+
+    void init(const unsigned pageSize);
+
+    unsigned size() const;
+
+    unsigned entry() const;
+
+private:
+    unsigned pageSize;
+    unsigned pageEntry;
 };
 
 } /* namespace inst */
