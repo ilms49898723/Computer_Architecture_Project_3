@@ -8,26 +8,30 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Os")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Os -g")
 
 set(SOURCE_FILES
-        InstDataBin.cpp
-        InstDataBin.hpp
-        InstDataStr.cpp
-        InstDataStr.hpp
-        InstDecoder.cpp
-        InstDecoder.hpp
-        InstImageReader.cpp
-        InstImageReader.hpp
-        InstLookUp.cpp
-        InstLookUp.hpp
-        InstMemory.cpp
-        InstMemory.hpp
-        InstRegister.cpp
-        InstRegister.hpp
-        InstSimulator.cpp
-        InstSimulator.hpp
-        InstType.hpp
-        InstUtility.cpp
-        InstUtility.hpp
-        main.cpp)
+    InstDataBin.cpp
+    InstDataBin.hpp
+    InstDataStr.cpp
+    InstDataStr.hpp
+    InstDecoder.cpp
+    InstDecoder.hpp
+    InstImageReader.cpp
+    InstImageReader.hpp
+    InstLookUp.cpp
+    InstLookUp.hpp
+    InstMemory.cpp
+    InstMemory.hpp
+    InstPageTable.cpp
+    InstPageTable.hpp
+    InstRegister.cpp
+    InstRegister.hpp
+    InstSimulator.cpp
+    InstSimulator.hpp
+    InstTLB.cpp
+    InstTLB.hpp
+    InstType.hpp
+    InstUtility.cpp
+    InstUtility.hpp
+    main.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/release")
