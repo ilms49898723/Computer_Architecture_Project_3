@@ -18,6 +18,7 @@
 #include "InstPageTable.hpp"
 #include "InstTLB.hpp"
 #include "InstType.hpp"
+#include "InstCache.hpp"
 
 namespace inst {
 
@@ -125,7 +126,8 @@ private:
     InstPageTable dPageTable;
     InstTLB iTLB;
     InstTLB dTLB;
-    // TODO cache
+    InstCache iCache;
+    InstCache dCache;
 };
 
 } /* namespace inst */

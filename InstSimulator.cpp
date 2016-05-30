@@ -45,11 +45,12 @@ void InstSimulator::loadData(const unsigned* src, const unsigned& len, const uns
 }
 
 void InstSimulator::setProperty(const InstParameter& iMemArgu, const InstParameter& dMemArgu) {
-    // TODO: command line arguments
     iPageTable.init(iMemArgu.pageSize);
     dPageTable.init(dMemArgu.pageSize);
     iTLB.init(iPageTable.entry() >> 2);
     dTLB.init(dPageTable.entry() >> 2);
+    iCache.init(iMemArgu.cacheSize, iMemArgu.cacheBlockSize, iMemArgu.cacheSetAssociativity);
+    dCache.init(dMemArgu.cacheSize, dMemArgu.cacheBlockSize, dMemArgu.cacheSetAssociativity);
 }
 
 void InstSimulator::setLogFile(const std::string& snapshotFilename, const std::string& reportFilename) {

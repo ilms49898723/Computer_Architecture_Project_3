@@ -15,6 +15,13 @@ public:
     InstCache();
 
     virtual ~InstCache();
+
+    void init(const unsigned cacheSize, const unsigned blockSize, const unsigned setAssociativity);
+
+private:
+    unsigned cacheSize;
+    unsigned blockSize;
+    unsigned setAssociativity;
 };
 
 } /* namespace inst */
