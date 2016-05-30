@@ -19,28 +19,28 @@ InstSimulator::~InstSimulator() {
 
 void InstSimulator::init() {
     reg.init();
-    mem.init();
+    memory.init();
     originalPc = 0u;
     snapshot = nullptr;
     report = nullptr;
     for (int i = 0; i < InstSimulator::MAXN; ++i) {
-        instList[i] = InstDecoder::decodeInstBin(0u);
+        instruction.setData(static_cast<unsigned>(i << 2), 0, 4);
+        instructionSet[i] = InstDecoder::decodeInstBin(0u);
     }
 }
 
 void InstSimulator::loadInstruction(const unsigned* src, const unsigned& len, const unsigned& pc) {
     this->originalPc = pc;
-    unsigned instSetIdx = pc >> 2;
     for (unsigned i = 0; i < len; ++i) {
-        instList[instSetIdx] = InstDecoder::decodeInstBin(src[i]);
-        ++instSetIdx;
+        instruction.setData(pc + (i << 2), src[i], 4);
+        instructionSet[(pc >> 2) + i] = InstDecoder::decodeInstBin(src[i]);
     }
 }
 
 void InstSimulator::loadData(const unsigned* src, const unsigned& len, const unsigned& sp) {
     reg.setRegister(29, sp, InstSize::WORD);
     for (unsigned i = 0; i < len; ++i) {
-        mem.setMemory(i * 4, src[i], InstSize::WORD);
+        memory.setData(i * 4, src[i], 4);
     }
 }
 
@@ -69,7 +69,8 @@ void InstSimulator::start() {
     currentPc = originalPc;
     cycle = 0u;
     alive = true;
-    while (!isHalt(instList[currentPc >> 2])) {
+    // TODO instruction fetch
+    while (true) {
         if (!alive) {
             break;
         }
@@ -82,6 +83,7 @@ void InstSimulator::start() {
 }
 
 void InstSimulator::dumpSnapshot(FILE* fp) const {
+    // TODO missing information
     fprintf(fp, "cycle %u\n", cycle);
     for (unsigned i = 0; i < 32; ++i) {
         fprintf(fp, "$%02d: 0x%08X\n", i, reg.getRegister(i));
@@ -92,15 +94,15 @@ void InstSimulator::dumpSnapshot(FILE* fp) const {
 unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& inst) const {
     switch (inst.getOpCode()) {
         case 0x23u:
-            return mem.getMemory(addr, InstSize::WORD);
+            return memory.getData(addr, InstSize::WORD);
         case 0x21u:
-            return toUnsigned(toSigned(mem.getMemory(addr, InstSize::HALF), InstSize::HALF));
+            return toUnsigned(toSigned(memory.getData(addr, InstSize::HALF), InstSize::HALF));
         case 0x25u:
-            return mem.getMemory(addr, InstSize::HALF);
+            return memory.getData(addr, InstSize::HALF);
         case 0x20u:
-            return toUnsigned(toSigned(mem.getMemory(addr, InstSize::BYTE), InstSize::BYTE));
+            return toUnsigned(toSigned(memory.getData(addr, InstSize::BYTE), InstSize::BYTE));
         case 0x24u:
-            return mem.getMemory(addr, InstSize::BYTE);
+            return memory.getData(addr, InstSize::BYTE);
         default:
             return 0u;
     }
@@ -109,13 +111,13 @@ unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& ins
 void InstSimulator::instMemStore(const unsigned& addr, const unsigned& val, const InstDataBin& inst) {
     switch (inst.getOpCode()) {
         case 0x2Bu:
-            mem.setMemory(addr, val, InstSize::WORD);
+            memory.setData(addr, val, InstSize::WORD);
             return;
         case 0x29u:
-            mem.setMemory(addr, val, InstSize::HALF);
+            memory.setData(addr, val, InstSize::HALF);
             return;
         case 0x28u:
-            mem.setMemory(addr, val, InstSize::BYTE);
+            memory.setData(addr, val, InstSize::BYTE);
             return;
         default:
             return;

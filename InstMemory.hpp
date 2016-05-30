@@ -36,38 +36,38 @@ public:
     void init();
 
     /**
-     * Get memory value at specified address
+     * Get data value at specified address
      *
      * @param addr address to get
      * @param size size to get
      */
-    unsigned getMemory(const unsigned& addr, const unsigned& size) const;
+    unsigned getData(const unsigned& addr, const unsigned& size) const;
 
     /**
-     * Get memory value at specified address
+     * Get data value at specified address
      *
      * @param addr address to get
      * @param size size to get
      */
-    unsigned getMemory(const unsigned& addr, const InstSize& size) const;
+    unsigned getData(const unsigned& addr, const InstSize& size) const;
 
     /**
-     * Set memory value at specified address
+     * Set data value at specified address
      *
      * @param addr address to set
      * @param val value to set
      * @param size size to set
      */
-    void setMemory(const unsigned& addr, const unsigned& val, const unsigned& size);
+    void setData(const unsigned& addr, const unsigned& val, const unsigned& size);
 
     /**
-     * Set memory value at specified address
+     * Set data value at specified address
      *
      * @param addr address to set
      * @param val value to set
      * @param size size to set
      */
-    void setMemory(const unsigned& addr, const unsigned& val, const InstSize& size);
+    void setData(const unsigned& addr, const unsigned& val, const InstSize& size);
 
 private:
     unsigned char data[1024];

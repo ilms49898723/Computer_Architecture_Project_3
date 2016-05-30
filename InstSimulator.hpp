@@ -106,14 +106,19 @@ private:
 
 private:
     bool alive;
-    unsigned currentPc;
     unsigned originalPc;
+    unsigned currentPc;
     unsigned cycle;
+
+private:
     FILE* snapshot;
     FILE* report;
+
+private:
+    InstDataBin instructionSet[MAXN];
     InstRegister reg;
-    InstMemory mem;
-    InstDataBin instList[MAXN];
+    InstMemory memory;
+    InstMemory instruction;
 };
 
 } /* namespace inst */

@@ -21,20 +21,20 @@ void InstMemory::init() {
     memset(data, 0, sizeof(unsigned char) * 1024);
 }
 
-unsigned InstMemory::getMemory(const unsigned& addr, const unsigned& size) const {
+unsigned InstMemory::getData(const unsigned& addr, const unsigned& size) const {
     switch (size) {
         case 4u:
-            return getMemory(addr, InstSize::WORD);
+            return getData(addr, InstSize::WORD);
         case 2u:
-            return getMemory(addr, InstSize::HALF);
+            return getData(addr, InstSize::HALF);
         case 1u:
-            return getMemory(addr, InstSize::BYTE);
+            return getData(addr, InstSize::BYTE);
         default:
             return 0u;
     }
 }
 
-unsigned InstMemory::getMemory(const unsigned& addr, const InstSize& size) const {
+unsigned InstMemory::getData(const unsigned& addr, const InstSize& size) const {
     if (size == InstSize::WORD) {
         return (data[addr] << 24) | (data[addr + 1] << 16) | (data[addr + 2] << 8) | data[addr + 3];
     }
@@ -46,23 +46,23 @@ unsigned InstMemory::getMemory(const unsigned& addr, const InstSize& size) const
     }
 }
 
-void InstMemory::setMemory(const unsigned& addr, const unsigned& val, const unsigned& size) {
+void InstMemory::setData(const unsigned& addr, const unsigned& val, const unsigned& size) {
     switch (size) {
         case 4u:
-            setMemory(addr, val, InstSize::WORD);
+            setData(addr, val, InstSize::WORD);
             return;
         case 2u:
-            setMemory(addr, val, InstSize::HALF);
+            setData(addr, val, InstSize::HALF);
             return;
         case 1u:
-            setMemory(addr, val, InstSize::BYTE);
+            setData(addr, val, InstSize::BYTE);
             return;
         default:
             return;
     }
 }
 
-void InstMemory::setMemory(const unsigned& addr, const unsigned& val, const InstSize& size) {
+void InstMemory::setData(const unsigned& addr, const unsigned& val, const InstSize& size) {
     if (size == InstSize::WORD) {
         data[addr] = static_cast<unsigned char>((val >> 24) & 0xFFu);
         data[addr + 1] = static_cast<unsigned char>((val >> 16) & 0xFFu);
