@@ -52,7 +52,7 @@ public:
      * @param len length of src
      * @param pc initial pc
      */
-    void loadInstruction(const unsigned* src, const unsigned& len, const unsigned& pc);
+    void loadInstruction(const unsigned* src, const unsigned len, const unsigned pc);
 
     /**
      * Load dimage.bin
@@ -61,7 +61,7 @@ public:
      * @param len length of src
      * @param sp initial sp
      */
-    void loadData(const unsigned* src, const unsigned& len, const unsigned& sp);
+    void loadData(const unsigned* src, const unsigned len, const unsigned sp);
 
     /**
      * Set property(command-line arguments)
@@ -87,9 +87,9 @@ public:
 private:
     void dumpSnapshot(FILE* fp) const;
 
-    unsigned instMemLoad(const unsigned& addr, const InstDataBin& inst) const;
+    unsigned instMemLoad(const unsigned addr, const InstDataBin& inst) const;
 
-    void instMemStore(const unsigned& addr, const unsigned& val, const InstDataBin& inst);
+    void instMemStore(const unsigned addr, const unsigned val, const InstDataBin& inst);
 
     bool isNop(const InstDataBin& inst) const;
 

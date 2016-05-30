@@ -27,14 +27,14 @@ public:
      *
      * @param src Instruction to decode
      */
-    static InstDataStr decodeInstStr(const unsigned& src);
+    static InstDataStr decodeInstStr(const unsigned src);
 
     /**
      * Decode Instruction. Store with InstDataBin
      *
      * @param src Instruction to decode
      */
-    static InstDataBin decodeInstBin(const unsigned& src);
+    static InstDataBin decodeInstBin(const unsigned src);
 };
 
 } /* namespace inst */

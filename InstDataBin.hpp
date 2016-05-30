@@ -91,63 +91,63 @@ public:
      *
      * @param val InstType to set
      */
-    void setInstType(const InstType& val);
+    void setInstType(const InstType val);
 
     /**
      * Set OpCode
      *
      * @param val OpCode to set
      */
-    void setOpCode(const unsigned& val);
+    void setOpCode(const unsigned val);
 
     /**
      * Set Rs
      *
      * @param val Rs to set
      */
-    void setRs(const unsigned& val);
+    void setRs(const unsigned val);
 
     /**
      * Set Rt
      *
      * @param val Rt to set
      */
-    void setRt(const unsigned& val);
+    void setRt(const unsigned val);
 
     /**
      * Set Rd
      *
      * @param val Rd to set
      */
-    void setRd(const unsigned& val);
+    void setRd(const unsigned val);
 
     /**
      * Set C
      *
      * @param val C to set
      */
-    void setC(const unsigned& val);
+    void setC(const unsigned val);
 
     /**
      * Set Funct
      *
      * @param val Funct to set
      */
-    void setFunct(const unsigned& val);
+    void setFunct(const unsigned val);
 
     /**
      * Set Inst
      *
      * @param val Inst to set
      */
-    void setInst(const unsigned& val);
+    void setInst(const unsigned val);
 
     /**
      * Set InstName
      *
      * @param val InstName to set
      */
-    void setInstName(const unsigned& val);
+    void setInstName(const unsigned val);
 
     /**
      * Set RegRead

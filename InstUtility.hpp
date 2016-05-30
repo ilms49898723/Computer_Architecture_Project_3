@@ -49,7 +49,7 @@ std::string toHexString(const Tp& val) {
  * @param argc argc in main function
  * @param argv argv in main function
  */
-void parseArgument(InstParameter& iMemArgs, InstParameter& dMemArgs, const int& argc, const char** argv);
+void parseArgument(InstParameter& iMemArgs, InstParameter& dMemArgs, const int argc, const char** argv);
 
 /**
  * Convert val to upper string
@@ -63,7 +63,7 @@ std::string toUpperString(std::string val);
  *
  * @param src source to convert
  */
-int toSigned(const unsigned& src);
+int toSigned(const unsigned src);
 
 /**
  * Extend number from unsigned to 32 bits signed, sign-extended
@@ -71,7 +71,7 @@ int toSigned(const unsigned& src);
  * @param src source to convert
  * @param type source type(size)
  */
-int toSigned(const unsigned& src, const inst::InstSize& type);
+int toSigned(const unsigned src, const inst::InstSize& type);
 
 /**
  * Extend number from unsigned to 32 bits signed, sign-extended
@@ -79,14 +79,14 @@ int toSigned(const unsigned& src, const inst::InstSize& type);
  * @param src source to convert
  * @param bits source bits length
  */
-int toSigned(const unsigned& src, const int& bits);
+int toSigned(const unsigned src, const unsigned bits);
 
 /**
  * Convert signed number to unsigned number
  *
  * @param src source to convert
  */
-unsigned toUnsigned(const int& src);
+unsigned toUnsigned(const int src);
 
 /**
  * Get bits from range [l, r), index starts from 0
@@ -95,7 +95,7 @@ unsigned toUnsigned(const int& src);
  * @param l lower loundary
  * @param r upper boundary
  */
-unsigned getBitsInRange(const unsigned& src, const int& l, const int& r);
+unsigned getBitsInRange(const unsigned src, const unsigned l, const unsigned r);
 
 } /* namespace inst */
 

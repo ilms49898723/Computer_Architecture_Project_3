@@ -39,7 +39,7 @@ public:
      * @param addr address to get
      * @param size size to get
      */
-    unsigned getRegister(const unsigned& addr, const unsigned& size = 4u) const;
+    unsigned getRegister(const unsigned addr, const unsigned size = 4u) const;
 
     /**
      * Get register value at specified address
@@ -47,7 +47,7 @@ public:
      * @param addr address to get
      * @param size size to get
      */
-    unsigned getRegister(const unsigned& addr, const InstSize& type) const;
+    unsigned getRegister(const unsigned addr, const InstSize& type) const;
 
     /**
      * Set register value at specified address
@@ -56,7 +56,7 @@ public:
      * @param val value to set
      * @param size size to set
      */
-    void setRegister(const unsigned& addr, const unsigned& val, const unsigned& size = 4u);
+    void setRegister(const unsigned addr, const unsigned val, const unsigned size = 4u);
 
     /**
      * Set register value at specified address
@@ -65,7 +65,7 @@ public:
      * @param val value to set
      * @param size size to set
      */
-    void setRegister(const unsigned& addr, const unsigned& val, const InstSize& type);
+    void setRegister(const unsigned addr, const unsigned val, const InstSize& type);
 
 private:
     unsigned reg[32];

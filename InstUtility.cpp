@@ -9,7 +9,7 @@
 
 namespace inst {
 
-void parseArgument(InstParameter& iMemArgs, InstParameter& dMemArgs, const int& argc, const char** argv) {
+void parseArgument(InstParameter& iMemArgs, InstParameter& dMemArgs, const int argc, const char** argv) {
     if (argc == 1) {
         iMemArgs = InstParameter(64, 8, 16, 4, 4);
         dMemArgs = InstParameter(32, 16, 16, 4, 1);
@@ -39,11 +39,11 @@ std::string toUpperString(std::string val) {
     return val;
 }
 
-int toSigned(const unsigned& src) {
+int toSigned(const unsigned src) {
     return static_cast<int>(src);
 }
 
-int toSigned(const unsigned& src, const InstSize& type) {
+int toSigned(const unsigned src, const InstSize& type) {
     if (type == InstSize::WORD) {
         return static_cast<int>(src);
     }
@@ -59,17 +59,17 @@ int toSigned(const unsigned& src, const InstSize& type) {
     }
 }
 
-int toSigned(const unsigned& src, const int& bits) {
+int toSigned(const unsigned src, const unsigned bits) {
     int var = static_cast<int>(src << (32 - bits));
     int ret = var >> (32 - bits);
     return ret;
 }
 
-unsigned toUnsigned(const int& src) {
+unsigned toUnsigned(const int src) {
     return static_cast<unsigned>(src);
 }
 
-unsigned getBitsInRange(const unsigned& src, const int& l, const int& r) {
+unsigned getBitsInRange(const unsigned src, const unsigned l, const unsigned r) {
     return (src << (32 - r)) >> (l + (32 - r));
 }
 

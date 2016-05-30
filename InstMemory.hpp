@@ -41,7 +41,7 @@ public:
      * @param addr address to get
      * @param size size to get
      */
-    unsigned getData(const unsigned& addr, const unsigned& size) const;
+    unsigned getData(const unsigned addr, const unsigned size) const;
 
     /**
      * Get data value at specified address
@@ -49,7 +49,7 @@ public:
      * @param addr address to get
      * @param size size to get
      */
-    unsigned getData(const unsigned& addr, const InstSize& size) const;
+    unsigned getData(const unsigned addr, const InstSize& size) const;
 
     /**
      * Set data value at specified address
@@ -58,7 +58,7 @@ public:
      * @param val value to set
      * @param size size to set
      */
-    void setData(const unsigned& addr, const unsigned& val, const unsigned& size);
+    void setData(const unsigned addr, const unsigned val, const unsigned size);
 
     /**
      * Set data value at specified address
@@ -67,7 +67,7 @@ public:
      * @param val value to set
      * @param size size to set
      */
-    void setData(const unsigned& addr, const unsigned& val, const InstSize& size);
+    void setData(const unsigned addr, const unsigned val, const InstSize& size);
 
 private:
     unsigned char data[1024];

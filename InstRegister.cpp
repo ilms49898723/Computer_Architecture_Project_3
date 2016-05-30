@@ -21,7 +21,7 @@ void InstRegister::init() {
     memset(reg, 0, sizeof(unsigned) * 32);
 }
 
-unsigned InstRegister::getRegister(const unsigned& addr, const unsigned int& size) const {
+unsigned InstRegister::getRegister(const unsigned addr, const unsigned size) const {
     switch (size) {
         case 4u:
             return getRegister(addr, InstSize::WORD);
@@ -34,7 +34,7 @@ unsigned InstRegister::getRegister(const unsigned& addr, const unsigned int& siz
     }
 }
 
-unsigned InstRegister::getRegister(const unsigned& addr, const InstSize& type) const {
+unsigned InstRegister::getRegister(const unsigned addr, const InstSize& type) const {
     if (type == InstSize::WORD) {
         return reg[addr];
     }
@@ -46,7 +46,7 @@ unsigned InstRegister::getRegister(const unsigned& addr, const InstSize& type) c
     }
 }
 
-void InstRegister::setRegister(const unsigned& addr, const unsigned& val, const unsigned int& size) {
+void InstRegister::setRegister(const unsigned addr, const unsigned val, const unsigned size) {
     switch (size) {
         case 4u:
             setRegister(addr, val, InstSize::WORD);
@@ -62,7 +62,7 @@ void InstRegister::setRegister(const unsigned& addr, const unsigned& val, const 
     }
 }
 
-void InstRegister::setRegister(const unsigned& addr, const unsigned& val, const InstSize& type) {
+void InstRegister::setRegister(const unsigned addr, const unsigned val, const InstSize& type) {
     if (addr == 0u) {
         return;
     }

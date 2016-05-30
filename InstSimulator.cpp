@@ -29,7 +29,7 @@ void InstSimulator::init() {
     }
 }
 
-void InstSimulator::loadInstruction(const unsigned* src, const unsigned& len, const unsigned& pc) {
+void InstSimulator::loadInstruction(const unsigned* src, const unsigned len, const unsigned pc) {
     this->originalPc = pc;
     for (unsigned i = 0; i < len; ++i) {
         instruction.setData(pc + (i << 2), src[i], 4);
@@ -37,7 +37,7 @@ void InstSimulator::loadInstruction(const unsigned* src, const unsigned& len, co
     }
 }
 
-void InstSimulator::loadData(const unsigned* src, const unsigned& len, const unsigned& sp) {
+void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsigned sp) {
     reg.setRegister(29, sp, InstSize::WORD);
     for (unsigned i = 0; i < len; ++i) {
         memory.setData(i * 4, src[i], 4);
@@ -96,7 +96,7 @@ void InstSimulator::dumpSnapshot(FILE* fp) const {
     fprintf(fp, "PC: 0x%08X\n", currentPc);
 }
 
-unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& inst) const {
+unsigned InstSimulator::instMemLoad(const unsigned addr, const InstDataBin& inst) const {
     switch (inst.getOpCode()) {
         case 0x23u:
             return memory.getData(addr, InstSize::WORD);
@@ -113,7 +113,7 @@ unsigned InstSimulator::instMemLoad(const unsigned& addr, const InstDataBin& ins
     }
 }
 
-void InstSimulator::instMemStore(const unsigned& addr, const unsigned& val, const InstDataBin& inst) {
+void InstSimulator::instMemStore(const unsigned addr, const unsigned val, const InstDataBin& inst) {
     switch (inst.getOpCode()) {
         case 0x2Bu:
             memory.setData(addr, val, InstSize::WORD);
