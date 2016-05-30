@@ -10,8 +10,7 @@
 namespace inst {
 
 InstMemory::InstMemory() {
-    memset(this->reg, 0, sizeof(unsigned) * 32);
-    memset(this->mem, 0, sizeof(unsigned char) * 1024);
+    memset(this->data, 0, sizeof(unsigned char) * 1024);
 }
 
 InstMemory::~InstMemory() {
@@ -19,8 +18,7 @@ InstMemory::~InstMemory() {
 }
 
 void InstMemory::init() {
-    memset(reg, 0, sizeof(unsigned) * 32);
-    memset(mem, 0, sizeof(unsigned char) * 1024);
+    memset(data, 0, sizeof(unsigned char) * 1024);
 }
 
 unsigned InstMemory::getMemory(const unsigned& addr, const unsigned& size) const {
@@ -38,13 +36,13 @@ unsigned InstMemory::getMemory(const unsigned& addr, const unsigned& size) const
 
 unsigned InstMemory::getMemory(const unsigned& addr, const InstSize& size) const {
     if (size == InstSize::WORD) {
-        return (mem[addr] << 24) | (mem[addr + 1] << 16) | (mem[addr + 2] << 8) | mem[addr + 3];
+        return (data[addr] << 24) | (data[addr + 1] << 16) | (data[addr + 2] << 8) | data[addr + 3];
     }
     else if (size == InstSize::HALF) {
-        return (mem[addr] << 8) | (mem[addr + 1]);
+        return (data[addr] << 8) | (data[addr + 1]);
     }
     else {
-        return mem[addr];
+        return data[addr];
     }
 }
 
@@ -66,17 +64,17 @@ void InstMemory::setMemory(const unsigned& addr, const unsigned& val, const unsi
 
 void InstMemory::setMemory(const unsigned& addr, const unsigned& val, const InstSize& size) {
     if (size == InstSize::WORD) {
-        mem[addr] = static_cast<unsigned char>((val >> 24) & 0xFFu);
-        mem[addr + 1] = static_cast<unsigned char>((val >> 16) & 0xFFu);
-        mem[addr + 2] = static_cast<unsigned char>((val >> 8) & 0xFFu);
-        mem[addr + 3] = static_cast<unsigned char>(val & 0xFFu);
+        data[addr] = static_cast<unsigned char>((val >> 24) & 0xFFu);
+        data[addr + 1] = static_cast<unsigned char>((val >> 16) & 0xFFu);
+        data[addr + 2] = static_cast<unsigned char>((val >> 8) & 0xFFu);
+        data[addr + 3] = static_cast<unsigned char>(val & 0xFFu);
     }
     else if (size == InstSize::HALF) {
-        mem[addr] = static_cast<unsigned char>((val >> 8) & 0xFFu);
-        mem[addr + 1] = static_cast<unsigned char>(val & 0xFFu);
+        data[addr] = static_cast<unsigned char>((val >> 8) & 0xFFu);
+        data[addr + 1] = static_cast<unsigned char>(val & 0xFFu);
     }
     else {
-        mem[addr] = static_cast<unsigned char>(val & 0xFFu);
+        data[addr] = static_cast<unsigned char>(val & 0xFFu);
     }
 }
 

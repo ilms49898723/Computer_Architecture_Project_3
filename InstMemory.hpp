@@ -70,8 +70,7 @@ public:
     void setMemory(const unsigned& addr, const unsigned& val, const InstSize& size);
 
 private:
-    unsigned char mem[1024];
-    unsigned reg[32];
+    unsigned char data[1024];
 };
 
 } /* namespace inst */
