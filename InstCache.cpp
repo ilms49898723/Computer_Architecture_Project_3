@@ -9,4 +9,12 @@
 
 namespace inst {
 
+InstCache::InstCache() {
+
+}
+
+InstCache::~InstCache() {
+
+}
+
 } /* namespace inst */

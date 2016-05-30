@@ -8,6 +8,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Os")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Os -g")
 
 set(SOURCE_FILES
+    InstCache.cpp
+    InstCache.hpp
     InstDataBin.cpp
     InstDataBin.hpp
     InstDataStr.cpp

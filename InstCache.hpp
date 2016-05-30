@@ -11,7 +11,10 @@
 namespace inst {
 
 class InstCache {
+public:
+    InstCache();
 
+    virtual ~InstCache();
 };
 
 } /* namespace inst */
