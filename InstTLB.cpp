@@ -17,8 +17,8 @@ InstTLB::~InstTLB() {
 
 }
 
-void InstTLB::init(const unsigned TLBSize) {
-
+void InstTLB::init(const unsigned size) {
+    this->size = size;
 }
 
 } /* namespace inst */

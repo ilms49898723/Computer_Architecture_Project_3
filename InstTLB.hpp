@@ -16,7 +16,7 @@ public:
 
     virtual ~InstTLB();
 
-    void init(const unsigned TLBSize);
+    void init(const unsigned size);
 
 private:
     unsigned size;
