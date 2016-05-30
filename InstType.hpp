@@ -41,25 +41,25 @@ enum class InstSize : unsigned {
  */
 struct InstParameter {
     unsigned memSize;
-    unsigned memPageSize;
+    unsigned pageSize;
     unsigned cacheSize;
     unsigned cacheBlockSize;
     unsigned cacheSetAssociativity;
 
     InstParameter() {
         memSize = 0u;
-        memPageSize = 0u;
+        pageSize = 0u;
         cacheSize = 0u;
         cacheBlockSize = 0u;
         cacheSetAssociativity = 0u;
     }
 
-    InstParameter(unsigned ms, unsigned mps, unsigned cs, unsigned cbs, unsigned cst) {
+    InstParameter(unsigned ms, unsigned ps, unsigned cs, unsigned cbs, unsigned csa) {
         memSize = ms;
-        memPageSize = mps;
+        pageSize = ps;
         cacheSize = cs;
         cacheBlockSize = cbs;
-        cacheSetAssociativity = cst;
+        cacheSetAssociativity = csa;
     }
 };
 

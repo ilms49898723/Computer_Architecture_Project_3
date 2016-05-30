@@ -11,10 +11,12 @@
 #include <cstdio>
 #include <cstdlib>
 #include <deque>
+#include "InstDataBin.hpp"
 #include "InstDecoder.hpp"
 #include "InstMemory.hpp"
 #include "InstRegister.hpp"
-#include "InstDataBin.hpp"
+#include "InstPageTable.hpp"
+#include "InstTLB.hpp"
 #include "InstType.hpp"
 
 namespace inst {
@@ -119,6 +121,11 @@ private:
     InstRegister reg;
     InstMemory memory;
     InstMemory instruction;
+    InstPageTable iPageTable;
+    InstPageTable dPageTable;
+    InstTLB iTLB;
+    InstTLB dTLB;
+    // TODO cache
 };
 
 } /* namespace inst */
