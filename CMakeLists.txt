@@ -16,6 +16,8 @@ set(SOURCE_FILES
     InstDataStr.hpp
     InstDecoder.cpp
     InstDecoder.hpp
+    InstDisk.cpp
+    InstDisk.hpp
     InstImageReader.cpp
     InstImageReader.hpp
     InstLookUp.cpp
