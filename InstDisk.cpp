@@ -10,16 +10,16 @@
 namespace inst {
 
 InstDisk::InstDisk() {
-    data = new unsigned[1024];
-    instructionSet = new InstDataBin[1024];
+    data = new unsigned[1024 >> 2];
+    instructionSet = new InstDataBin[1024 >> 2];
 }
 
 InstDisk::InstDisk(const InstDisk& that) {
     if (this != &that) {
-        this->data = new unsigned[1024];
-        memcpy(this->data, that.data, sizeof(unsigned) * 1024);
-        this->instructionSet = new InstDataBin[1024];
-        for (int i = 0; i < 1024; ++i) {
+        this->data = new unsigned[1024 >> 2];
+        memcpy(this->data, that.data, sizeof(unsigned) * (1024 >> 2));
+        this->instructionSet = new InstDataBin[1024 >> 2];
+        for (int i = 0; i < (1024 >> 2); ++i) {
             this->instructionSet[i] = that.instructionSet[i];
         }
     }
@@ -34,6 +34,22 @@ InstDisk::InstDisk(InstDisk&& that) {
     }
 }
 
+unsigned InstDisk::getData(const unsigned addr) {
+    return data[addr >> 2];
+}
+
+const InstDataBin& InstDisk::getInstruction(const unsigned addr) {
+    return instructionSet[addr >> 2];
+}
+
+void InstDisk::setData(const unsigned addr, const unsigned val) {
+    data[addr >> 2] = val;
+}
+
+void InstDisk::setInstruction(const unsigned addr, const InstDataBin& val) {
+    instructionSet[addr >> 2] = val;
+}
+
 InstDisk::~InstDisk() {
     delete[] data;
     delete[] instructionSet;
@@ -41,10 +57,10 @@ InstDisk::~InstDisk() {
 
 InstDisk& InstDisk::operator=(const InstDisk& that) {
     if (this != &that) {
-        this->data = new unsigned[1024];
-        memcpy(this->data, that.data, sizeof(unsigned) * 1024);
-        this->instructionSet = new InstDataBin[1024];
-        for (int i = 0; i < 1024; ++i) {
+        this->data = new unsigned[1024 >> 2];
+        memcpy(this->data, that.data, sizeof(unsigned) * (1024 >> 2));
+        this->instructionSet = new InstDataBin[1024 >> 2];
+        for (int i = 0; i < (1024 >> 2); ++i) {
             this->instructionSet[i] = that.instructionSet[i];
         }
     }

@@ -14,16 +14,64 @@ namespace inst {
 
 class InstDisk {
 public:
+    /**
+     * Default constructor
+     */
     InstDisk();
 
+    /**
+     * Copy constructor
+     */
     InstDisk(const InstDisk& that);
 
+    /**
+     * Move constructor
+     */
     InstDisk(InstDisk&& that);
 
+    /**
+     * Default destructor
+     */
     ~InstDisk();
 
+    /**
+     * Get data at specified address
+     *
+     * @param addr address to get
+     */
+    unsigned getData(const unsigned addr);
+
+    /**
+     * Get instruction data at specified address(i-disk only)
+     *
+     * @param addr address to get
+     */
+    const InstDataBin& getInstruction(const unsigned addr);
+
+    /**
+     * Set data at specified address
+     *
+     * @param addr address to set
+     * @param val data to set
+     */
+    void setData(const unsigned addr, const unsigned val);
+
+    /**
+     * Set instruction data at specified address
+     *
+     * @param addr address to set
+     * @param val instruction data to set
+     */
+    void setInstruction(const unsigned addr, const InstDataBin& val);
+
+    /**
+     * Copy assignment
+     */
     InstDisk& operator=(const InstDisk& that);
 
+    /**
+     * Move assignment
+     */
     InstDisk& operator=(InstDisk&& that);
 
 private:
