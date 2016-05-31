@@ -36,7 +36,6 @@ public:
      */
     InstDataBin(InstDataBin&& that);
 
-protected:
     /**
      * Default destructor
      */

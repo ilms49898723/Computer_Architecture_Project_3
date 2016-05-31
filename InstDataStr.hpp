@@ -34,7 +34,6 @@ public:
      */
     InstDataStr(InstDataStr&& that);
 
-protected:
     /**
      * Default Destructor
      */

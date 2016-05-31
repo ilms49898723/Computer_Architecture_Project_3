@@ -33,7 +33,6 @@ public:
      */
     InstRegister(InstRegister&& that);
 
-protected:
     /**
      * Default destructor
      */

@@ -45,7 +45,6 @@ public:
      */
     InstSimulator(InstSimulator&& that);
 
-protected:
     /**
      * Default destructor
      */

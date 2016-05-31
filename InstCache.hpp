@@ -14,7 +14,6 @@ class InstCache {
 public:
     InstCache();
 
-protected:
     ~InstCache();
 
 public:

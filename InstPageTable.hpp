@@ -14,7 +14,6 @@ class InstPageTable {
 public:
     InstPageTable();
 
-protected:
     ~InstPageTable();
 
 public:

@@ -35,7 +35,6 @@ public:
      */
     InstMemory(InstMemory&& that);
 
-protected:
     /**
      * Default destructor
      */

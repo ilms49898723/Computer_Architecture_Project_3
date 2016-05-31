@@ -14,7 +14,6 @@ class InstTLB {
 public:
     InstTLB();
 
-protected:
     ~InstTLB();
 
 public:
