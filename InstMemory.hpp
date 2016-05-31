@@ -10,6 +10,7 @@
 
 #include <cstring>
 #include <string>
+#include <queue>
 #include "InstUtility.hpp"
 #include "InstType.hpp"
 
@@ -19,6 +20,17 @@ namespace inst {
  * Memory, 1024 bytes
  */
 class InstMemory {
+private:
+    struct MemoryLRU {
+        unsigned index;
+        unsigned cycle;
+        MemoryLRU(const unsigned index = 0, const unsigned cycle = 0) :
+                index(index), cycle(cycle) {}
+        bool operator<(const MemoryLRU& that) const {
+            return cycle < that.cycle || (cycle == that.cycle && index < that.index);
+        }
+    };
+
 public:
     /**
      * Default constructor
@@ -92,6 +104,7 @@ public:
 
 private:
     unsigned char* data;
+    std::priority_queue<MemoryLRU> lruSet;
 };
 
 } /* namespace inst */

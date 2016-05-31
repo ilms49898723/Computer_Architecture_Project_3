@@ -15,6 +15,7 @@ InstMemory::InstMemory() {
 
 InstMemory::InstMemory(const InstMemory& that) {
     if (this != &that) {
+        this->lruSet = that.lruSet;
         this->data = new unsigned char[1024];
         memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
     }
@@ -22,6 +23,7 @@ InstMemory::InstMemory(const InstMemory& that) {
 
 InstMemory::InstMemory(InstMemory&& that) {
     if (this != &that) {
+        this->lruSet = std::move(that.lruSet);
         this->data = that.data;
         that.data = nullptr;
     }
@@ -94,6 +96,7 @@ void InstMemory::setData(const unsigned addr, const unsigned val, const InstSize
 
 InstMemory& InstMemory::operator=(const InstMemory& that) {
     if (this != &that) {
+        this->lruSet = that.lruSet;
         this->data = new unsigned char[1024];
         memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
     }
@@ -102,6 +105,7 @@ InstMemory& InstMemory::operator=(const InstMemory& that) {
 
 InstMemory& InstMemory::operator=(InstMemory&& that) {
     if (this != &that) {
+        this->lruSet = std::move(that.lruSet);
         this->data = that.data;
         that.data = nullptr;
     }
