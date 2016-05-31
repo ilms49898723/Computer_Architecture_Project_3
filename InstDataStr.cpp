@@ -19,6 +19,30 @@ InstDataStr::InstDataStr() {
     this->funct = "";
 }
 
+InstDataStr::InstDataStr(const InstDataStr& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+    }
+}
+
+InstDataStr::InstDataStr(InstDataStr&& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+    }
+}
+
 InstDataStr::~InstDataStr() {
 
 }
@@ -131,6 +155,32 @@ std::string InstDataStr::toString() const {
     else {
         return "undef";
     }
+}
+
+InstDataStr& InstDataStr::operator=(const InstDataStr& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+    }
+    return *this;
+}
+
+InstDataStr& InstDataStr::operator=(InstDataStr&& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+    }
+    return *this;
 }
 
 } /* namespace inst */

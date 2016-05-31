@@ -10,7 +10,21 @@
 namespace inst {
 
 InstRegister::InstRegister() {
-    init();
+    this->reg = new unsigned[32];
+}
+
+InstRegister::InstRegister(const InstRegister& that) {
+    if (this != &that) {
+        this->reg = new unsigned[32];
+        memcpy(this->reg, that.reg, sizeof(unsigned) * 32);
+    }
+}
+
+InstRegister::InstRegister(InstRegister&& that) {
+    if (this != &that) {
+        this->reg = that.reg;
+        that.reg = nullptr;
+    }
 }
 
 InstRegister::~InstRegister() {
@@ -75,6 +89,22 @@ void InstRegister::setRegister(const unsigned addr, const unsigned val, const In
     else {
         reg[addr] = val & 0x000000FFu;
     }
+}
+
+InstRegister& InstRegister::operator=(const InstRegister& that) {
+    if (this != &that) {
+        this->reg = new unsigned[32];
+        memcpy(this->reg, that.reg, sizeof(unsigned) * 32);
+    }
+    return *this;
+}
+
+InstRegister& InstRegister::operator=(InstRegister&& that) {
+    if (this != &that) {
+        this->reg = that.reg;
+        that.reg = nullptr;
+    }
+    return *this;
 }
 
 } /* namespace inst */

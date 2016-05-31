@@ -24,10 +24,22 @@ public:
     InstRegister();
 
     /**
+     * Copy constructor
+     */
+    InstRegister(const InstRegister& that);
+
+    /**
+     * Move constructor
+     */
+    InstRegister(InstRegister&& that);
+
+protected:
+    /**
      * Default destructor
      */
-    virtual ~InstRegister();
+    ~InstRegister();
 
+public:
     /**
      * Initialize
      */
@@ -67,8 +79,18 @@ public:
      */
     void setRegister(const unsigned addr, const unsigned val, const InstSize& type);
 
+    /**
+     * Copy assignment
+     */
+    InstRegister& operator=(const InstRegister& that);
+
+    /**
+     * Move assignment
+     */
+    InstRegister& operator=(InstRegister&& that);
+
 private:
-    unsigned reg[32];
+    unsigned* reg;
 };
 
 } /* namespace inst */

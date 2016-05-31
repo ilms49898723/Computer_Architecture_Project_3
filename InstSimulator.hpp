@@ -36,10 +36,22 @@ public:
     InstSimulator();
 
     /**
+     * Copy constructor
+     */
+    InstSimulator(const InstSimulator& that) = delete;
+
+    /**
+     * Move constructor
+     */
+    InstSimulator(InstSimulator&& that);
+
+protected:
+    /**
      * Default destructor
      */
-    virtual ~InstSimulator();
+    ~InstSimulator();
 
+public:
     /**
      * Initialize
      */
@@ -84,6 +96,16 @@ public:
      */
     void start();
 
+    /**
+     * Copy assignment
+     */
+    InstSimulator& operator=(const InstSimulator& that) = delete;
+
+    /**
+     * Move assignment
+     */
+    InstSimulator& operator=(InstSimulator&& that);
+
 private:
     void dumpSnapshot(FILE* fp) const;
 
@@ -118,7 +140,7 @@ private:
     FILE* report;
 
 private:
-    InstDataBin instructionSet[MAXN];
+    InstDataBin* instructionSet;
     InstRegister reg;
     InstMemory memory;
     InstMemory instruction;

@@ -10,11 +10,25 @@
 namespace inst {
 
 InstMemory::InstMemory() {
-    memset(this->data, 0, sizeof(unsigned char) * 1024);
+    this->data = new unsigned char[1024];
+}
+
+InstMemory::InstMemory(const InstMemory& that) {
+    if (this != &that) {
+        this->data = new unsigned char[1024];
+        memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
+    }
+}
+
+InstMemory::InstMemory(InstMemory&& that) {
+    if (this != &that) {
+        this->data = that.data;
+        that.data = nullptr;
+    }
 }
 
 InstMemory::~InstMemory() {
-
+    delete[] data;
 }
 
 void InstMemory::init() {
@@ -76,6 +90,22 @@ void InstMemory::setData(const unsigned addr, const unsigned val, const InstSize
     else {
         data[addr] = static_cast<unsigned char>(val & 0xFFu);
     }
+}
+
+InstMemory& InstMemory::operator=(const InstMemory& that) {
+    if (this != &that) {
+        this->data = new unsigned char[1024];
+        memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
+    }
+    return *this;
+}
+
+InstMemory& InstMemory::operator=(InstMemory&& that) {
+    if (this != &that) {
+        this->data = that.data;
+        that.data = nullptr;
+    }
+    return *this;
 }
 
 } /* namespace inst */

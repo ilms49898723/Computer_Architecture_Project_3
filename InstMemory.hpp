@@ -26,17 +26,29 @@ public:
     InstMemory();
 
     /**
+     * Copy constructor
+     */
+    InstMemory(const InstMemory& that);
+
+    /**
+     * Move constructor
+     */
+    InstMemory(InstMemory&& that);
+
+protected:
+    /**
      * Default destructor
      */
-    virtual ~InstMemory();
+    ~InstMemory();
 
+public:
     /**
      * Initialize
      */
     void init();
 
     /**
-     * Get data value at specified address
+     * Get data value at specified address with size
      *
      * @param addr address to get
      * @param size size to get
@@ -44,7 +56,7 @@ public:
     unsigned getData(const unsigned addr, const unsigned size) const;
 
     /**
-     * Get data value at specified address
+     * Get data value at specified address with size
      *
      * @param addr address to get
      * @param size size to get
@@ -52,7 +64,7 @@ public:
     unsigned getData(const unsigned addr, const InstSize& size) const;
 
     /**
-     * Set data value at specified address
+     * Set data value at specified address with size
      *
      * @param addr address to set
      * @param val value to set
@@ -61,7 +73,7 @@ public:
     void setData(const unsigned addr, const unsigned val, const unsigned size);
 
     /**
-     * Set data value at specified address
+     * Set data value at specified address with size
      *
      * @param addr address to set
      * @param val value to set
@@ -69,8 +81,18 @@ public:
      */
     void setData(const unsigned addr, const unsigned val, const InstSize& size);
 
+    /**
+     * Copy assignment
+     */
+    InstMemory& operator=(const InstMemory& that);
+
+    /**
+     * Move assignment
+     */
+    InstMemory& operator=(InstMemory&& that);
+
 private:
-    unsigned char data[1024];
+    unsigned char* data;
 };
 
 } /* namespace inst */

@@ -27,10 +27,22 @@ public:
     InstDataBin();
 
     /**
-     * Default Destructor
+     * Copy constructor
      */
-    virtual ~InstDataBin();
+    InstDataBin(const InstDataBin& that);
 
+    /**
+     * Move constructor
+     */
+    InstDataBin(InstDataBin&& that);
+
+protected:
+    /**
+     * Default destructor
+     */
+    ~InstDataBin();
+
+public:
     /**
      * Get InstType
      */
@@ -162,6 +174,16 @@ public:
      * @param reg RegWrite to set
      */
     void setRegWrite(const InstElement& reg);
+
+    /**
+     * Copy assignment
+     */
+    InstDataBin& operator=(const InstDataBin& that);
+
+    /**
+     * Move assignment
+     */
+    InstDataBin& operator=(InstDataBin&& that);
 
 private:
     InstType instType;

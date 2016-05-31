@@ -20,15 +20,27 @@ namespace inst {
 class InstDataStr {
 public:
     /**
-     * Default Constructor
+     * Default constructor
      */
     InstDataStr();
 
     /**
+     * Copy constructor
+     */
+    InstDataStr(const InstDataStr& that);
+
+    /**
+     * Move constructor
+     */
+    InstDataStr(InstDataStr&& that);
+
+protected:
+    /**
      * Default Destructor
      */
-    virtual ~InstDataStr();
+    ~InstDataStr();
 
+public:
     /**
      * Get InstType
      */
@@ -117,6 +129,16 @@ public:
      * Convert this to std::string
      */
     std::string toString() const;
+
+    /**
+     * Copy assignment
+     */
+    InstDataStr& operator=(const InstDataStr& that);
+
+    /**
+     * Move assignment
+     */
+    InstDataStr& operator=(InstDataStr&& that);
 
 private:
     InstType instType;

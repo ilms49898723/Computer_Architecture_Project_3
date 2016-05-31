@@ -57,7 +57,11 @@ public:
      */
     static unsigned readDataImage(FILE* dimage, unsigned* dst, unsigned* sp);
 
-public:
+    /**
+     * Read a word(4 byte) from FILE*, return as unsigned
+     *
+     * @param fin FILE* want to read
+     */
     static unsigned readWordFromBin(FILE* fin);
 };
 

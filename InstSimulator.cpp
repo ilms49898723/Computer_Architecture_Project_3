@@ -10,11 +10,34 @@
 namespace inst {
 
 InstSimulator::InstSimulator() {
+    this->instructionSet = new InstDataBin[MAXN];
     init();
 }
 
-InstSimulator::~InstSimulator() {
+InstSimulator::InstSimulator(InstSimulator&& that) {
+    if (this != &that) {
+        this->instructionSet = that.instructionSet;
+        that.instructionSet = nullptr;
+        this->alive = that.alive;
+        this->originalPc = that.originalPc;
+        this->currentPc = that.currentPc;
+        this->cycle = that.cycle;
+        this->snapshot = that.snapshot;
+        this->report = that.report;
+        this->reg = std::move(that.reg);
+        this->memory = std::move(that.memory);
+        this->instruction = std::move(that.instruction);
+        this->iPageTable = std::move(that.iPageTable);
+        this->dPageTable = std::move(that.dPageTable);
+        this->iTLB = std::move(that.iTLB);
+        this->dTLB = std::move(that.dTLB);
+        this->iCache = std::move(that.iCache);
+        this->dCache = std::move(that.dCache);
+    }
+}
 
+InstSimulator::~InstSimulator() {
+    delete[] instructionSet;
 }
 
 void InstSimulator::init() {
@@ -187,6 +210,29 @@ bool InstSimulator::isBranchJ(const InstDataBin& inst) const {
         return false;
     }
     return inst.getOpCode() == 0x02u || inst.getOpCode() == 0x03u;
+}
+
+InstSimulator& InstSimulator::operator=(InstSimulator&& that) {
+    if (this != &that) {
+        this->instructionSet = that.instructionSet;
+        that.instructionSet = nullptr;
+        this->alive = that.alive;
+        this->originalPc = that.originalPc;
+        this->currentPc = that.currentPc;
+        this->cycle = that.cycle;
+        this->snapshot = that.snapshot;
+        this->report = that.report;
+        this->reg = std::move(that.reg);
+        this->memory = std::move(that.memory);
+        this->instruction = std::move(that.instruction);
+        this->iPageTable = std::move(that.iPageTable);
+        this->dPageTable = std::move(that.dPageTable);
+        this->iTLB = std::move(that.iTLB);
+        this->dTLB = std::move(that.dTLB);
+        this->iCache = std::move(that.iCache);
+        this->dCache = std::move(that.dCache);
+    }
+    return *this;
 }
 
 } /* namespace inst */

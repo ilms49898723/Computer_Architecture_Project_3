@@ -14,8 +14,10 @@ class InstTLB {
 public:
     InstTLB();
 
-    virtual ~InstTLB();
+protected:
+    ~InstTLB();
 
+public:
     void init(const unsigned size);
 
 private:

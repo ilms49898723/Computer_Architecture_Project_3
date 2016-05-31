@@ -14,8 +14,10 @@ class InstPageTable {
 public:
     InstPageTable();
 
-    virtual ~InstPageTable();
+protected:
+    ~InstPageTable();
 
+public:
     void init(const unsigned pageSize);
 
     unsigned size() const;

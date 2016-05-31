@@ -22,6 +22,36 @@ InstDataBin::InstDataBin() {
     this->regWrite.clear();
 }
 
+InstDataBin::InstDataBin(const InstDataBin& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+        this->inst = that.inst;
+        this->regRead = that.regRead;
+        this->regWrite = that.regWrite;
+    }
+}
+
+InstDataBin::InstDataBin(InstDataBin&& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+        this->inst = that.inst;
+        this->regRead = std::move(that.regRead);
+        this->regWrite = std::move(that.regWrite);
+    }
+}
+
 InstDataBin::~InstDataBin() {
 
 }
@@ -128,6 +158,38 @@ void InstDataBin::setRegRead(const InstElement& reg) {
 
 void InstDataBin::setRegWrite(const InstElement& reg) {
     regWrite.push_back(reg);
+}
+
+InstDataBin& InstDataBin::operator=(const InstDataBin& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+        this->inst = that.inst;
+        this->regRead = that.regRead;
+        this->regWrite = that.regWrite;
+    }
+    return *this;
+}
+
+InstDataBin& InstDataBin::operator=(InstDataBin&& that) {
+    if (this != &that) {
+        this->instType = that.instType;
+        this->opCode = that.opCode;
+        this->rs = that.rs;
+        this->rt = that.rt;
+        this->rd = that.rd;
+        this->c = that.c;
+        this->funct = that.funct;
+        this->inst = that.inst;
+        this->regRead = std::move(that.regRead);
+        this->regWrite = std::move(that.regWrite);
+    }
+    return *this;
 }
 
 } /* namespace inst */

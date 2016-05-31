@@ -14,8 +14,10 @@ class InstCache {
 public:
     InstCache();
 
-    virtual ~InstCache();
+protected:
+    ~InstCache();
 
+public:
     void init(const unsigned cacheSize, const unsigned blockSize, const unsigned setAssociativity);
 
 private:
