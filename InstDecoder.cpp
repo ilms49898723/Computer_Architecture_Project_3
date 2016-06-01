@@ -106,18 +106,18 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned src) {
         ret.setInstName(funct);
         switch (funct) {
             case 0x08u: // jr
-                ret.setRegRead(InstElement(rs, InstElementType::RS));
+                ret.addRegRead(InstElement(rs, InstElementType::RS));
                 break;
             case 0x00u: // sll
             case 0x02u: // srl
             case 0x03u: // sra
-                ret.setRegRead(InstElement(rt, InstElementType::RT));
-                ret.setRegWrite(InstElement(rd, InstElementType::RD));
+                ret.addRegRead(InstElement(rt, InstElementType::RT));
+                ret.addRegWrite(InstElement(rd, InstElementType::RD));
                 break;
             default:
-                ret.setRegRead(InstElement(rs, InstElementType::RS));
-                ret.setRegRead(InstElement(rt, InstElementType::RT));
-                ret.setRegWrite(InstElement(rd, InstElementType::RD));
+                ret.addRegRead(InstElement(rs, InstElementType::RS));
+                ret.addRegRead(InstElement(rt, InstElementType::RT));
+                ret.addRegWrite(InstElement(rd, InstElementType::RD));
                 break;
         }
         return ret;
@@ -131,7 +131,7 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned src) {
         ret.setC(c);
         ret.setInstName(opCode);
         if (opCode == 0x03u) {
-            ret.setRegWrite(InstElement(31));
+            ret.addRegWrite(InstElement(31));
         }
         return ret;
     }
@@ -157,22 +157,22 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned src) {
         ret.setInstName(opCode);
         switch (opCode) {
             case 0x07u: // bgtz
-                ret.setRegRead(InstElement(rs, InstElementType::RS));
+                ret.addRegRead(InstElement(rs, InstElementType::RS));
                 break;
             case 0x0Fu: // lui
-                ret.setRegWrite(InstElement(rt, InstElementType::RT));
+                ret.addRegWrite(InstElement(rt, InstElementType::RT));
                 break;
             case 0x04u: // beq
             case 0x05u: // bne
             case 0x2Bu: // sw
             case 0x29u: // sh
             case 0x28u: // sb
-                ret.setRegRead(InstElement(rs, InstElementType::RS));
-                ret.setRegRead(InstElement(rt, InstElementType::RT));
+                ret.addRegRead(InstElement(rs, InstElementType::RS));
+                ret.addRegRead(InstElement(rt, InstElementType::RT));
                 break;
             default:
-                ret.setRegRead(InstElement(rs, InstElementType::RS));
-                ret.setRegWrite(InstElement(rt, InstElementType::RT));
+                ret.addRegRead(InstElement(rs, InstElementType::RS));
+                ret.addRegWrite(InstElement(rt, InstElementType::RT));
                 break;
         }
         return ret;
