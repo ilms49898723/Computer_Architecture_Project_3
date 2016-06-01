@@ -36,7 +36,7 @@ InstDataStr InstDecoder::decodeInstStr(const unsigned src) {
         functStr = InstLookUp::functLookUp(funct);
         InstDataStr ret;
         ret.setInstType(InstType::R);
-        ret.setOpCode(opCodeStr);
+        ret.setOpcode(opCodeStr);
         ret.setRs(rsStr);
         ret.setRt(rtStr);
         ret.setRd(rdStr);
@@ -49,7 +49,7 @@ InstDataStr InstDecoder::decodeInstStr(const unsigned src) {
         cStr = toHexString(c);
         InstDataStr ret;
         ret.setInstType(InstType::J);
-        ret.setOpCode(opCodeStr);
+        ret.setOpcode(opCodeStr);
         ret.setC(cStr);
         return ret;
     }
@@ -57,7 +57,7 @@ InstDataStr InstDecoder::decodeInstStr(const unsigned src) {
         opCodeStr = InstLookUp::opCodeLookUp(opCode);
         InstDataStr ret;
         ret.setInstType(InstType::S);
-        ret.setOpCode(opCodeStr);
+        ret.setOpcode(opCodeStr);
         return ret;
     }
     else {
@@ -69,7 +69,7 @@ InstDataStr InstDecoder::decodeInstStr(const unsigned src) {
         cStr = toHexString(c);
         InstDataStr ret;
         ret.setInstType(InstType::I);
-        ret.setOpCode(opCodeStr);
+        ret.setOpcode(opCodeStr);
         ret.setRs(rsStr);
         ret.setRt(rtStr);
         ret.setC(cStr);
@@ -97,7 +97,7 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned src) {
         InstDataBin ret;
         ret.setInst(src);
         ret.setInstType(InstType::R);
-        ret.setOpCode(opCode);
+        ret.setOpcode(opCode);
         ret.setRs(rs);
         ret.setRt(rt);
         ret.setRd(rd);
@@ -127,7 +127,7 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned src) {
         InstDataBin ret;
         ret.setInst(src);
         ret.setInstType(InstType::J);
-        ret.setOpCode(opCode);
+        ret.setOpcode(opCode);
         ret.setC(c);
         ret.setInstName(opCode);
         if (opCode == 0x03u) {
@@ -139,7 +139,7 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned src) {
         InstDataBin ret;
         ret.setInst(src);
         ret.setInstType(InstType::S);
-        ret.setOpCode(opCode);
+        ret.setOpcode(opCode);
         ret.setInstName(opCode);
         return ret;
     }
@@ -150,7 +150,7 @@ InstDataBin InstDecoder::decodeInstBin(const unsigned src) {
         InstDataBin ret;
         ret.setInst(src);
         ret.setInstType(InstType::I);
-        ret.setOpCode(opCode);
+        ret.setOpcode(opCode);
         ret.setRs(rs);
         ret.setRt(rt);
         ret.setC(c);

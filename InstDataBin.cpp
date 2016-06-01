@@ -11,7 +11,7 @@ namespace inst {
 
 InstDataBin::InstDataBin() {
     this->instType = InstType::UNDEF;
-    this->opCode = 0u;
+    this->opcode = 0u;
     this->rs = 0u;
     this->rt = 0u;
     this->rd = 0u;
@@ -25,7 +25,7 @@ InstDataBin::InstDataBin() {
 InstDataBin::InstDataBin(const InstDataBin& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
+        this->opcode = that.opcode;
         this->rs = that.rs;
         this->rt = that.rt;
         this->rd = that.rd;
@@ -40,7 +40,7 @@ InstDataBin::InstDataBin(const InstDataBin& that) {
 InstDataBin::InstDataBin(InstDataBin&& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
+        this->opcode = that.opcode;
         this->rs = that.rs;
         this->rt = that.rt;
         this->rd = that.rd;
@@ -60,8 +60,8 @@ InstType InstDataBin::getInstType() const {
     return instType;
 }
 
-unsigned InstDataBin::getOpCode() const {
-    return opCode;
+unsigned InstDataBin::getOpcode() const {
+    return opcode;
 }
 
 unsigned InstDataBin::getRs() const {
@@ -88,7 +88,7 @@ unsigned InstDataBin::getInst() const {
     return inst;
 }
 
-std::string InstDataBin::getInstName() const {
+const std::string& InstDataBin::getInstName() const {
     return instName;
 }
 
@@ -104,8 +104,8 @@ void InstDataBin::setInstType(const InstType val) {
     instType = val;
 }
 
-void InstDataBin::setOpCode(const unsigned val) {
-    opCode = val;
+void InstDataBin::setOpcode(const unsigned val) {
+    opcode = val;
 }
 
 void InstDataBin::setRs(const unsigned val) {
@@ -163,7 +163,7 @@ void InstDataBin::setRegWrite(const InstElement& reg) {
 InstDataBin& InstDataBin::operator=(const InstDataBin& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
+        this->opcode = that.opcode;
         this->rs = that.rs;
         this->rt = that.rt;
         this->rd = that.rd;
@@ -179,7 +179,7 @@ InstDataBin& InstDataBin::operator=(const InstDataBin& that) {
 InstDataBin& InstDataBin::operator=(InstDataBin&& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
+        this->opcode = that.opcode;
         this->rs = that.rs;
         this->rt = that.rt;
         this->rd = that.rd;

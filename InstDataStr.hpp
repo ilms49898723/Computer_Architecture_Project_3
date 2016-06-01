@@ -46,9 +46,9 @@ public:
     InstType getInstType() const;
 
     /**
-     * Get OpCode
+     * Get Opcode
      */
-    std::string getOpCode() const;
+    std::string getOpcode() const;
 
     /**
      * Get Rs
@@ -80,14 +80,14 @@ public:
      *
      * @param val InstType to set
      */
-    void setInstType(const InstType& val);
+    void setInstType(const InstType val);
 
     /**
      * Set OpCode
      *
-     * @param val OpCode to set
+     * @param val Opcode to set
      */
-    void setOpCode(const std::string& val);
+    void setOpcode(const std::string& val);
 
     /**
      * Set Rs
@@ -125,7 +125,7 @@ public:
     void setFunct(const std::string& val);
 
     /**
-     * Convert this to std::string
+     * Return string representation of this object
      */
     std::string toString() const;
 

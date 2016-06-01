@@ -13,6 +13,7 @@
 #include <deque>
 #include "InstDataBin.hpp"
 #include "InstDecoder.hpp"
+#include "InstDisk.hpp"
 #include "InstMemory.hpp"
 #include "InstRegister.hpp"
 #include "InstPageTable.hpp"
@@ -141,8 +142,10 @@ private:
 private:
     InstDataBin* instructionSet;
     InstRegister reg;
-    InstMemory memory;
-    InstMemory instruction;
+    InstDisk iDisk;
+    InstDisk dDisk;
+    InstMemory dMem;
+    InstMemory iMem;
     InstPageTable iPageTable;
     InstPageTable dPageTable;
     InstTLB iTLB;

@@ -51,7 +51,7 @@ InstType InstDataStr::getInstType() const {
     return instType;
 }
 
-std::string InstDataStr::getOpCode() const {
+std::string InstDataStr::getOpcode() const {
     return opCode;
 }
 
@@ -87,11 +87,11 @@ std::string InstDataStr::getFunct() const {
     return funct;
 }
 
-void InstDataStr::setInstType(const InstType& val) {
+void InstDataStr::setInstType(const InstType val) {
     instType = val;
 }
 
-void InstDataStr::setOpCode(const std::string& val) {
+void InstDataStr::setOpcode(const std::string& val) {
     opCode = val;
 }
 

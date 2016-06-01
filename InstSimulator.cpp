@@ -10,14 +10,11 @@
 namespace inst {
 
 InstSimulator::InstSimulator() {
-    this->instructionSet = new InstDataBin[MAXN];
     init();
 }
 
 InstSimulator::InstSimulator(InstSimulator&& that) {
     if (this != &that) {
-        this->instructionSet = that.instructionSet;
-        that.instructionSet = nullptr;
         this->alive = that.alive;
         this->originalPc = that.originalPc;
         this->currentPc = that.currentPc;
@@ -25,8 +22,10 @@ InstSimulator::InstSimulator(InstSimulator&& that) {
         this->snapshot = that.snapshot;
         this->report = that.report;
         this->reg = std::move(that.reg);
-        this->memory = std::move(that.memory);
-        this->instruction = std::move(that.instruction);
+        this->iDisk = std::move(that.iDisk);
+        this->dDisk = std::move(that.dDisk);
+        this->dMem = std::move(that.dMem);
+        this->iMem = std::move(that.iMem);
         this->iPageTable = std::move(that.iPageTable);
         this->dPageTable = std::move(that.dPageTable);
         this->iTLB = std::move(that.iTLB);
@@ -37,33 +36,36 @@ InstSimulator::InstSimulator(InstSimulator&& that) {
 }
 
 InstSimulator::~InstSimulator() {
-    delete[] instructionSet;
+
 }
 
 void InstSimulator::init() {
-    reg.init();
-    memory.init();
-    originalPc = 0u;
+    alive = true;
+    originalPc = 0;
+    currentPc = 0;
+    cycle = 0;
     snapshot = nullptr;
     report = nullptr;
-    for (int i = 0; i < InstSimulator::MAXN; ++i) {
-        instruction.setData(static_cast<unsigned>(i << 2), 0, 4);
-        instructionSet[i] = InstDecoder::decodeInstBin(0u);
+    reg.init();
+    for (unsigned i = 0; i < 1024; i += 4) {
+        dDisk.setData(i, 0);
+        iDisk.setData(i, 0);
+        iDisk.setInstruction(i, InstDecoder::decodeInstBin(0));
     }
 }
 
 void InstSimulator::loadInstruction(const unsigned* src, const unsigned len, const unsigned pc) {
     this->originalPc = pc;
     for (unsigned i = 0; i < len; ++i) {
-        instruction.setData(pc + (i << 2), src[i], 4);
-        instructionSet[(pc >> 2) + i] = InstDecoder::decodeInstBin(src[i]);
+        iDisk.setData(pc + (i << 2), src[i]);
+        iDisk.setInstruction(pc + (i << 2), InstDecoder::decodeInstBin(src[i]));
     }
 }
 
 void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsigned sp) {
     reg.setRegister(29, sp, InstSize::WORD);
     for (unsigned i = 0; i < len; ++i) {
-        memory.setData(i * 4, src[i], 4);
+        dDisk.setData(i << 2, src[i]);
     }
 }
 
@@ -120,32 +122,32 @@ void InstSimulator::dumpSnapshot(FILE* fp) const {
 }
 
 unsigned InstSimulator::instMemLoad(const unsigned addr, const InstDataBin& inst) const {
-    switch (inst.getOpCode()) {
+    switch (inst.getOpcode()) {
         case 0x23u:
-            return memory.getData(addr, InstSize::WORD);
+            return dMem.getData(addr, InstSize::WORD);
         case 0x21u:
-            return toUnsigned(toSigned(memory.getData(addr, InstSize::HALF), InstSize::HALF));
+            return toUnsigned(toSigned(dMem.getData(addr, InstSize::HALF), InstSize::HALF));
         case 0x25u:
-            return memory.getData(addr, InstSize::HALF);
+            return dMem.getData(addr, InstSize::HALF);
         case 0x20u:
-            return toUnsigned(toSigned(memory.getData(addr, InstSize::BYTE), InstSize::BYTE));
+            return toUnsigned(toSigned(dMem.getData(addr, InstSize::BYTE), InstSize::BYTE));
         case 0x24u:
-            return memory.getData(addr, InstSize::BYTE);
+            return dMem.getData(addr, InstSize::BYTE);
         default:
             return 0u;
     }
 }
 
 void InstSimulator::instMemStore(const unsigned addr, const unsigned val, const InstDataBin& inst) {
-    switch (inst.getOpCode()) {
+    switch (inst.getOpcode()) {
         case 0x2Bu:
-            memory.setData(addr, val, InstSize::WORD);
+            dMem.setData(addr, val, InstSize::WORD);
             return;
         case 0x29u:
-            memory.setData(addr, val, InstSize::HALF);
+            dMem.setData(addr, val, InstSize::HALF);
             return;
         case 0x28u:
-            memory.setData(addr, val, InstSize::BYTE);
+            dMem.setData(addr, val, InstSize::BYTE);
             return;
         default:
             return;
@@ -153,7 +155,7 @@ void InstSimulator::instMemStore(const unsigned addr, const unsigned val, const 
 }
 
 bool InstSimulator::isNop(const InstDataBin& inst) const {
-    return !inst.getOpCode() &&
+    return !inst.getOpcode() &&
            !inst.getRt() &&
            !inst.getRd() &&
            !inst.getC() &&
@@ -161,11 +163,11 @@ bool InstSimulator::isNop(const InstDataBin& inst) const {
 }
 
 bool InstSimulator::isHalt(const InstDataBin& inst) const {
-    return inst.getOpCode() == 0x3Fu;
+    return inst.getOpcode() == 0x3Fu;
 }
 
 bool InstSimulator::isMemoryLoad(const InstDataBin& inst) const {
-    switch (inst.getOpCode()) {
+    switch (inst.getOpcode()) {
         case 0x23u:
         case 0x21u:
         case 0x25u:
@@ -178,7 +180,7 @@ bool InstSimulator::isMemoryLoad(const InstDataBin& inst) const {
 }
 
 bool InstSimulator::isMemoryStore(const InstDataBin& inst) const {
-    switch (inst.getOpCode()) {
+    switch (inst.getOpcode()) {
         case 0x2Bu:
         case 0x29u:
         case 0x28u:
@@ -202,20 +204,18 @@ bool InstSimulator::isBranchI(const InstDataBin& inst) const {
     if (inst.getInstType() != InstType::I) {
         return false;
     }
-    return inst.getOpCode() == 0x04u || inst.getOpCode() == 0x05u || inst.getOpCode() == 0x07u;
+    return inst.getOpcode() == 0x04u || inst.getOpcode() == 0x05u || inst.getOpcode() == 0x07u;
 }
 
 bool InstSimulator::isBranchJ(const InstDataBin& inst) const {
     if (inst.getInstType() != InstType::J) {
         return false;
     }
-    return inst.getOpCode() == 0x02u || inst.getOpCode() == 0x03u;
+    return inst.getOpcode() == 0x02u || inst.getOpcode() == 0x03u;
 }
 
 InstSimulator& InstSimulator::operator=(InstSimulator&& that) {
     if (this != &that) {
-        this->instructionSet = that.instructionSet;
-        that.instructionSet = nullptr;
         this->alive = that.alive;
         this->originalPc = that.originalPc;
         this->currentPc = that.currentPc;
@@ -223,8 +223,10 @@ InstSimulator& InstSimulator::operator=(InstSimulator&& that) {
         this->snapshot = that.snapshot;
         this->report = that.report;
         this->reg = std::move(that.reg);
-        this->memory = std::move(that.memory);
-        this->instruction = std::move(that.instruction);
+        this->iDisk = std::move(that.iDisk);
+        this->dDisk = std::move(that.dDisk);
+        this->dMem = std::move(that.dMem);
+        this->iMem = std::move(that.iMem);
         this->iPageTable = std::move(that.iPageTable);
         this->dPageTable = std::move(that.dPageTable);
         this->iTLB = std::move(that.iTLB);

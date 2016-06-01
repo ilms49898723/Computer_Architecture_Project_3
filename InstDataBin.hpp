@@ -11,8 +11,8 @@
 #include <string>
 #include <vector>
 #include "InstLookUp.hpp"
-#include "InstUtility.hpp"
 #include "InstType.hpp"
+#include "InstUtility.hpp"
 
 namespace inst {
 
@@ -48,9 +48,9 @@ public:
     InstType getInstType() const;
 
     /**
-     * Get OpCode
+     * Get Opcode
      */
-    unsigned getOpCode() const;
+    unsigned getOpcode() const;
 
     /**
      * Get Rs
@@ -95,7 +95,7 @@ public:
     /**
      * Get InstName
      */
-    std::string getInstName() const;
+    const std::string& getInstName() const;
 
     /**
      * Set InstType
@@ -105,11 +105,11 @@ public:
     void setInstType(const InstType val);
 
     /**
-     * Set OpCode
+     * Set Opcode
      *
      * @param val OpCode to set
      */
-    void setOpCode(const unsigned val);
+    void setOpcode(const unsigned val);
 
     /**
      * Set Rs
@@ -156,7 +156,7 @@ public:
     /**
      * Set InstName
      *
-     * @param val InstName to set
+     * @param val opcode or funct to translate to string
      */
     void setInstName(const unsigned val);
 
@@ -186,7 +186,7 @@ public:
 
 private:
     InstType instType;
-    unsigned opCode;
+    unsigned opcode;
     unsigned rs;
     unsigned rt;
     unsigned rd;
