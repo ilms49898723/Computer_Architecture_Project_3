@@ -21,14 +21,22 @@ namespace inst {
  */
 class InstMemory {
 private:
-    struct MemoryLRU {
-        unsigned addr;
+    class MemoryPage {
+    public:
+        MemoryPage();
+
+        MemoryPage(const MemoryPage& that);
+
+        ~MemoryPage();
+
+        void init(const unsigned size);
+
+        MemoryPage& operator=(const MemoryPage& that);
+
+    public:
         unsigned cycle;
-        MemoryLRU(const unsigned addr = 0, const unsigned cycle = 0) :
-                addr(addr), cycle(cycle) {}
-        bool operator<(const MemoryLRU& that) const {
-            return cycle < that.cycle || (cycle == that.cycle && addr < that.addr);
-        }
+        unsigned size;
+        unsigned* data;
     };
 
 public:
@@ -38,41 +46,17 @@ public:
     InstMemory();
 
     /**
-     * Copy constructor
-     */
-    InstMemory(const InstMemory& that);
-
-    /**
-     * Move constructor
-     */
-    InstMemory(InstMemory&& that);
-
-    /**
      * Default destructor
      */
     ~InstMemory();
 
 public:
     /**
-     * Initialize(set all content to zero)
+     * Initialize
      */
-    void init(const unsigned size);
+    void init(const unsigned size, const unsigned pageSize);
 
-    /**
-     * Get data value at specified address with size
-     *
-     * @param addr address to get
-     * @param size size to get
-     */
-    unsigned getData(const unsigned addr, const unsigned size) const;
-
-    /**
-     * Get data value at specified address with size
-     *
-     * @param addr address to get
-     * @param size size to get
-     */
-    unsigned getData(const unsigned addr, const InstSize size) const;
+    // TODO add getData, setData
 
     /**
      * Get memory size in bytes
@@ -80,37 +64,15 @@ public:
     unsigned getSize() const;
 
     /**
-     * Set data value at specified address with size
-     *
-     * @param addr address to set
-     * @param val value to set
-     * @param size size to set
+     * Get number of memory entry
      */
-    void setData(const unsigned addr, const unsigned val, const unsigned size);
-
-    /**
-     * Set data value at specified address with size
-     *
-     * @param addr address to set
-     * @param val value to set
-     * @param size size to set
-     */
-    void setData(const unsigned addr, const unsigned val, const InstSize size);
-
-    /**
-     * Copy assignment
-     */
-    InstMemory& operator=(const InstMemory& that);
-
-    /**
-     * Move assignment
-     */
-    InstMemory& operator=(InstMemory&& that);
+    unsigned getEntry() const;
 
 private:
     unsigned size;
-    unsigned* data;
-    std::priority_queue<MemoryLRU> lruSet;
+    unsigned entry;
+    bool* valid;
+    MemoryPage* data;
 };
 
 } /* namespace inst */

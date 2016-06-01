@@ -9,137 +9,84 @@
 
 namespace inst {
 
-InstMemory::InstMemory() {
+InstMemory::MemoryPage::MemoryPage() {
+    this->cycle = 0;
     this->size = 0;
     this->data = nullptr;
 }
 
-InstMemory::InstMemory(const InstMemory& that) {
+InstMemory::MemoryPage::MemoryPage(const InstMemory::MemoryPage& that) {
     if (this != &that) {
-        if (!that.data) {
+        if (that.data) {
+            this->cycle = that.cycle;
             this->size = that.size;
             this->data = new unsigned[this->size >> 2];
             memcpy(this->data, that.data, sizeof(unsigned) * (this->size >> 2));
-            this->lruSet = that.lruSet;
         }
         else {
+            this->cycle = 0;
             this->size = 0;
             this->data = nullptr;
         }
     }
 }
 
-InstMemory::InstMemory(InstMemory&& that) {
+InstMemory::MemoryPage::~MemoryPage() {
+    delete[] this->data;
+}
+
+void InstMemory::MemoryPage::init(const unsigned size) {
+    delete[] this->data;
+    this->cycle = 0;
+    this->size = size;
+    this->data = new unsigned[this->size >> 2];
+}
+
+InstMemory::MemoryPage& InstMemory::MemoryPage::operator=(const InstMemory::MemoryPage& that) {
     if (this != &that) {
-        this->size = that.size;
-        this->data = that.data;
-        that.data = nullptr;
-        this->lruSet = std::move(that.lruSet);
+        delete[] this->data;
+        if (that.data) {
+            this->cycle = that.cycle;
+            this->size = that.size;
+            this->data = new unsigned[this->size >> 2];
+            memcpy(this->data, that.data, sizeof(unsigned) * (this->size >> 2));
+        }
+        else {
+            this->cycle = 0;
+            this->size = 0;
+            this->data = nullptr;
+        }
     }
+    return *this;
+}
+
+InstMemory::InstMemory() {
+    this->size = 0;
+    this->valid = nullptr;
+    this->data = nullptr;
 }
 
 InstMemory::~InstMemory() {
+    delete[] valid;
     delete[] data;
 }
 
-void InstMemory::init(const unsigned size) {
+void InstMemory::init(const unsigned size, const unsigned pageSize) {
+    delete[] this->valid;
     delete[] this->data;
     this->size = size;
-    this->data = new unsigned[size >> 2];
-    memset(this->data, 0, sizeof(unsigned) * (size >> 2));
-    while (!lruSet.empty()) {
-        lruSet.pop();
-    }
-    for (unsigned i = 0; i < size; i += 4) {
-        lruSet.push(MemoryLRU(i, 0));
-    }
-}
-
-unsigned InstMemory::getData(const unsigned addr, const unsigned size) const {
-    switch (size) {
-        case 4u:
-            return getData(addr, InstSize::WORD);
-        case 2u:
-            return getData(addr, InstSize::HALF);
-        case 1u:
-            return getData(addr, InstSize::BYTE);
-        default:
-            return 0u;
-    }
-}
-
-unsigned InstMemory::getData(const unsigned addr, const InstSize size) const {
-    if (size == InstSize::WORD) {
-        return data[addr >> 2] & 0xFFFFFFFFu;
-    }
-    else if (size == InstSize::HALF) {
-        return data[addr >> 2] & 0xFFFFu;
-    }
-    else {
-        return data[addr >> 2] & 0xFFu;
-    }
+    this->entry = size / pageSize;
+    this->valid = new bool[this->entry];
+    this->data = new MemoryPage[this->entry];
+    memset(this->valid, false, sizeof(bool) * this->entry);
 }
 
 unsigned InstMemory::getSize() const {
     return size;
 }
 
-void InstMemory::setData(const unsigned addr, const unsigned val, const unsigned size) {
-    switch (size) {
-        case 4u:
-            setData(addr, val, InstSize::WORD);
-            return;
-        case 2u:
-            setData(addr, val, InstSize::HALF);
-            return;
-        case 1u:
-            setData(addr, val, InstSize::BYTE);
-            return;
-        default:
-            return;
-    }
-}
-
-void InstMemory::setData(const unsigned addr, const unsigned val, const InstSize size) {
-    if (size == InstSize::WORD) {
-        data[addr >> 2] = val;
-    }
-    else if (size == InstSize::HALF) {
-        data[addr >> 2] &= 0xFFFF0000u;
-        data[addr >> 2] |= (val & 0xFFFFu);
-    }
-    else {
-        data[addr >> 2] &= 0xFFFFFF00u;
-        data[addr >> 2] |= (val & 0xFFu);
-    }
-}
-
-InstMemory& InstMemory::operator=(const InstMemory& that) {
-    if (this != &that) {
-        delete[] this->data;
-        if (!that.data) {
-            this->size = that.size;
-            this->data = new unsigned[this->size >> 2];
-            memcpy(this->data, that.data, sizeof(unsigned) * (this->size >> 2));
-            this->lruSet = that.lruSet;
-        }
-        else {
-            this->size = 0;
-            this->data = nullptr;
-        }
-    }
-    return *this;
-}
-
-InstMemory& InstMemory::operator=(InstMemory&& that) {
-    if (this != &that) {
-        delete[] this->data;
-        this->size = that.size;
-        this->data = that.data;
-        that.data = nullptr;
-        this->lruSet = std::move(lruSet);
-    }
-    return *this;
+unsigned InstMemory::getEntry() const {
+    return entry;
 }
 
 } /* namespace inst */
