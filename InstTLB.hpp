@@ -8,19 +8,48 @@
 #ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTTLB_HPP_
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTTLB_HPP_
 
+#include <queue>
+#include <utility>
+
 namespace inst {
 
+/**
+ * Translation Look-aside Buffer
+ */
 class InstTLB {
+private:
+    struct TLBData {
+        unsigned tag;
+        unsigned ppn;
+        unsigned cycle;
+        bool valid;
+        TLBData(const unsigned tag = 0, const unsigned ppn = 0, const unsigned cycle = 0, const bool valid = false) :
+                tag(tag), ppn(ppn), cycle(cycle), valid(valid) {}
+    };
+
 public:
     InstTLB();
 
     ~InstTLB();
 
-public:
-    void init(const unsigned size);
+    void init(const unsigned entry, const unsigned pageSize);
+
+    void push(const unsigned tag, const unsigned ppn);
+
+    void update(const unsigned tag, const unsigned cycle);
+
+    void remove(const unsigned tag);
+
+    std::pair<unsigned, bool> lookup(const unsigned addr, const unsigned cycle);
 
 private:
-    unsigned size;
+    unsigned entry;
+    unsigned pageSize;
+    TLBData* data;
+
+private:
+    unsigned hit;
+    unsigned miss;
 };
 
 } /* namespace inst */
