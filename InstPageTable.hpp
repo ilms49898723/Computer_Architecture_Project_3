@@ -30,27 +30,33 @@ public:
 
     ~InstPageTable();
 
+    void init(const unsigned pageSize);
+
     void push(const unsigned tag, const unsigned ppn);
 
     void remove(const unsigned tag);
 
     std::pair<unsigned, bool> lookup(const unsigned tag);
 
-    InstPageTable& operator=(const InstPageTable& that);
+    unsigned getHit() const;
 
-    InstPageTable& operator=(InstPageTable&& that);
-
-public:
-    void init(const unsigned pageSize);
+    unsigned getMiss() const;
 
     unsigned size() const;
 
     unsigned entry() const;
 
+    InstPageTable& operator=(const InstPageTable& that);
+    InstPageTable& operator=(InstPageTable&& that);
+
 private:
     unsigned pageSize;
     unsigned pageEntry;
     PageTableData* data;
+
+private:
+    unsigned hit;
+    unsigned miss;
 };
 
 } /* namespace inst */

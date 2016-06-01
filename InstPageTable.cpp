@@ -10,9 +10,11 @@
 namespace inst {
 
 InstPageTable::InstPageTable() {
-    this->pageSize = 0u;
-    this->pageEntry = 0u;
+    this->pageSize = 0;
+    this->pageEntry = 0;
     this->data = nullptr;
+    this->hit = 0;
+    this->miss = 0;
 }
 
 InstPageTable::InstPageTable(const InstPageTable& that) {
@@ -21,6 +23,8 @@ InstPageTable::InstPageTable(const InstPageTable& that) {
             this->pageSize = that.pageSize;
             this->pageEntry = that.pageEntry;
             this->data = new PageTableData[this->pageEntry];
+            this->hit = that.hit;
+            this->miss = that.miss;
             for (unsigned i = 0; i < this->pageEntry; ++i) {
                 this->data[i] = that.data[i];
             }
@@ -29,6 +33,8 @@ InstPageTable::InstPageTable(const InstPageTable& that) {
             this->pageSize = 0;
             this->pageEntry = 0;
             this->data = nullptr;
+            this->hit = 0;
+            this->miss = 0;
         }
     }
 }
@@ -39,6 +45,8 @@ InstPageTable::InstPageTable(InstPageTable&& that) {
         this->pageEntry = that.pageEntry;
         this->data = that.data;
         that.data = nullptr;
+        this->hit = that.hit;
+        this->miss = that.miss;
     }
 }
 
@@ -51,6 +59,8 @@ void InstPageTable::init(const unsigned pageSize) {
     this->pageSize = pageSize;
     this->pageEntry = 1024u / pageSize;
     this->data = new PageTableData[this->pageEntry];
+    this->hit = 0;
+    this->miss = 0;
 }
 
 void InstPageTable::push(const unsigned tag, const unsigned ppn) {
@@ -66,6 +76,14 @@ std::pair<unsigned, bool> InstPageTable::lookup(const unsigned tag) {
         return std::make_pair(0, false);
     }
     return std::make_pair(data[tag].ppn, data[tag].valid);
+}
+
+unsigned InstPageTable::getHit() const {
+    return this->hit;
+}
+
+unsigned InstPageTable::getMiss() const {
+    return this->miss;
 }
 
 unsigned InstPageTable::size() const {
@@ -86,11 +104,15 @@ InstPageTable& InstPageTable::operator=(const InstPageTable& that) {
             for (unsigned i = 0; i < this->pageEntry; ++i) {
                 this->data[i] = that.data[i];
             }
+            this->hit = that.hit;
+            this->miss = that.miss;
         }
         else {
             this->pageSize = 0;
             this->pageEntry = 0;
             this->data = nullptr;
+            this->hit = 0;
+            this->miss = 0;
         }
     }
     return *this;
@@ -103,6 +125,8 @@ InstPageTable& InstPageTable::operator=(InstPageTable&& that) {
         this->pageEntry = that.pageEntry;
         this->data = that.data;
         that.data = nullptr;
+        this->hit = that.hit;
+        this->miss = that.miss;
     }
     return *this;
 }
