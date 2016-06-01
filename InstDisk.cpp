@@ -39,11 +39,11 @@ InstDisk::~InstDisk() {
     delete[] instructionSet;
 }
 
-unsigned InstDisk::getData(const unsigned addr) {
+unsigned InstDisk::getData(const unsigned addr) const {
     return data[addr >> 2];
 }
 
-const InstDataBin& InstDisk::getInstruction(const unsigned addr) {
+const InstDataBin& InstDisk::getInstruction(const unsigned addr) const {
     return instructionSet[addr >> 2];
 }
 

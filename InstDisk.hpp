@@ -42,14 +42,14 @@ public:
      *
      * @param addr address to get
      */
-    unsigned getData(const unsigned addr);
+    unsigned getData(const unsigned addr) const;
 
     /**
      * Get instruction data at specified address(i-disk only)
      *
      * @param addr address to get
      */
-    const InstDataBin& getInstruction(const unsigned addr);
+    const InstDataBin& getInstruction(const unsigned addr) const;
 
     /**
      * Set data at specified address
