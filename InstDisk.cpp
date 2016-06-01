@@ -34,6 +34,11 @@ InstDisk::InstDisk(InstDisk&& that) {
     }
 }
 
+InstDisk::~InstDisk() {
+    delete[] data;
+    delete[] instructionSet;
+}
+
 unsigned InstDisk::getData(const unsigned addr) {
     return data[addr >> 2];
 }
@@ -50,9 +55,8 @@ void InstDisk::setInstruction(const unsigned addr, const InstDataBin& val) {
     instructionSet[addr >> 2] = val;
 }
 
-InstDisk::~InstDisk() {
-    delete[] data;
-    delete[] instructionSet;
+void InstDisk::setInstruction(const unsigned addr, InstDataBin&& val) {
+    instructionSet[addr >> 2] = std::move(val);
 }
 
 InstDisk& InstDisk::operator=(const InstDisk& that) {

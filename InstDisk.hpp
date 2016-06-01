@@ -12,6 +12,9 @@
 
 namespace inst {
 
+/**
+ * Disk, 1024 bytes, fixed size
+ */
 class InstDisk {
 public:
     /**
@@ -63,6 +66,14 @@ public:
      * @param val instruction data to set
      */
     void setInstruction(const unsigned addr, const InstDataBin& val);
+
+    /**
+     * Set instruction data at specified address
+     *
+     * @param addr address to set
+     * @param val instruction data to set
+     */
+    void setInstruction(const unsigned addr, InstDataBin&& val);
 
     /**
      * Copy assignment
