@@ -69,13 +69,15 @@ void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsi
     }
 }
 
-void InstSimulator::setProperty(const InstParameter& iMemArgu, const InstParameter& dMemArgu) {
-    iPageTable.init(iMemArgu.pageSize);
-    dPageTable.init(dMemArgu.pageSize);
-    iTLB.init(iPageTable.entry() >> 2);
+void InstSimulator::setProperty(const InstParameter& iParam, const InstParameter& dParam) {
+    iMem.init(iParam.memSize);
+    dMem.init(dParam.memSize);
+    iPageTable.init(iParam.pageSize);
+    dPageTable.init(dParam.pageSize);
     dTLB.init(dPageTable.entry() >> 2);
-    iCache.init(iMemArgu.cacheSize, iMemArgu.cacheBlockSize, iMemArgu.cacheSetAssociativity);
-    dCache.init(dMemArgu.cacheSize, dMemArgu.cacheBlockSize, dMemArgu.cacheSetAssociativity);
+    iTLB.init(iPageTable.entry() >> 2);
+    iCache.init(iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity);
+    dCache.init(dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity);
 }
 
 void InstSimulator::setLogFile(const std::string& snapshotFilename, const std::string& reportFilename) {

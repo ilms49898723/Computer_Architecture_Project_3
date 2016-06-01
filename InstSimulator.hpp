@@ -81,7 +81,7 @@ public:
      * @param iMemArgu i-memory parameters
      * @param dMemArgu d-memory parameters
      */
-    void setProperty(const InstParameter& iMemArgu, const InstParameter& dMemArgu);
+    void setProperty(const InstParameter& iParam, const InstParameter& dParam);
 
     /**
      * Set log file(snapshot, report)

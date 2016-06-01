@@ -20,8 +20,8 @@ int main(int argc, const char** argv) {
     const std::string snapshotFilename = "snapshot.rpt";
     const std::string reportFilename = "report.rpt";
     // command line argument
-    inst::InstParameter iMemArgs, dMemArgs;
-    inst::parseArgument(iMemArgs, dMemArgs, argc, argv);
+    inst::InstParameter iParam, dParam;
+    inst::parseArgument(iParam, dParam, argc, argv);
     // load iimage.bin, dimage.bin
     unsigned pc, sp;
     unsigned instructions[2048], memory[2048];
@@ -29,7 +29,7 @@ int main(int argc, const char** argv) {
     unsigned dLen = inst::InstImageReader::readDataImage(dimageFilename.c_str(), memory, &sp);
     // set simulator, start simulation
     inst::InstSimulator simulator;
-    simulator.setProperty(iMemArgs, dMemArgs);
+    simulator.setProperty(iParam, dParam);
     simulator.setLogFile(snapshotFilename,reportFilename);
     simulator.loadInstruction(instructions, iLen, pc);
     simulator.loadData(memory, dLen, sp);
