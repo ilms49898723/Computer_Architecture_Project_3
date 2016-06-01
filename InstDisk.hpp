@@ -8,7 +8,9 @@
 #ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTDISK_HPP_
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTDISK_HPP_
 
+#include <cstring>
 #include "InstDataBin.hpp"
+#include "InstDecoder.hpp"
 
 namespace inst {
 
@@ -36,6 +38,11 @@ public:
      * Default destructor
      */
     ~InstDisk();
+
+    /**
+     * Initialize
+     */
+    void init();
 
     /**
      * Get data at specified address

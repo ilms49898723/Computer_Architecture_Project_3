@@ -39,6 +39,13 @@ InstDisk::~InstDisk() {
     delete[] this->instruction;
 }
 
+void InstDisk::init() {
+    memset(this->data, 0, sizeof(unsigned) * (1024 >> 2));
+    for (int i = 0; i < (1024 >> 2); ++i) {
+        this->instruction[i] = InstDecoder::decodeInstBin(0);
+    }
+}
+
 unsigned InstDisk::getData(const unsigned addr) const {
     return this->data[addr >> 2];
 }
