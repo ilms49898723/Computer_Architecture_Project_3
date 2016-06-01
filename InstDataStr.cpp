@@ -11,7 +11,7 @@ namespace inst {
 
 InstDataStr::InstDataStr() {
     this->instType = InstType::UNDEF;
-    this->opCode = "";
+    this->opcode = "";
     this->rs = "";
     this->rt = "";
     this->rd = "";
@@ -22,7 +22,7 @@ InstDataStr::InstDataStr() {
 InstDataStr::InstDataStr(const InstDataStr& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
+        this->opcode = that.opcode;
         this->rs = that.rs;
         this->rt = that.rt;
         this->rd = that.rd;
@@ -34,12 +34,12 @@ InstDataStr::InstDataStr(const InstDataStr& that) {
 InstDataStr::InstDataStr(InstDataStr&& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
-        this->rs = that.rs;
-        this->rt = that.rt;
-        this->rd = that.rd;
-        this->c = that.c;
-        this->funct = that.funct;
+        this->opcode = std::move(that.opcode);
+        this->rs = std::move(that.rs);
+        this->rt = std::move(that.rt);
+        this->rd = std::move(that.rd);
+        this->c = std::move(that.c);
+        this->funct = std::move(that.funct);
     }
 }
 
@@ -48,71 +48,71 @@ InstDataStr::~InstDataStr() {
 }
 
 InstType InstDataStr::getInstType() const {
-    return instType;
+    return this->instType;
 }
 
 std::string InstDataStr::getOpcode() const {
-    return opCode;
+    return this->opcode;
 }
 
 std::string InstDataStr::getRs() const {
     if (instType == InstType::J || instType == InstType::S) {
         return "";
     }
-    return rs;
+    return this->rs;
 }
 
 std::string InstDataStr::getRt() const {
     if (instType == InstType::J || instType == InstType::S) {
         return "";
     }
-    return rt;
+    return this->rt;
 }
 
 std::string InstDataStr::getRd() const {
     if (instType != InstType::R) {
         return "";
     }
-    return rd;
+    return this->rd;
 }
 
 std::string InstDataStr::getC() const {
-    return c;
+    return this->c;
 }
 
 std::string InstDataStr::getFunct() const {
     if (instType != InstType::R) {
         return "";
     }
-    return funct;
+    return this->funct;
 }
 
 void InstDataStr::setInstType(const InstType val) {
-    instType = val;
+    this->instType = val;
 }
 
 void InstDataStr::setOpcode(const std::string& val) {
-    opCode = val;
+    this->opcode = val;
 }
 
 void InstDataStr::setRs(const std::string& val) {
-    rs = val;
+    this->rs = val;
 }
 
 void InstDataStr::setRt(const std::string& val) {
-    rt = val;
+    this->rt = val;
 }
 
 void InstDataStr::setRd(const std::string& val) {
-    rd = val;
+    this->rd = val;
 }
 
 void InstDataStr::setC(const std::string& val) {
-    c = val;
+    this->c = val;
 }
 
 void InstDataStr::setFunct(const std::string& val) {
-    funct = val;
+    this->funct = val;
 }
 
 std::string InstDataStr::toString() const {
@@ -128,29 +128,29 @@ std::string InstDataStr::toString() const {
         }
     }
     else if (instType == InstType::I) {
-        if (opCode == "lui") {
-            return opCode + " $" + rt + ", " + c;
+        if (opcode == "lui") {
+            return opcode + " $" + rt + ", " + c;
         }
-        else if (opCode == "bgtz") {
-            return opCode + " $" + rs + ", " + c;
+        else if (opcode == "bgtz") {
+            return opcode + " $" + rs + ", " + c;
         }
-        else if (opCode == "addi" || opCode == "addiu" || opCode == "lui" ||
-                 opCode == "andi" || opCode == "ori" || opCode == "nori" ||
-                 opCode == "slti") {
-            return opCode + " $" + rt + ", $" + rs + ", " + c;
+        else if (opcode == "addi" || opcode == "addiu" || opcode == "lui" ||
+                 opcode == "andi" || opcode == "ori" || opcode == "nori" ||
+                 opcode == "slti") {
+            return opcode + " $" + rt + ", $" + rs + ", " + c;
         }
-        else if (opCode == "beq" || opCode == "bne") {
-            return opCode + " $" + rs + ", $" + rt + ", " + c;
+        else if (opcode == "beq" || opcode == "bne") {
+            return opcode + " $" + rs + ", $" + rt + ", " + c;
         }
         else {
-            return opCode + " $" + rt + ", " + c + "($" + rs + ")";
+            return opcode + " $" + rt + ", " + c + "($" + rs + ")";
         }
     }
     else if (instType == InstType::J) {
-        return opCode + " " + c;
+        return opcode + " " + c;
     }
     else if (instType == InstType::S) {
-        return opCode;
+        return opcode;
     }
     else {
         return "undef";
@@ -160,7 +160,7 @@ std::string InstDataStr::toString() const {
 InstDataStr& InstDataStr::operator=(const InstDataStr& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
+        this->opcode = that.opcode;
         this->rs = that.rs;
         this->rt = that.rt;
         this->rd = that.rd;
@@ -173,12 +173,12 @@ InstDataStr& InstDataStr::operator=(const InstDataStr& that) {
 InstDataStr& InstDataStr::operator=(InstDataStr&& that) {
     if (this != &that) {
         this->instType = that.instType;
-        this->opCode = that.opCode;
-        this->rs = that.rs;
-        this->rt = that.rt;
-        this->rd = that.rd;
-        this->c = that.c;
-        this->funct = that.funct;
+        this->opcode = std::move(that.opcode);
+        this->rs = std::move(that.rs);
+        this->rt = std::move(that.rt);
+        this->rd = std::move(that.rd);
+        this->c = std::move(that.c);
+        this->funct = std::move(that.funct);
     }
     return *this;
 }

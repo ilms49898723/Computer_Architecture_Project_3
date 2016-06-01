@@ -83,7 +83,7 @@ public:
     void setInstType(const InstType val);
 
     /**
-     * Set OpCode
+     * Set Opcode
      *
      * @param val Opcode to set
      */
@@ -141,7 +141,7 @@ public:
 
 private:
     InstType instType;
-    std::string opCode;
+    std::string opcode;
     std::string rs;
     std::string rt;
     std::string rd;
