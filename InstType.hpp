@@ -37,6 +37,14 @@ enum class InstSize : unsigned {
 };
 
 /**
+ * Enum for cache, tlb, pte... type
+ * Instruction(i-image) or Data(d-image)
+ */
+enum class InstRoute : unsigned {
+    INST, DATA
+};
+
+/**
  * Structure to store command-line arguments
  */
 struct InstParameter {
