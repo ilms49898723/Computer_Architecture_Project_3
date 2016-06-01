@@ -62,9 +62,9 @@ void InstDisk::setInstruction(const unsigned addr, InstDataBin&& val) {
 InstDisk& InstDisk::operator=(const InstDisk& that) {
     if (this != &that) {
         delete[] this->data;
+        delete[] this->instructionSet;
         this->data = new unsigned[1024 >> 2];
         memcpy(this->data, that.data, sizeof(unsigned) * (1024 >> 2));
-        delete[] this->instructionSet;
         this->instructionSet = new InstDataBin[1024 >> 2];
         for (int i = 0; i < (1024 >> 2); ++i) {
             this->instructionSet[i] = that.instructionSet[i];
@@ -75,6 +75,8 @@ InstDisk& InstDisk::operator=(const InstDisk& that) {
 
 InstDisk& InstDisk::operator=(InstDisk&& that) {
     if (this != &that) {
+        delete[] this->data;
+        delete[] this->instructionSet;
         this->data = that.data;
         that.data = nullptr;
         this->instructionSet = that.instructionSet;
