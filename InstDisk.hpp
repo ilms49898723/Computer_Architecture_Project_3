@@ -87,7 +87,7 @@ public:
 
 private:
     unsigned* data;
-    InstDataBin* instructionSet;
+    InstDataBin* instruction;
 };
 
 } /* namespace inst */
