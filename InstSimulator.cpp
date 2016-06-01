@@ -13,28 +13,6 @@ InstSimulator::InstSimulator() {
     init();
 }
 
-InstSimulator::InstSimulator(InstSimulator&& that) {
-    if (this != &that) {
-        this->alive = that.alive;
-        this->originalPc = that.originalPc;
-        this->currentPc = that.currentPc;
-        this->cycle = that.cycle;
-        this->snapshot = that.snapshot;
-        this->report = that.report;
-        this->reg = std::move(that.reg);
-        this->iDisk = std::move(that.iDisk);
-        this->dDisk = std::move(that.dDisk);
-        this->dMem = std::move(that.dMem);
-        this->iMem = std::move(that.iMem);
-        this->iPageTable = std::move(that.iPageTable);
-        this->dPageTable = std::move(that.dPageTable);
-        this->iTLB = std::move(that.iTLB);
-        this->dTLB = std::move(that.dTLB);
-        this->iCache = std::move(that.iCache);
-        this->dCache = std::move(that.dCache);
-    }
-}
-
 InstSimulator::~InstSimulator() {
 
 }
@@ -47,11 +25,8 @@ void InstSimulator::init() {
     snapshot = nullptr;
     report = nullptr;
     reg.init();
-    for (unsigned i = 0; i < 1024; i += 4) {
-        dDisk.setData(i, 0);
-        iDisk.setData(i, 0);
-        iDisk.setInstruction(i, InstDecoder::decodeInstBin(0));
-    }
+    iDisk.init();
+    dDisk.init();
 }
 
 void InstSimulator::loadInstruction(const unsigned* src, const unsigned len, const unsigned pc) {
@@ -63,7 +38,7 @@ void InstSimulator::loadInstruction(const unsigned* src, const unsigned len, con
 }
 
 void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsigned sp) {
-    reg.setRegister(29, sp, InstSize::WORD);
+    reg.setRegister(29, sp);
     for (unsigned i = 0; i < len; ++i) {
         dDisk.setData(i << 2, src[i]);
     }
@@ -72,12 +47,12 @@ void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsi
 void InstSimulator::setProperty(const InstParameter& iParam, const InstParameter& dParam) {
     iTLB.init((1024u / iParam.pageSize) >> 2);
     dTLB.init((1024u / dParam.pageSize) >> 2);
-//    iMem.init(iParam.memSize, iParam.pageSize);
-//    dMem.init(dParam.memSize, dParam.pageSize);
-//    iPageTable.init(iParam.pageSize);
-//    dPageTable.init(dParam.pageSize);
-//    iCache.init(iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity);
-//    dCache.init(dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity);
+    iPageTable.init(iParam.pageSize);
+    dPageTable.init(dParam.pageSize);
+    iMemory.init(iParam.memSize, iParam.pageSize);
+    dMemory.init(dParam.memSize, dParam.pageSize);
+    iCache.init(iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity);
+    dCache.init(dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity);
 }
 
 void InstSimulator::setLogFile(const std::string& snapshotFilename, const std::string& reportFilename) {
@@ -121,6 +96,29 @@ void InstSimulator::dumpSnapshot(FILE* fp) const {
         fprintf(fp, "$%02d: 0x%08X\n", i, reg.getRegister(i));
     }
     fprintf(fp, "PC: 0x%08X\n", currentPc);
+}
+
+void InstSimulator::searchCache(const unsigned addr, const InstRoute type) {
+    InstTLB& tlb = (type == InstRoute::INST) ? iTLB : dTLB;
+    InstPageTable& pageTable = (type == InstRoute::INST) ? iPageTable : dPageTable;
+    InstMemory& memory = (type == InstRoute::INST) ? iMemory : dMemory;
+    InstCache& cache = (type == InstRoute::INST) ? iCache : dCache;
+    InstDisk& disk = (type == InstRoute::INST) ? iDisk : dDisk;
+    unsigned tag = addr / pageTable.size();
+    auto tlbResult = tlb.lookup(tag);
+    if (tlbResult.second) {
+        tlb.update(tag, cycle);
+    }
+    else {
+        auto ptResult = pageTable.lookup(tag);
+        if (ptResult.second) {
+            tlb.push(tag, ptResult.first, cycle);
+            // TODO update memory LRU
+        }
+        else {
+            // TODO complete it
+        }
+    }
 }
 
 bool InstSimulator::isNop(const InstDataBin& inst) const {
@@ -181,29 +179,6 @@ bool InstSimulator::isBranchJ(const InstDataBin& inst) const {
         return false;
     }
     return inst.getOpcode() == 0x02u || inst.getOpcode() == 0x03u;
-}
-
-InstSimulator& InstSimulator::operator=(InstSimulator&& that) {
-    if (this != &that) {
-        this->alive = that.alive;
-        this->originalPc = that.originalPc;
-        this->currentPc = that.currentPc;
-        this->cycle = that.cycle;
-        this->snapshot = that.snapshot;
-        this->report = that.report;
-        this->reg = std::move(that.reg);
-        this->iDisk = std::move(that.iDisk);
-        this->dDisk = std::move(that.dDisk);
-        this->dMem = std::move(that.dMem);
-        this->iMem = std::move(that.iMem);
-        this->iPageTable = std::move(that.iPageTable);
-        this->dPageTable = std::move(that.dPageTable);
-        this->iTLB = std::move(that.iTLB);
-        this->dTLB = std::move(that.dTLB);
-        this->iCache = std::move(that.iCache);
-        this->dCache = std::move(that.dCache);
-    }
-    return *this;
 }
 
 } /* namespace inst */

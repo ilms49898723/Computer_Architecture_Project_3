@@ -42,11 +42,6 @@ public:
     InstSimulator(const InstSimulator& that) = delete;
 
     /**
-     * Move constructor
-     */
-    InstSimulator(InstSimulator&& that);
-
-    /**
      * Default destructor
      */
     ~InstSimulator();
@@ -101,13 +96,10 @@ public:
      */
     InstSimulator& operator=(const InstSimulator& that) = delete;
 
-    /**
-     * Move assignment
-     */
-    InstSimulator& operator=(InstSimulator&& that);
-
 private:
     void dumpSnapshot(FILE* fp) const;
+
+    void searchCache(const unsigned addr, const InstRoute type);
 
     bool isNop(const InstDataBin& inst) const;
 
@@ -136,18 +128,17 @@ private:
     FILE* report;
 
 private:
-    InstDataBin* instructionSet;
     InstRegister reg;
-    InstDisk iDisk;
-    InstDisk dDisk;
-    InstMemory dMem;
-    InstMemory iMem;
-    InstPageTable iPageTable;
-    InstPageTable dPageTable;
     InstTLB iTLB;
     InstTLB dTLB;
+    InstPageTable iPageTable;
+    InstPageTable dPageTable;
+    InstMemory iMemory;
+    InstMemory dMemory;
     InstCache iCache;
     InstCache dCache;
+    InstDisk iDisk;
+    InstDisk dDisk;
 };
 
 } /* namespace inst */
