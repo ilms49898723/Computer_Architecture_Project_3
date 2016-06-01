@@ -40,7 +40,7 @@ public:
 
     void remove(const unsigned tag);
 
-    std::pair<unsigned, bool> lookup(const unsigned addr, const unsigned cycle);
+    std::pair<unsigned, bool> lookup(const unsigned tag, const unsigned cycle);
 
 private:
     unsigned entry;

@@ -64,8 +64,7 @@ void InstTLB::remove(const unsigned tag) {
     }
 }
 
-std::pair<unsigned, bool> InstTLB::lookup(const unsigned addr, const unsigned cycle) {
-    unsigned tag = addr / pageSize;
+std::pair<unsigned, bool> InstTLB::lookup(const unsigned tag, const unsigned cycle) {
     for (unsigned i = 0; i < entry; ++i) {
         if (data[i].valid && data[i].tag == tag) {
             data[i].cycle = cycle;
