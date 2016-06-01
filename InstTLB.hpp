@@ -29,9 +29,13 @@ private:
 public:
     InstTLB();
 
+    InstTLB(const InstTLB& that);
+
+    InstTLB(InstTLB&& that);
+
     ~InstTLB();
 
-    void init(const unsigned entry, const unsigned pageSize);
+    void init(const unsigned entry);
 
     void push(const unsigned tag, const unsigned ppn, const unsigned cycle);
 
@@ -39,11 +43,20 @@ public:
 
     void remove(const unsigned tag);
 
-    std::pair<unsigned, bool> lookup(const unsigned tag, const unsigned cycle);
+    std::pair<unsigned, bool> lookup(const unsigned tag);
+
+    unsigned getHit() const;
+
+    unsigned getMiss() const;
+
+    unsigned entry() const;
+
+    InstTLB& operator=(const InstTLB& that);
+
+    InstTLB& operator=(InstTLB&& that);
 
 private:
-    unsigned entry;
-    unsigned pageSize;
+    unsigned tlbEntry;
     TLBData* data;
 
 private:

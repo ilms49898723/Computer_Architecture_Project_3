@@ -10,21 +10,49 @@
 namespace inst {
 
 InstTLB::InstTLB() {
-    this->entry = 0;
-    this->pageSize = 0;
+    this->tlbEntry = 0;
     this->data = nullptr;
     this->hit = 0;
     this->miss = 0;
+}
+
+InstTLB::InstTLB(const InstTLB& that) {
+    if (this != &that) {
+        if (that.data) {
+            this->tlbEntry = that.tlbEntry;
+            this->data = new TLBData[this->tlbEntry];
+            for (unsigned i = 0; i < this->tlbEntry; ++i) {
+                this->data[i] = that.data[i];
+            }
+            this->hit = that.hit;
+            this->miss = that.miss;
+        }
+        else {
+            this->tlbEntry = 0;
+            this->data = nullptr;
+            this->hit = 0;
+            this->miss = 0;
+        }
+    }
+}
+
+InstTLB::InstTLB(InstTLB&& that) {
+    if (this != &that) {
+        this->tlbEntry = that.tlbEntry;
+        this->data = that.data;
+        that.data = nullptr;
+        this->hit = that.hit;
+        this->miss = that.miss;
+    }
 }
 
 InstTLB::~InstTLB() {
 
 }
 
-void InstTLB::init(const unsigned entry, const unsigned pageSize) {
+void InstTLB::init(const unsigned entry) {
     delete[] this->data;
-    this->entry = entry;
-    this->pageSize = pageSize;
+    this->tlbEntry = entry;
     this->data = new TLBData[entry];
     this->hit = 0;
     this->miss = 0;
@@ -32,7 +60,7 @@ void InstTLB::init(const unsigned entry, const unsigned pageSize) {
 
 void InstTLB::push(const unsigned tag, const unsigned ppn, const unsigned cycle) {
     unsigned index = 0;
-    for (unsigned i = 0; i < entry; ++i) {
+    for (unsigned i = 0; i < tlbEntry; ++i) {
         if (!data[i].valid) {
             data[i] = TLBData(tag, ppn, cycle, true);
             return;
@@ -47,7 +75,7 @@ void InstTLB::push(const unsigned tag, const unsigned ppn, const unsigned cycle)
 }
 
 void InstTLB::update(const unsigned tag, const unsigned cycle) {
-    for (unsigned i = 0; i < entry; ++i) {
+    for (unsigned i = 0; i < tlbEntry; ++i) {
         if (data[i].valid && data[i].tag == tag) {
             data[i].cycle = cycle;
             break;
@@ -56,7 +84,7 @@ void InstTLB::update(const unsigned tag, const unsigned cycle) {
 }
 
 void InstTLB::remove(const unsigned tag) {
-    for (unsigned i = 0; i < entry; ++i) {
+    for (unsigned i = 0; i < tlbEntry; ++i) {
         if (data[i].valid && data[i].tag == tag) {
             data[i].valid = false;
             break;
@@ -64,16 +92,61 @@ void InstTLB::remove(const unsigned tag) {
     }
 }
 
-std::pair<unsigned, bool> InstTLB::lookup(const unsigned tag, const unsigned cycle) {
-    for (unsigned i = 0; i < entry; ++i) {
+std::pair<unsigned, bool> InstTLB::lookup(const unsigned tag) {
+    for (unsigned i = 0; i < tlbEntry; ++i) {
         if (data[i].valid && data[i].tag == tag) {
-            data[i].cycle = cycle;
             ++hit;
             return std::make_pair(data[i].ppn, data[i].valid);
         }
     }
     ++miss;
     return std::make_pair(0, false);
+}
+
+unsigned InstTLB::getHit() const {
+    return this->hit;
+}
+
+unsigned InstTLB::getMiss() const {
+    return this->miss;
+}
+
+unsigned InstTLB::entry() const {
+    return this->tlbEntry;
+}
+
+InstTLB& InstTLB::operator=(const InstTLB& that) {
+    if (this != &that) {
+        delete[] this->data;
+        if (that.data) {
+            this->tlbEntry = that.tlbEntry;
+            this->data = new TLBData[this->tlbEntry];
+            for (unsigned i = 0; i < this->tlbEntry; ++i) {
+                this->data[i] = that.data[i];
+            }
+            this->hit = that.hit;
+            this->miss = that.miss;
+        }
+        else {
+            this->tlbEntry = 0;
+            this->data = nullptr;
+            this->hit = 0;
+            this->miss = 0;
+        }
+    }
+    return *this;
+}
+
+InstTLB& InstTLB::operator=(InstTLB&& that) {
+    if (this != &that) {
+        delete[] this->data;
+        this->tlbEntry = that.tlbEntry;
+        this->data = that.data;
+        that.data = nullptr;
+        this->hit = that.hit;
+        this->miss = that.miss;
+    }
+    return *this;
 }
 
 } /* namespace inst */

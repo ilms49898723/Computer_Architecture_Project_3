@@ -70,14 +70,14 @@ void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsi
 }
 
 void InstSimulator::setProperty(const InstParameter& iParam, const InstParameter& dParam) {
-    iMem.init(iParam.memSize);
-    dMem.init(dParam.memSize);
-    iPageTable.init(iParam.pageSize);
-    dPageTable.init(dParam.pageSize);
-    dTLB.init(dPageTable.entry() >> 2);
-    iTLB.init(iPageTable.entry() >> 2);
-    iCache.init(iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity);
-    dCache.init(dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity);
+    iTLB.init((1024u / iParam.pageSize) >> 2);
+    dTLB.init((1024u / dParam.pageSize) >> 2);
+//    iMem.init(iParam.memSize, iParam.pageSize);
+//    dMem.init(dParam.memSize, dParam.pageSize);
+//    iPageTable.init(iParam.pageSize);
+//    dPageTable.init(dParam.pageSize);
+//    iCache.init(iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity);
+//    dCache.init(dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity);
 }
 
 void InstSimulator::setLogFile(const std::string& snapshotFilename, const std::string& reportFilename) {
@@ -121,39 +121,6 @@ void InstSimulator::dumpSnapshot(FILE* fp) const {
         fprintf(fp, "$%02d: 0x%08X\n", i, reg.getRegister(i));
     }
     fprintf(fp, "PC: 0x%08X\n", currentPc);
-}
-
-unsigned InstSimulator::instMemLoad(const unsigned addr, const InstDataBin& inst) const {
-    switch (inst.getOpcode()) {
-        case 0x23u:
-            return dMem.getData(addr, InstSize::WORD);
-        case 0x21u:
-            return toUnsigned(toSigned(dMem.getData(addr, InstSize::HALF), InstSize::HALF));
-        case 0x25u:
-            return dMem.getData(addr, InstSize::HALF);
-        case 0x20u:
-            return toUnsigned(toSigned(dMem.getData(addr, InstSize::BYTE), InstSize::BYTE));
-        case 0x24u:
-            return dMem.getData(addr, InstSize::BYTE);
-        default:
-            return 0u;
-    }
-}
-
-void InstSimulator::instMemStore(const unsigned addr, const unsigned val, const InstDataBin& inst) {
-    switch (inst.getOpcode()) {
-        case 0x2Bu:
-            dMem.setData(addr, val, InstSize::WORD);
-            return;
-        case 0x29u:
-            dMem.setData(addr, val, InstSize::HALF);
-            return;
-        case 0x28u:
-            dMem.setData(addr, val, InstSize::BYTE);
-            return;
-        default:
-            return;
-    }
 }
 
 bool InstSimulator::isNop(const InstDataBin& inst) const {

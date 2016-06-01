@@ -109,10 +109,6 @@ public:
 private:
     void dumpSnapshot(FILE* fp) const;
 
-    unsigned instMemLoad(const unsigned addr, const InstDataBin& inst) const;
-
-    void instMemStore(const unsigned addr, const unsigned val, const InstDataBin& inst);
-
     bool isNop(const InstDataBin& inst) const;
 
     bool isHalt(const InstDataBin& inst) const;
