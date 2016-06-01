@@ -34,7 +34,7 @@ public:
 
     void init(const unsigned entry, const unsigned pageSize);
 
-    void push(const unsigned tag, const unsigned ppn);
+    void push(const unsigned tag, const unsigned ppn, const unsigned cycle);
 
     void update(const unsigned tag, const unsigned cycle);
 
