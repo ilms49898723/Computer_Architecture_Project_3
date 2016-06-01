@@ -161,18 +161,18 @@ public:
     void setInstName(const unsigned val);
 
     /**
-     * Set RegRead
+     * Add an instruction element to RegRead
      *
-     * @param reg RegRead to set
+     * @param element instruction element to add
      */
-    void setRegRead(const InstElement& reg);
+    void addRegRead(const InstElement& element);
 
     /**
-     * Set RegWrite
+     * Add an instruction element to RegWrite
      *
-     * @param reg RegWrite to set
+     * @param element instruction element to add
      */
-    void setRegWrite(const InstElement& reg);
+    void addRegWrite(const InstElement& element);
 
     /**
      * Copy assignment

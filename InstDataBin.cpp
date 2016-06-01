@@ -18,6 +18,7 @@ InstDataBin::InstDataBin() {
     this->c = 0u;
     this->funct = 0u;
     this->inst = 0u;
+    this->instName = "";
     this->regRead.clear();
     this->regWrite.clear();
 }
@@ -32,6 +33,7 @@ InstDataBin::InstDataBin(const InstDataBin& that) {
         this->c = that.c;
         this->funct = that.funct;
         this->inst = that.inst;
+        this->instName = that.instName;
         this->regRead = that.regRead;
         this->regWrite = that.regWrite;
     }
@@ -47,6 +49,7 @@ InstDataBin::InstDataBin(InstDataBin&& that) {
         this->c = that.c;
         this->funct = that.funct;
         this->inst = that.inst;
+        this->instName = std::move(that.instName);
         this->regRead = std::move(that.regRead);
         this->regWrite = std::move(that.regWrite);
     }
@@ -57,107 +60,107 @@ InstDataBin::~InstDataBin() {
 }
 
 InstType InstDataBin::getInstType() const {
-    return instType;
+    return this->instType;
 }
 
 unsigned InstDataBin::getOpcode() const {
-    return opcode;
+    return this->opcode;
 }
 
 unsigned InstDataBin::getRs() const {
-    return rs;
+    return this->rs;
 }
 
 unsigned InstDataBin::getRt() const {
-    return rt;
+    return this->rt;
 }
 
 unsigned InstDataBin::getRd() const {
-    return rd;
+    return this->rd;
 }
 
 unsigned InstDataBin::getC() const {
-    return c;
+    return this->c;
 }
 
 unsigned InstDataBin::getFunct() const {
-    return funct;
+    return this->funct;
 }
 
 unsigned InstDataBin::getInst() const {
-    return inst;
+    return this->inst;
 }
 
 const std::string& InstDataBin::getInstName() const {
-    return instName;
+    return this->instName;
 }
 
 const std::vector<InstElement>& InstDataBin::getRegRead() const {
-    return regRead;
+    return this->regRead;
 }
 
 const std::vector<InstElement>& InstDataBin::getRegWrite() const {
-    return regWrite;
+    return this->regWrite;
 }
 
 void InstDataBin::setInstType(const InstType val) {
-    instType = val;
+    this->instType = val;
 }
 
 void InstDataBin::setOpcode(const unsigned val) {
-    opcode = val;
+    this->opcode = val;
 }
 
 void InstDataBin::setRs(const unsigned val) {
-    rs = val;
+    this->rs = val;
 }
 
 void InstDataBin::setRt(const unsigned val) {
-    rt = val;
+    this->rt = val;
 }
 
 void InstDataBin::setRd(const unsigned val) {
-    rd = val;
+    this->rd = val;
 }
 
 void InstDataBin::setC(const unsigned val) {
-    c = val;
+    this->c = val;
 }
 
 void InstDataBin::setFunct(const unsigned val) {
-    funct = val;
+    this->funct = val;
 }
 
 void InstDataBin::setInst(const unsigned val) {
-    inst = val;
+    this->inst = val;
 }
 
 void InstDataBin::setInstName(const unsigned val) {
     if (instType == InstType::UNDEF) {
-        instName = "";
+        this->instName = "";
     }
     else if (instType == InstType::R) {
         if (inst == 0u) {
-            instName = "NOP";
+            this->instName = "NOP";
         }
         else if (rt == 0u && rd == 0u && c == 0u && funct == 0u) {
-            instName = "NOP";
+            this->instName = "NOP";
         }
         else {
-            instName = toUpperString(InstLookUp::functLookUp(val));
+            this->instName = toUpperString(InstLookUp::functLookUp(val));
         }
     }
     else {
-        instName = toUpperString(InstLookUp::opCodeLookUp(val));
+        this->instName = toUpperString(InstLookUp::opCodeLookUp(val));
     }
 }
 
-void InstDataBin::setRegRead(const InstElement& reg) {
-    regRead.push_back(reg);
+void InstDataBin::addRegRead(const InstElement& element) {
+    this->regRead.push_back(element);
 }
 
-void InstDataBin::setRegWrite(const InstElement& reg) {
-    regWrite.push_back(reg);
+void InstDataBin::addRegWrite(const InstElement& element) {
+    this->regWrite.push_back(element);
 }
 
 InstDataBin& InstDataBin::operator=(const InstDataBin& that) {
@@ -170,6 +173,7 @@ InstDataBin& InstDataBin::operator=(const InstDataBin& that) {
         this->c = that.c;
         this->funct = that.funct;
         this->inst = that.inst;
+        this->instName = that.instName;
         this->regRead = that.regRead;
         this->regWrite = that.regWrite;
     }
@@ -186,6 +190,7 @@ InstDataBin& InstDataBin::operator=(InstDataBin&& that) {
         this->c = that.c;
         this->funct = that.funct;
         this->inst = that.inst;
+        this->instName = std::move(that.instName);
         this->regRead = std::move(that.regRead);
         this->regWrite = std::move(that.regWrite);
     }
