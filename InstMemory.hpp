@@ -17,17 +17,17 @@
 namespace inst {
 
 /**
- * Memory, 1024 bytes
+ * Memory
  */
 class InstMemory {
 private:
     struct MemoryLRU {
-        unsigned index;
+        unsigned addr;
         unsigned cycle;
-        MemoryLRU(const unsigned index = 0, const unsigned cycle = 0) :
-                index(index), cycle(cycle) {}
+        MemoryLRU(const unsigned addr = 0, const unsigned cycle = 0) :
+                addr(addr), cycle(cycle) {}
         bool operator<(const MemoryLRU& that) const {
-            return cycle < that.cycle || (cycle == that.cycle && index < that.index);
+            return cycle < that.cycle || (cycle == that.cycle && addr < that.addr);
         }
     };
 
@@ -54,9 +54,9 @@ public:
 
 public:
     /**
-     * Initialize
+     * Initialize(set all content to zero)
      */
-    void init();
+    void init(const unsigned size);
 
     /**
      * Get data value at specified address with size
@@ -72,7 +72,12 @@ public:
      * @param addr address to get
      * @param size size to get
      */
-    unsigned getData(const unsigned addr, const InstSize& size) const;
+    unsigned getData(const unsigned addr, const InstSize size) const;
+
+    /**
+     * Get memory size in bytes
+     */
+    unsigned getSize() const;
 
     /**
      * Set data value at specified address with size
@@ -90,7 +95,7 @@ public:
      * @param val value to set
      * @param size size to set
      */
-    void setData(const unsigned addr, const unsigned val, const InstSize& size);
+    void setData(const unsigned addr, const unsigned val, const InstSize size);
 
     /**
      * Copy assignment
@@ -103,7 +108,8 @@ public:
     InstMemory& operator=(InstMemory&& that);
 
 private:
-    unsigned char* data;
+    unsigned size;
+    unsigned* data;
     std::priority_queue<MemoryLRU> lruSet;
 };
 
