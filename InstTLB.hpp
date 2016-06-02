@@ -37,13 +37,13 @@ public:
 
     void init(const unsigned entry);
 
-    void push(const unsigned tag, const unsigned ppn, const unsigned cycle);
+    void push(const unsigned vpn, const unsigned ppn, const unsigned cycle);
 
-    void update(const unsigned tag, const unsigned cycle);
+    void update(const unsigned vpn, const unsigned cycle);
 
-    void remove(const unsigned tag);
+    void remove(const unsigned vpn);
 
-    std::pair<unsigned, bool> lookup(const unsigned tag);
+    std::pair<unsigned, bool> lookup(const unsigned vpn);
 
     unsigned getHit() const;
 

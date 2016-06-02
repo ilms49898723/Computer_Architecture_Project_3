@@ -58,11 +58,11 @@ void InstTLB::init(const unsigned entry) {
     this->miss = 0;
 }
 
-void InstTLB::push(const unsigned tag, const unsigned ppn, const unsigned cycle) {
+void InstTLB::push(const unsigned vpn, const unsigned ppn, const unsigned cycle) {
     unsigned index = 0;
     for (unsigned i = 0; i < tlbEntry; ++i) {
         if (!data[i].valid) {
-            data[i] = TLBData(tag, ppn, cycle, true);
+            data[i] = TLBData(vpn, ppn, cycle, true);
             return;
         }
         else {
@@ -71,30 +71,30 @@ void InstTLB::push(const unsigned tag, const unsigned ppn, const unsigned cycle)
             }
         }
     }
-    data[index] = TLBData(tag, ppn, cycle, true);
+    data[index] = TLBData(vpn, ppn, cycle, true);
 }
 
-void InstTLB::update(const unsigned tag, const unsigned cycle) {
+void InstTLB::update(const unsigned vpn, const unsigned cycle) {
     for (unsigned i = 0; i < tlbEntry; ++i) {
-        if (data[i].valid && data[i].tag == tag) {
+        if (data[i].valid && data[i].tag == vpn) {
             data[i].cycle = cycle;
             break;
         }
     }
 }
 
-void InstTLB::remove(const unsigned tag) {
+void InstTLB::remove(const unsigned vpn) {
     for (unsigned i = 0; i < tlbEntry; ++i) {
-        if (data[i].valid && data[i].tag == tag) {
+        if (data[i].valid && data[i].tag == vpn) {
             data[i].valid = false;
             break;
         }
     }
 }
 
-std::pair<unsigned, bool> InstTLB::lookup(const unsigned tag) {
+std::pair<unsigned, bool> InstTLB::lookup(const unsigned vpn) {
     for (unsigned i = 0; i < tlbEntry; ++i) {
-        if (data[i].valid && data[i].tag == tag) {
+        if (data[i].valid && data[i].tag == vpn) {
             ++hit;
             return std::make_pair(data[i].ppn, data[i].valid);
         }
