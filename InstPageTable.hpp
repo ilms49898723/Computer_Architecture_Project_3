@@ -43,18 +43,46 @@ public:
      */
     void init(const unsigned pageSize);
 
+    /**
+     * Add mapping vpn -> ppn to table
+     *
+     * @param vpn virtual page number
+     * @param ppn physical page number
+     */
     void insert(const unsigned vpn, const unsigned ppn);
 
+    /**
+     * Erase vpn in table
+     *
+     * @param vpn virtual page number to erase
+     */
     void erase(const unsigned vpn);
 
+    /**
+     * Find vpn in table
+     *
+     * @param vpn virtual page number to find
+     */
     std::pair<unsigned, bool> find(const unsigned vpn);
 
+    /**
+     * Get PageTable hit
+     */
     unsigned getHit() const;
 
+    /**
+     * Get PageTable miss
+     */
     unsigned getMiss() const;
 
+    /**
+     * Get PageSize
+     */
     unsigned getPageSize() const;
 
+    /**
+     * Get number of page table entry
+     */
     unsigned getEntry() const;
 
 private:
