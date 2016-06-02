@@ -106,7 +106,7 @@ private:
     unsigned entry;
     unsigned pageSize;
     bool* valid;
-    MemoryPage* data;
+    MemoryPage* page;
 };
 
 } /* namespace inst */
