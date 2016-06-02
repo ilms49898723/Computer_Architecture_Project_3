@@ -95,7 +95,7 @@ public:
     InstDisk& operator=(InstDisk&& that);
 
 private:
-    unsigned* data;
+    unsigned char* data;
     InstDataBin* instruction;
 };
 

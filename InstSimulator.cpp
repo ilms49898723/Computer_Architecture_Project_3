@@ -18,7 +18,6 @@ InstSimulator::~InstSimulator() {
 }
 
 void InstSimulator::init() {
-    alive = true;
     originalPc = 0;
     currentPc = 0;
     cycle = 0;
@@ -77,15 +76,95 @@ void InstSimulator::start() {
     }
     currentPc = originalPc;
     cycle = 0u;
-    alive = true;
-    // TODO instruction fetch
-    while (true) {
-        if (!alive) {
-            break;
+    dumpSnapshot(snapshot);
+    InstDisk tddisk = dDisk;
+    while (!isHalt(iDisk.getInstruction(currentPc))) {
+        const InstDataBin& inst = iDisk.getInstruction(currentPc);
+        bool pcUpdated = false;
+        if (inst.getInstType() == InstType::R) {
+            if (isBranchR(inst)) {
+                currentPc = reg.getRegister(inst.getRs());
+                pcUpdated = true;
+            }
+            else {
+                reg.setRegister(inst.getRd(), instALUR(inst));
+            }
         }
-        dumpSnapshot(snapshot);
+        else if (inst.getInstType() == InstType::I) {
+            if (isBranchI(inst)) {
+                unsigned result = instALUI(inst);
+                if (result) {
+                    int newPc = static_cast<int>(currentPc) + 4 + 4 * toSigned(inst.getC(), 16);
+                    currentPc = static_cast<unsigned>(newPc);
+                    pcUpdated = true;
+                }
+            }
+            else if (isMemoryLoad(inst)) {
+                unsigned addr = instALUI(inst);
+                unsigned loadedData;
+                switch (inst.getOpcode()) {
+                    case 0x23u:
+                        loadedData = tddisk.getData(addr);
+                        break;
+                    case 0x21u:
+                        loadedData = toUnsigned(toSigned(tddisk.getData(addr, 2), InstSize::HALF));
+                        break;
+                    case 0x25u:
+                        loadedData = tddisk.getData(addr, 2);
+                        break;
+                    case 0x20u:
+                        loadedData = toUnsigned(toSigned(tddisk.getData(addr, 1), InstSize::BYTE));
+                        break;
+                    case 0x24u:
+                        loadedData = tddisk.getData(addr, 1);
+                        break;
+                    default:
+                        loadedData = 0;
+                        break;
+                }
+                reg.setRegister(inst.getRt(), loadedData);
+            }
+            else if (isMemoryStore(inst)) {
+                unsigned addr = instALUI(inst);
+                unsigned savedData = reg.getRegister(inst.getRt());
+                switch (inst.getOpcode()) {
+                    case 0x2Bu:
+                        tddisk.setData(addr, savedData, 4);
+                        break;
+                    case 0x29u:
+                        tddisk.setData(addr, savedData, 2);
+                        break;
+                    case 0x28u:
+                        tddisk.setData(addr, savedData, 1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else {
+                reg.setRegister(inst.getRt(), instALUI(inst));
+            }
+        }
+        else {
+            pcUpdated = true;
+            switch (inst.getOpcode()) {
+                case 0x02u:
+                    currentPc = ((currentPc + 4) & 0xF0000000u) | (inst.getC() << 2);
+                    break;
+                case 0x03u:
+                    reg.setRegister(31, currentPc + 4);
+                    currentPc = ((currentPc + 4) & 0xF0000000u) | (inst.getC() << 2);
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (!pcUpdated) {
+            currentPc += 4;
+        }
         ++cycle;
-        currentPc += 4;
+        printf("cycle %u: %s\n", cycle, InstDecoder::decodeInstStr(inst.getInst()).toString().c_str());
+        dumpSnapshot(snapshot);
     }
     fclose(snapshot);
     fclose(report);
@@ -98,6 +177,7 @@ void InstSimulator::dumpSnapshot(FILE* fp) const {
         fprintf(fp, "$%02d: 0x%08X\n", i, reg.getRegister(i));
     }
     fprintf(fp, "PC: 0x%08X\n", currentPc);
+    fprintf(fp, "\n\n");
 }
 
 void InstSimulator::search(const unsigned virtualAddr, const InstRoute type) {
@@ -127,6 +207,79 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute type) {
     }
     unsigned physicalAddr = ppn * param.pageSize + virtualAddr % param.pageSize;
 
+}
+
+unsigned InstSimulator::instALUR(const InstDataBin& inst) {
+    const unsigned valRs = reg.getRegister(inst.getRs());
+    const unsigned valRt = reg.getRegister(inst.getRt());
+    const unsigned valC = inst.getC();
+    switch (inst.getFunct()) {
+        case 0x20u: // add
+            return valRs + valRt;
+        case 0x21u: // addu
+            return valRs + valRt;
+        case 0x22u: // sub
+            return valRs - valRt;
+        case 0x24u: // and
+            return valRs & valRt;
+        case 0x25u: // or
+            return valRs | valRt;
+        case 0x26u: // xor
+            return valRs ^ valRt;
+        case 0x27u: // nor
+            return ~(valRs | valRt);
+        case 0x28u: // nand
+            return ~(valRs & valRt);
+        case 0x2Au: // slt
+            return static_cast<unsigned>(toSigned(valRs) < toSigned(valRt));
+        case 0x00u: // sll
+            return valRt << valC;
+        case 0x02u: // srl
+            return valRt >> valC;
+        case 0x03u: // sra
+            return static_cast<unsigned>(static_cast<int>(valRt) >> static_cast<int>(valC));
+        default:
+            return 0u;
+    }
+}
+
+unsigned InstSimulator::instALUI(const InstDataBin& inst) {
+    const unsigned valRs = reg.getRegister(inst.getRs());
+    const unsigned valRt = reg.getRegister(inst.getRt());
+    const unsigned valC = inst.getC();
+    switch (inst.getOpcode()) {
+        case 0x08u: // addi
+            return toUnsigned(toSigned(valRs) + toSigned(valC, 16));
+        case 0x09u: // addiu
+            return valRs + toUnsigned(toSigned(valC, 16));
+        case 0x23u: // lw
+        case 0x21u: // lh
+        case 0x25u: // lhu
+        case 0x20u: // lb
+        case 0x24u: // lbu
+        case 0x2Bu: // sw
+        case 0x29u: // sh
+        case 0x28u: // sb
+            return toUnsigned(toSigned(valRs) + toSigned(valC, 16));
+        case 0x0Fu: // lui // special // maybe incorrect
+            return valC << 16;
+        case 0x0Cu: // andi
+            return valRs & valC;
+        case 0x0Du: // ori
+            return valRs | valC;
+        case 0x0Eu: // nori
+            return ~(valRs | valC);
+        case 0x0Au: // slti
+            return static_cast<unsigned>(toSigned(valRs) < toSigned(valC, 16));
+        case 0x04u: // beq
+            return static_cast<unsigned>(valRs == valRt);
+        case 0x05u: // bne
+            return static_cast<unsigned>(valRs != valRt);
+        case 0x07u: // bgtz
+            return static_cast<unsigned>(toSigned(valRs) > 0);
+        default:
+            return 0u;
+    }
 }
 
 bool InstSimulator::isNop(const InstDataBin& inst) const {

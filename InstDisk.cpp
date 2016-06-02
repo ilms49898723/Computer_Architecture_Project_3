@@ -10,14 +10,14 @@
 namespace inst {
 
 InstDisk::InstDisk() {
-    this->data = new unsigned[1024 >> 2];
+    this->data = new unsigned char[1024];
     this->instruction = new InstDataBin[1024 >> 2];
 }
 
 InstDisk::InstDisk(const InstDisk& that) {
     if (this != &that) {
-        this->data = new unsigned[1024 >> 2];
-        memcpy(this->data, that.data, sizeof(unsigned) * (1024 >> 2));
+        this->data = new unsigned char[1024];
+        memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
         this->instruction = new InstDataBin[1024 >> 2];
         for (int i = 0; i < (1024 >> 2); ++i) {
             this->instruction[i] = that.instruction[i];
@@ -40,21 +40,25 @@ InstDisk::~InstDisk() {
 }
 
 void InstDisk::init() {
-    memset(this->data, 0, sizeof(unsigned) * (1024 >> 2));
+    memset(this->data, 0, sizeof(unsigned char) * 1024);
     for (int i = 0; i < (1024 >> 2); ++i) {
         this->instruction[i] = InstDecoder::decodeInstBin(0);
     }
 }
 
 unsigned InstDisk::getData(const unsigned addr, const unsigned size) const {
-    if (size == 4) {
-        return this->data[addr >> 2];
+    if (size == 4) {;
+        return (this->data[addr] << 24) |
+               (this->data[addr + 1] << 16) |
+               (this->data[addr + 2] << 8) |
+               (this->data[addr + 3]);
     }
     else if (size == 2) {
-        return this->data[addr >> 2] & 0xFFFFu;
+        return (this->data[addr] << 8) |
+               (this->data[addr + 1]);
     }
     else {
-        return this->data[addr >> 2] & 0xFFu;
+        return this->data[addr];
     }
 }
 
@@ -64,15 +68,17 @@ const InstDataBin& InstDisk::getInstruction(const unsigned addr) const {
 
 void InstDisk::setData(const unsigned addr, const unsigned val, const unsigned size) {
     if (size == 4) {
-        this->data[addr >> 2] = val;
+        this->data[addr] = static_cast<unsigned char>((val >> 24) & 0xFFu);
+        this->data[addr + 1] = static_cast<unsigned char>((val >> 16) & 0xFFu);
+        this->data[addr + 2] = static_cast<unsigned char>((val >> 8) & 0xFFu);
+        this->data[addr + 3] = static_cast<unsigned char>(val & 0xFFu);
     }
     else if (size == 2) {
-        this->data[addr >> 2] &= 0xFFFF0000u;
-        this->data[addr >> 2] |= (val & 0xFFFFu);
+        this->data[addr] = static_cast<unsigned char>((val >> 8) & 0xFFu);
+        this->data[addr + 1] = static_cast<unsigned char>(val & 0xFFu);
     }
     else {
-        this->data[addr >> 2] &= 0xFFFFFF00u;
-        this->data[addr >> 2] |= (val & 0xFFu);
+        this->data[addr] = static_cast<unsigned char>(val & 0xFFu);
     }
 }
 
@@ -88,8 +94,8 @@ InstDisk& InstDisk::operator=(const InstDisk& that) {
     if (this != &that) {
         delete[] this->data;
         delete[] this->instruction;
-        this->data = new unsigned[1024 >> 2];
-        memcpy(this->data, that.data, sizeof(unsigned) * (1024 >> 2));
+        this->data = new unsigned char[1024];
+        memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
         this->instruction = new InstDataBin[1024 >> 2];
         for (int i = 0; i < (1024 >> 2); ++i) {
             this->instruction[i] = that.instruction[i];

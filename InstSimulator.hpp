@@ -90,6 +90,10 @@ private:
 
     void search(const unsigned virtualAddr, const InstRoute type);
 
+    unsigned instALUR(const InstDataBin& inst);
+
+    unsigned instALUI(const InstDataBin& inst);
+
     bool isNop(const InstDataBin& inst) const;
 
     bool isHalt(const InstDataBin& inst) const;
@@ -107,7 +111,6 @@ private:
     bool isBranchJ(const InstDataBin& inst) const;
 
 private:
-    bool alive;
     unsigned originalPc;
     unsigned currentPc;
     unsigned cycle;
