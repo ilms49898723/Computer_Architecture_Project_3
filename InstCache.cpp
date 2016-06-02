@@ -23,7 +23,7 @@ InstCache::CacheBlock::~CacheBlock() {
 
 void InstCache::CacheBlock::allocate(const unsigned size) {
     delete[] this->content;
-    this->content = new unsigned[size >> 2];
+    this->content = new unsigned char[size];
 }
 
 void InstCache::CacheBlock::init(const unsigned tag, const unsigned ppn) {
@@ -90,7 +90,7 @@ unsigned InstCache::eraseLeastUsed(const unsigned index, InstMemory& memory) {
         }
     }
     for (unsigned i = 0; i < blockSize; ++i) {
-        memory.setData(targetSet.block[target].ppn, i << 2, targetSet.block[target].content[i]);
+        memory.setData(targetSet.block[target].ppn, i, targetSet.block[target].content[i], 1);
     }
     targetSet.block[target].valid = false;
     return target;
@@ -109,7 +109,7 @@ bool InstCache::requestBlock(const unsigned physicalAddr, const unsigned ppn) {
     return false;
 }
 
-std::pair<unsigned, bool> InstCache::search(const unsigned physicalAddr) {
+std::pair<unsigned, bool> InstCache::search(const unsigned physicalAddr, const unsigned size) {
     unsigned tag = getTag(physicalAddr);
     unsigned index = getIndex(physicalAddr);
     unsigned offset = getOffset(physicalAddr);
@@ -117,33 +117,71 @@ std::pair<unsigned, bool> InstCache::search(const unsigned physicalAddr) {
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (targetSet.block[i].valid && targetSet.block[i].tag == tag) {
             ++hit;
-            return std::make_pair(targetSet.block[i].content[offset >> 2], true);
+            unsigned ret = 0;
+            if (size == 4) {
+                ret = (targetSet.block[i].content[offset] << 24) |
+                      (targetSet.block[i].content[offset + 1] << 16) |
+                      (targetSet.block[i].content[offset + 2] << 8) |
+                      (targetSet.block[i].content[offset + 3]);
+            }
+            else if (size == 2) {
+                ret = (targetSet.block[i].content[offset] << 8) |
+                      (targetSet.block[i].content[offset + 1]);
+            }
+            else {
+                ret = (targetSet.block[i].content[offset]);
+            }
+            return std::make_pair(ret, true);
         }
     }
     ++miss;
     return std::make_pair(0, false);
 }
 
-void InstCache::setData(const unsigned physicalAddr, const unsigned val) {
+void InstCache::setData(const unsigned physicalAddr, const unsigned val, const unsigned size) {
     unsigned tag = getTag(physicalAddr);
     unsigned index = getIndex(physicalAddr);
     unsigned offset = getOffset(physicalAddr);
     CacheData& targetSet = data[index];
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (targetSet.block[i].valid && targetSet.block[i].tag == tag) {
-            targetSet.block[i].content[offset >> 2] = val;
+            if (size == 4) {
+                targetSet.block[i].content[offset] = static_cast<unsigned char>((val >> 24) & 0xFFu);
+                targetSet.block[i].content[offset + 1] = static_cast<unsigned char>((val >> 16) & 0xFFu);
+                targetSet.block[i].content[offset + 2] = static_cast<unsigned char>((val >> 8) & 0xFFu);
+                targetSet.block[i].content[offset + 3] = static_cast<unsigned char>((val) & 0xFFu);
+            }
+            else if (size == 2) {
+                targetSet.block[i].content[offset] = static_cast<unsigned char>((val >> 8) & 0xFFu);
+                targetSet.block[i].content[offset + 1] = static_cast<unsigned char>((val) & 0xFFu);
+            }
+            else {
+                targetSet.block[i].content[offset] = static_cast<unsigned char>((val) & 0xFFu);
+            }
         }
     }
 }
 
-unsigned InstCache::getData(const unsigned physicalAddr) {
+unsigned InstCache::getData(const unsigned physicalAddr, const unsigned size) {
     unsigned tag = getTag(physicalAddr);
     unsigned index = getIndex(physicalAddr);
     unsigned offset = getOffset(physicalAddr);
     CacheData& targetSet = data[index];
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (targetSet.block[i].valid && targetSet.block[i].tag == tag) {
-            return targetSet.block[i].content[offset >> 2];
+            if (size == 4) {
+                return (targetSet.block[i].content[offset] << 24) |
+                       (targetSet.block[i].content[offset + 1] << 16) |
+                       (targetSet.block[i].content[offset + 2] << 8) |
+                       (targetSet.block[i].content[offset + 3]);
+            }
+            else if (size == 2) {
+                return (targetSet.block[i].content[offset] << 8) |
+                       (targetSet.block[i].content[offset + 1]);
+            }
+            else {
+                return (targetSet.block[i].content[offset]);
+            }
         }
     }
     return 0;

@@ -28,7 +28,7 @@ private:
     public:
         unsigned tag;
         unsigned ppn;
-        unsigned* content;
+        unsigned char* content;
         bool valid;
         bool mru;
     };
@@ -86,23 +86,26 @@ public:
      * Search data in cache at physical address
      *
      * @param physicalAddr physical address to search
+     * @param size size
      */
-    std::pair<unsigned, bool> search(const unsigned physicalAddr);
+    std::pair<unsigned, bool> search(const unsigned physicalAddr, const unsigned size = 4);
 
     /**
      * Set value to the block in cache relative to physical address
      *
      * @param physicalAddr physical address
      * @param val value to set
+     * @param size size
      */
-    void setData(const unsigned physicalAddr, const unsigned val);
+    void setData(const unsigned physicalAddr, const unsigned val, const unsigned size = 4);
 
     /**
      * Get value at the block in cache relative to physical address
      *
      * @param physicalAddr physical address
+     * @param size size
      */
-    unsigned getData(const unsigned physicalAddr);
+    unsigned getData(const unsigned physicalAddr, const unsigned size = 4);
 
     /**
      * Get cache size in bytes
