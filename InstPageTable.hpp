@@ -14,11 +14,15 @@ namespace inst {
 
 class InstPageTable {
 private:
-    struct PageTable {
+    class PageTable {
+    public:
+        PageTable(const unsigned ppn = 0, const bool valid = false);
+
+        ~PageTable();
+
+    public:
         unsigned ppn;
         bool valid;
-        PageTable(const unsigned ppn = 0, const bool valid = false) :
-                ppn(ppn), valid(valid) {}
     };
 
 public:
@@ -47,6 +51,7 @@ public:
     unsigned entry() const;
 
     InstPageTable& operator=(const InstPageTable& that);
+
     InstPageTable& operator=(InstPageTable&& that);
 
 private:

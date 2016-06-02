@@ -9,6 +9,15 @@
 
 namespace inst {
 
+InstPageTable::PageTable::PageTable(const unsigned int ppn, const bool valid) {
+    this->ppn = ppn;
+    this->valid = valid;
+}
+
+InstPageTable::PageTable::~PageTable() {
+
+}
+
 InstPageTable::InstPageTable() {
     this->pageSize = 0;
     this->pageEntry = 0;
@@ -76,12 +85,7 @@ std::pair<unsigned, bool> InstPageTable::lookup(const unsigned vpn) {
         ++miss;
         return std::make_pair(0, false);
     }
-    if (table[vpn].valid) {
-        ++hit;
-    }
-    else {
-        ++miss;
-    }
+    (table[vpn].valid) ? ++hit : ++miss;
     return std::make_pair(table[vpn].ppn, table[vpn].valid);
 }
 
