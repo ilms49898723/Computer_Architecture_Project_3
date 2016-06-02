@@ -63,19 +63,26 @@ void InstPageTable::init(const unsigned pageSize) {
     this->miss = 0;
 }
 
-void InstPageTable::push(const unsigned tag, const unsigned ppn) {
-    data[tag] = PageTableData(ppn, true);
+void InstPageTable::push(const unsigned vpn, const unsigned ppn) {
+    data[vpn] = PageTableData(ppn, true);
 }
 
-void InstPageTable::remove(const unsigned tag) {
-    data[tag].valid = false;
+void InstPageTable::remove(const unsigned vpn) {
+    data[vpn].valid = false;
 }
 
-std::pair<unsigned, bool> InstPageTable::lookup(const unsigned tag) {
-    if (tag >= pageEntry) {
+std::pair<unsigned, bool> InstPageTable::lookup(const unsigned vpn) {
+    if (vpn >= pageEntry) {
+        ++miss;
         return std::make_pair(0, false);
     }
-    return std::make_pair(data[tag].ppn, data[tag].valid);
+    if (data[vpn].valid) {
+        ++hit;
+    }
+    else {
+        ++miss;
+    }
+    return std::make_pair(data[vpn].ppn, data[vpn].valid);
 }
 
 unsigned InstPageTable::getHit() const {

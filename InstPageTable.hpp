@@ -32,11 +32,11 @@ public:
 
     void init(const unsigned pageSize);
 
-    void push(const unsigned tag, const unsigned ppn);
+    void push(const unsigned vpn, const unsigned ppn);
 
-    void remove(const unsigned tag);
+    void remove(const unsigned vpn);
 
-    std::pair<unsigned, bool> lookup(const unsigned tag);
+    std::pair<unsigned, bool> lookup(const unsigned vpn);
 
     unsigned getHit() const;
 
