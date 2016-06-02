@@ -68,11 +68,19 @@ public:
     void init(const unsigned cacheSize, const unsigned blockSize, const unsigned setAssociativity);
 
     /**
+     * Erase specified data
+     *
+     * @param physicalAddr physical address
+     */
+    void eraseSpecified(const unsigned physicalAddr, InstMemory& memory);
+
+    /**
      * Erase least recently used block, flush to memory
      *
-     * @param physicalAddr
+     * @param physicalAddr physical address
+     * @param memory memory
      */
-    unsigned eraseLeastUsed(const unsigned index, InstMemory& memory);
+    unsigned eraseLeastUsed(const unsigned physicalAddr, InstMemory& memory);
 
     /**
      * Request a cache block
@@ -138,6 +146,8 @@ public:
     unsigned getMiss() const;
 
 private:
+    void checkMRU(const unsigned index, const unsigned tag);
+
     unsigned getTag(const unsigned physicalAddr) const;
 
     unsigned getIndex(const unsigned physicalAddr) const;

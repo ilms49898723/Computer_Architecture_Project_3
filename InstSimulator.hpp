@@ -88,6 +88,8 @@ public:
 private:
     void dumpSnapshot(FILE* fp) const;
 
+    void dumpCMP(FILE* fp) const;
+
     void search(const unsigned virtualAddr, const InstRoute type);
 
     unsigned instALUR(const InstDataBin& inst);

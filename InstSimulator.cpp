@@ -77,8 +77,12 @@ void InstSimulator::start() {
     currentPc = originalPc;
     cycle = 0u;
     dumpSnapshot(snapshot);
-    InstDisk tddisk = dDisk;
-    while (!isHalt(iDisk.getInstruction(currentPc))) {
+    InstDisk verifyDisk = dDisk;
+    while (true) {
+        search(currentPc, InstRoute::INST);
+        if (isHalt(iDisk.getInstruction(currentPc))) {
+            break;
+        }
         const InstDataBin& inst = iDisk.getInstruction(currentPc);
         bool pcUpdated = false;
         if (inst.getInstType() == InstType::R) {
@@ -102,21 +106,22 @@ void InstSimulator::start() {
             else if (isMemoryLoad(inst)) {
                 unsigned addr = instALUI(inst);
                 unsigned loadedData;
+                search(addr, InstRoute::DATA);
                 switch (inst.getOpcode()) {
                     case 0x23u:
-                        loadedData = tddisk.getData(addr);
+                        loadedData = verifyDisk.getData(addr);
                         break;
                     case 0x21u:
-                        loadedData = toUnsigned(toSigned(tddisk.getData(addr, 2), InstSize::HALF));
+                        loadedData = toUnsigned(toSigned(verifyDisk.getData(addr, 2), InstSize::HALF));
                         break;
                     case 0x25u:
-                        loadedData = tddisk.getData(addr, 2);
+                        loadedData = verifyDisk.getData(addr, 2);
                         break;
                     case 0x20u:
-                        loadedData = toUnsigned(toSigned(tddisk.getData(addr, 1), InstSize::BYTE));
+                        loadedData = toUnsigned(toSigned(verifyDisk.getData(addr, 1), InstSize::BYTE));
                         break;
                     case 0x24u:
-                        loadedData = tddisk.getData(addr, 1);
+                        loadedData = verifyDisk.getData(addr, 1);
                         break;
                     default:
                         loadedData = 0;
@@ -127,15 +132,16 @@ void InstSimulator::start() {
             else if (isMemoryStore(inst)) {
                 unsigned addr = instALUI(inst);
                 unsigned savedData = reg.getRegister(inst.getRt());
+                search(addr, InstRoute::DATA);
                 switch (inst.getOpcode()) {
                     case 0x2Bu:
-                        tddisk.setData(addr, savedData, 4);
+                        verifyDisk.setData(addr, savedData, 4);
                         break;
                     case 0x29u:
-                        tddisk.setData(addr, savedData, 2);
+                        verifyDisk.setData(addr, savedData, 2);
                         break;
                     case 0x28u:
-                        tddisk.setData(addr, savedData, 1);
+                        verifyDisk.setData(addr, savedData, 1);
                         break;
                     default:
                         break;
@@ -166,18 +172,45 @@ void InstSimulator::start() {
         printf("cycle %u: %s\n", cycle, InstDecoder::decodeInstStr(inst.getInst()).toString().c_str());
         dumpSnapshot(snapshot);
     }
+    dumpCMP(report);
     fclose(snapshot);
     fclose(report);
 }
 
 void InstSimulator::dumpSnapshot(FILE* fp) const {
-    // TODO missing information
     fprintf(fp, "cycle %u\n", cycle);
     for (unsigned i = 0; i < 32; ++i) {
         fprintf(fp, "$%02d: 0x%08X\n", i, reg.getRegister(i));
     }
     fprintf(fp, "PC: 0x%08X\n", currentPc);
     fprintf(fp, "\n\n");
+}
+
+void InstSimulator::dumpCMP(FILE* fp) const {
+    fprintf(fp, "ICache :\n");
+    fprintf(fp, "# hits: %u\n", iCache.getHit());
+    fprintf(fp, "# misses: %u\n", iCache.getMiss());
+    fprintf(fp, "\n");
+    fprintf(fp, "DCache :\n");
+    fprintf(fp, "# hits: %u\n", dCache.getHit());
+    fprintf(fp, "# misses: %u\n", dCache.getMiss());
+    fprintf(fp, "\n");
+    fprintf(fp, "ITLB :\n");
+    fprintf(fp, "# hits: %u\n", iTLB.getHit());
+    fprintf(fp, "# misses: %u\n", iTLB.getMiss());
+    fprintf(fp, "\n");
+    fprintf(fp, "DTLB :\n");
+    fprintf(fp, "# hits: %u\n", dTLB.getHit());
+    fprintf(fp, "# misses: %u\n", dTLB.getMiss());
+    fprintf(fp, "\n");
+    fprintf(fp, "IPageTable :\n");
+    fprintf(fp, "# hits: %u\n", iPageTable.getHit());
+    fprintf(fp, "# misses: %u\n", iPageTable.getMiss());
+    fprintf(fp, "\n");
+    fprintf(fp, "DPageTable :\n");
+    fprintf(fp, "# hits: %u\n", dPageTable.getHit());
+    fprintf(fp, "# misses: %u\n", dPageTable.getMiss());
+    fprintf(fp, "\n");
 }
 
 void InstSimulator::search(const unsigned virtualAddr, const InstRoute type) {
@@ -191,22 +224,50 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute type) {
     unsigned ppn = 0;
     auto tlbResult = tlb.lookup(vpn);
     if (tlbResult.second) {
+        printf("tlb_hit ");
         ppn = tlbResult.first;
         tlb.update(vpn, cycle);
     }
     else {
-        auto ptResult = pageTable.find(vpn);
-        if (ptResult.second) {
-            ppn = ptResult.first;
+        printf("tlb_miss ");
+        auto pageTableResult = pageTable.find(vpn);
+        if (pageTableResult.second) {
+            printf("pagetable_hit ");
+            ppn = pageTableResult.first;
             tlb.insert(vpn, ppn, cycle);
             memory.update(ppn, cycle);
         }
         else {
+            printf("pagetable_miss ");
             // TODO recheck and complete it
+            auto memoryResult = memory.requestPage(vpn);
+            if (!memoryResult.second) {
+                auto replacedAddr = memory.getLeastUsed();
+                // TODO cache????????????????
+                pageTable.erase(replacedAddr.first);
+                tlb.erase(replacedAddr.first);
+                memory.eraseLeastUsed(disk);
+                memoryResult = memory.requestPage(vpn);
+                memory.update(memoryResult.first, cycle);
+            }
+            ppn = memoryResult.first;
+            pageTable.insert(vpn, ppn);
+            tlb.insert(vpn, ppn, cycle);
         }
     }
+    printf("pa_got ");
     unsigned physicalAddr = ppn * param.pageSize + virtualAddr % param.pageSize;
-
+    auto cacheResult = cache.search(ppn);
+    if (!cacheResult.second) {
+        if (!cache.requestBlock(physicalAddr, ppn)) {
+            printf("cache_request_failed ");
+            cache.eraseLeastUsed(physicalAddr, memory);
+            printf("cache_eraseLRU ");
+        }
+        cache.requestBlock(physicalAddr, ppn);
+        printf("cache_requested ");
+    }
+    printf("\n");
 }
 
 unsigned InstSimulator::instALUR(const InstDataBin& inst) {

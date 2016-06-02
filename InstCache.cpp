@@ -80,7 +80,24 @@ void InstCache::init(const unsigned cacheSize, const unsigned blockSize, const u
     this->miss = 0;
 }
 
-unsigned InstCache::eraseLeastUsed(const unsigned index, InstMemory& memory) {
+void InstCache::eraseSpecified(const unsigned physicalAddr, InstMemory& memory) {
+    unsigned tag = getTag(physicalAddr);
+    unsigned index = getIndex(physicalAddr);
+    const CacheData& targetSet = data[index];
+    unsigned target = 0;
+    for (unsigned i = 0; i < setAssociativity; ++i) {
+        if (targetSet.block[i].valid && targetSet.block[i].tag == tag) {
+            target = i;
+        }
+    }
+    for (unsigned i = 0; i < blockSize; ++i) {
+        memory.setData(targetSet.block[target].ppn, i, targetSet.block[target].content[i], 1);
+    }
+    targetSet.block[target].valid = false;
+}
+
+unsigned InstCache::eraseLeastUsed(const unsigned physicalAddr, InstMemory& memory) {
+    unsigned index = getIndex(physicalAddr);
     CacheData& targetSet = data[index];
     unsigned target = 0;
     for (unsigned i = 0; i < setAssociativity; ++i) {
@@ -90,6 +107,7 @@ unsigned InstCache::eraseLeastUsed(const unsigned index, InstMemory& memory) {
         }
     }
     for (unsigned i = 0; i < blockSize; ++i) {
+        printf("\nwrite to mem %u", targetSet.block[target].ppn + i);
         memory.setData(targetSet.block[target].ppn, i, targetSet.block[target].content[i], 1);
     }
     targetSet.block[target].valid = false;
@@ -103,6 +121,7 @@ bool InstCache::requestBlock(const unsigned physicalAddr, const unsigned ppn) {
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (!targetSet.block[i].valid) {
             targetSet.block[i].init(tag, ppn);
+            checkMRU(index, tag);
             return true;
         }
     }
@@ -117,6 +136,8 @@ std::pair<unsigned, bool> InstCache::search(const unsigned physicalAddr, const u
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (targetSet.block[i].valid && targetSet.block[i].tag == tag) {
             ++hit;
+            targetSet.block[i].mru = true;
+            checkMRU(index, tag);
             unsigned ret = 0;
             if (size == 4) {
                 ret = (targetSet.block[i].content[offset] << 24) |
@@ -209,6 +230,19 @@ unsigned InstCache::getHit() const {
 
 unsigned InstCache::getMiss() const {
     return this->miss;
+}
+
+void InstCache::checkMRU(const unsigned index, const unsigned tag) {
+    bool isAllOne = false;
+    CacheData& targetSet = data[index];
+    for (unsigned i = 0; i < setAssociativity; ++i) {
+        isAllOne &= targetSet.block[i].mru;
+    }
+    if (isAllOne) {
+        for (unsigned i = 0; i < setAssociativity; ++i) {
+            targetSet.block[i].mru = (targetSet.block[i].tag == tag);
+        }
+    }
 }
 
 unsigned InstCache::getTag(const unsigned physicalAddr) const {

@@ -69,6 +69,11 @@ public:
     void update(const unsigned ppn, const unsigned cycle);
 
     /**
+     * Get least used page vpn, ppn
+     */
+    std::pair<unsigned, unsigned> getLeastUsed();
+
+    /**
      * Erase least recently used page, flush to disk
      *
      * @param disk disk

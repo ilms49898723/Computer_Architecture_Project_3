@@ -62,6 +62,16 @@ void InstMemory::update(const unsigned ppn, const unsigned cycle) {
     page[ppn].cycle = cycle;
 }
 
+std::pair<unsigned, unsigned> InstMemory::getLeastUsed() {
+    unsigned index = 0;
+    for (unsigned i = 0; i < entry; ++i) {
+        if (page[i].valid && page[i].cycle < page[index].cycle) {
+            index = i;
+        }
+    }
+    return std::make_pair(page[index].vpn, index);
+}
+
 std::pair<unsigned, unsigned> InstMemory::eraseLeastUsed(InstDisk& disk) {
     unsigned index = 0;
     for (unsigned i = 0; i < entry; ++i) {
@@ -73,14 +83,14 @@ std::pair<unsigned, unsigned> InstMemory::eraseLeastUsed(InstDisk& disk) {
         disk.setData(page[index].vpn + i, page[index].data[i], 1);
     }
     page[index].valid = false;
-    return std::make_pair(page[index].vpn, index * pageSize);
+    return std::make_pair(page[index].vpn, index);
 }
 
 std::pair<unsigned, bool> InstMemory::requestPage(const unsigned vpn) {
     for (unsigned i = 0; i < entry; ++i) {
         if (!page[i].valid) {
             page[i].init(vpn);
-            return std::make_pair(i * pageSize, true);
+            return std::make_pair(i, true);
         }
     }
     return std::make_pair(0, false);
