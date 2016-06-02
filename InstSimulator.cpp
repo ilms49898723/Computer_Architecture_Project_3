@@ -45,14 +45,16 @@ void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsi
 }
 
 void InstSimulator::setProperty(const InstParameter& iParam, const InstParameter& dParam) {
-    iTLB.init((1024u / iParam.pageSize) >> 2);
-    dTLB.init((1024u / dParam.pageSize) >> 2);
-    iPageTable.init(iParam.pageSize);
-    dPageTable.init(dParam.pageSize);
-    iMemory.init(iParam.memSize, iParam.pageSize);
-    dMemory.init(dParam.memSize, dParam.pageSize);
-    iCache.init(iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity);
-    dCache.init(dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity);
+    this->iParam = iParam;
+    this->dParam = dParam;
+    this->iTLB.init((1024u / iParam.pageSize) >> 2);
+    this->dTLB.init((1024u / dParam.pageSize) >> 2);
+    this->iPageTable.init(iParam.pageSize);
+    this->dPageTable.init(dParam.pageSize);
+    this->iMemory.init(iParam.memSize, iParam.pageSize);
+    this->dMemory.init(dParam.memSize, dParam.pageSize);
+    this->iCache.init(iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity);
+    this->dCache.init(dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity);
 }
 
 void InstSimulator::setLogFile(const std::string& snapshotFilename, const std::string& reportFilename) {
@@ -98,27 +100,33 @@ void InstSimulator::dumpSnapshot(FILE* fp) const {
     fprintf(fp, "PC: 0x%08X\n", currentPc);
 }
 
-void InstSimulator::searchCache(const unsigned addr, const InstRoute type) {
+void InstSimulator::search(const unsigned virtualAddr, const InstRoute type) {
+    const InstParameter& param = (type == InstRoute::INST) ? iParam : dParam;
     InstTLB& tlb = (type == InstRoute::INST) ? iTLB : dTLB;
     InstPageTable& pageTable = (type == InstRoute::INST) ? iPageTable : dPageTable;
     InstMemory& memory = (type == InstRoute::INST) ? iMemory : dMemory;
     InstCache& cache = (type == InstRoute::INST) ? iCache : dCache;
     InstDisk& disk = (type == InstRoute::INST) ? iDisk : dDisk;
-    unsigned tag = addr / pageTable.size();
-    auto tlbResult = tlb.lookup(tag);
+    unsigned vpn = virtualAddr / param.pageSize;
+    unsigned ppn = 0;
+    auto tlbResult = tlb.lookup(vpn);
     if (tlbResult.second) {
-        tlb.update(tag, cycle);
+        ppn = tlbResult.first;
+        tlb.update(vpn, cycle);
     }
     else {
-        auto ptResult = pageTable.lookup(tag);
+        auto ptResult = pageTable.find(vpn);
         if (ptResult.second) {
-            tlb.push(tag, ptResult.first, cycle);
-            // TODO update memory LRU
+            ppn = ptResult.first;
+            tlb.insert(vpn, ppn, cycle);
+            memory.update(ppn, cycle);
         }
         else {
-            // TODO complete it
+            // TODO recheck and complete it
         }
     }
+    unsigned physicalAddr = ppn * param.pageSize + virtualAddr % param.pageSize;
+
 }
 
 bool InstSimulator::isNop(const InstDataBin& inst) const {

@@ -37,16 +37,10 @@ public:
     InstSimulator();
 
     /**
-     * Copy constructor
-     */
-    InstSimulator(const InstSimulator& that) = delete;
-
-    /**
      * Default destructor
      */
     ~InstSimulator();
 
-public:
     /**
      * Initialize
      */
@@ -91,15 +85,10 @@ public:
      */
     void start();
 
-    /**
-     * Copy assignment
-     */
-    InstSimulator& operator=(const InstSimulator& that) = delete;
-
 private:
     void dumpSnapshot(FILE* fp) const;
 
-    void searchCache(const unsigned addr, const InstRoute type);
+    void search(const unsigned virtualAddr, const InstRoute type);
 
     bool isNop(const InstDataBin& inst) const;
 
@@ -129,6 +118,8 @@ private:
 
 private:
     InstRegister reg;
+    InstParameter iParam;
+    InstParameter dParam;
     InstTLB iTLB;
     InstTLB dTLB;
     InstPageTable iPageTable;
