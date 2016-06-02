@@ -21,12 +21,15 @@ InstMemory::MemoryPage::~MemoryPage() {
     delete[] this->data;
 }
 
-void InstMemory::MemoryPage::init(const unsigned size, const unsigned vpn) {
+void InstMemory::MemoryPage::allocate(const unsigned size) {
     delete[] this->data;
-    this->cycle = 0;
     this->size = size;
-    this->vpn = vpn;
     this->data = new unsigned[this->size >> 2];
+}
+
+void InstMemory::MemoryPage::init(const unsigned vpn) {
+    this->cycle = 0;
+    this->vpn = vpn;
     this->valid = true;
 }
 
@@ -47,6 +50,9 @@ void InstMemory::init(const unsigned size, const unsigned pageSize) {
     this->entry = size / pageSize;
     this->pageSize = pageSize;
     this->page = new MemoryPage[this->entry];
+    for (unsigned i = 0; i < this->entry; ++i) {
+        this->page[i].allocate(pageSize);
+    }
 }
 
 void InstMemory::update(const unsigned ppn, const unsigned cycle) {
@@ -73,7 +79,7 @@ std::pair<unsigned, unsigned> InstMemory::eraseLeastUsed(InstDisk& disk) {
 std::pair<unsigned, bool> InstMemory::requestPage(const unsigned vpn) {
     for (unsigned i = 0; i < entry; ++i) {
         if (!page[i].valid) {
-            page[i].init(pageSize, vpn);
+            page[i].init(vpn);
             return std::make_pair(i * pageSize, true);
         }
     }

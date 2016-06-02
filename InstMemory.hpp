@@ -29,7 +29,9 @@ private:
 
         ~MemoryPage();
 
-        void init(const unsigned size, const unsigned vpn);
+        void allocate(const unsigned size);
+
+        void init(const unsigned vpn);
 
     public:
         unsigned cycle;
