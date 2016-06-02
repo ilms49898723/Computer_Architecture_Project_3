@@ -10,7 +10,9 @@
 
 #include <cstring>
 #include <string>
-#include <queue>
+#include <utility>
+#include <vector>
+#include "InstDisk.hpp"
 #include "InstUtility.hpp"
 #include "InstType.hpp"
 
@@ -29,13 +31,14 @@ private:
 
         ~MemoryPage();
 
-        void init(const unsigned size);
+        void init(const unsigned size, const unsigned vpn);
 
         MemoryPage& operator=(const MemoryPage& that);
 
     public:
         unsigned cycle;
         unsigned size;
+        unsigned vpn;
         unsigned* data;
     };
 
@@ -53,10 +56,35 @@ public:
 public:
     /**
      * Initialize
+     *
+     * @param size memory size(in bytes)
+     * @param pageSize page size(in bytes)
      */
     void init(const unsigned size, const unsigned pageSize);
 
     // TODO add getData, setData
+
+    /**
+     * Update LRU cycle in page number ppn
+     *
+     * @param ppn physical-page-number to update
+     * @param cycle cycle
+     */
+    void update(const unsigned ppn, const unsigned cycle);
+
+    /**
+     * Flush Least recently used page to disk, return vpn flushed
+     *
+     * @param disk disk
+     */
+    unsigned flushLeast(InstDisk& disk);
+
+    /**
+     * Request a Memory Page
+     *
+     * Return a valid index only when there is empty space in memory
+     */
+    std::pair<unsigned, bool> requestPage(const unsigned vpn);
 
     /**
      * Get memory size in bytes
@@ -68,9 +96,15 @@ public:
      */
     unsigned getEntry() const;
 
+    /**
+     * Get page size
+     */
+    unsigned getPageSize() const ;
+
 private:
     unsigned size;
     unsigned entry;
+    unsigned pageSize;
     bool* valid;
     MemoryPage* data;
 };
