@@ -67,7 +67,7 @@ public:
     void update(const unsigned ppn, const unsigned cycle);
 
     /**
-     * Flush least recently used page to disk
+     * Erase least recently used page, flush to disk
      *
      * @param disk disk
      */
