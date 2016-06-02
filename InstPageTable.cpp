@@ -9,7 +9,7 @@
 
 namespace inst {
 
-InstPageTable::PageTable::PageTable(const unsigned int ppn, const bool valid) {
+InstPageTable::PageTable::PageTable(const unsigned ppn, const bool valid) {
     this->ppn = ppn;
     this->valid = valid;
 }
@@ -20,43 +20,10 @@ InstPageTable::PageTable::~PageTable() {
 
 InstPageTable::InstPageTable() {
     this->pageSize = 0;
-    this->pageEntry = 0;
+    this->entry = 0;
     this->table = nullptr;
     this->hit = 0;
     this->miss = 0;
-}
-
-InstPageTable::InstPageTable(const InstPageTable& that) {
-    if (this != &that) {
-        if (that.table) {
-            this->pageSize = that.pageSize;
-            this->pageEntry = that.pageEntry;
-            this->table = new PageTable[this->pageEntry];
-            this->hit = that.hit;
-            this->miss = that.miss;
-            for (unsigned i = 0; i < this->pageEntry; ++i) {
-                this->table[i] = that.table[i];
-            }
-        }
-        else {
-            this->pageSize = 0;
-            this->pageEntry = 0;
-            this->table = nullptr;
-            this->hit = 0;
-            this->miss = 0;
-        }
-    }
-}
-
-InstPageTable::InstPageTable(InstPageTable&& that) {
-    if (this != &that) {
-        this->pageSize = that.pageSize;
-        this->pageEntry = that.pageEntry;
-        this->table = that.table;
-        that.table = nullptr;
-        this->hit = that.hit;
-        this->miss = that.miss;
-    }
 }
 
 InstPageTable::~InstPageTable() {
@@ -66,25 +33,21 @@ InstPageTable::~InstPageTable() {
 void InstPageTable::init(const unsigned pageSize) {
     delete[] this->table;
     this->pageSize = pageSize;
-    this->pageEntry = 1024u / pageSize;
-    this->table = new PageTable[this->pageEntry];
+    this->entry = 1024u / pageSize;
+    this->table = new PageTable[this->entry];
     this->hit = 0;
     this->miss = 0;
 }
 
-void InstPageTable::push(const unsigned vpn, const unsigned ppn) {
+void InstPageTable::insert(const unsigned vpn, const unsigned ppn) {
     table[vpn] = PageTable(ppn, true);
 }
 
-void InstPageTable::remove(const unsigned vpn) {
+void InstPageTable::erase(const unsigned vpn) {
     table[vpn].valid = false;
 }
 
-std::pair<unsigned, bool> InstPageTable::lookup(const unsigned vpn) {
-    if (vpn >= pageEntry) {
-        ++miss;
-        return std::make_pair(0, false);
-    }
+std::pair<unsigned, bool> InstPageTable::find(const unsigned vpn) {
     (table[vpn].valid) ? ++hit : ++miss;
     return std::make_pair(table[vpn].ppn, table[vpn].valid);
 }
@@ -97,49 +60,12 @@ unsigned InstPageTable::getMiss() const {
     return this->miss;
 }
 
-unsigned InstPageTable::getSize() const {
+unsigned InstPageTable::getPageSize() const {
     return this->pageSize;
 }
 
 unsigned InstPageTable::getEntry() const {
-    return this->pageEntry;
-}
-
-InstPageTable& InstPageTable::operator=(const InstPageTable& that) {
-    if (this != &that) {
-        delete[] this->table;
-        if (that.table) {
-            this->pageSize = that.pageSize;
-            this->pageEntry = that.pageEntry;
-            this->table = new PageTable[this->pageEntry];
-            for (unsigned i = 0; i < this->pageEntry; ++i) {
-                this->table[i] = that.table[i];
-            }
-            this->hit = that.hit;
-            this->miss = that.miss;
-        }
-        else {
-            this->pageSize = 0;
-            this->pageEntry = 0;
-            this->table = nullptr;
-            this->hit = 0;
-            this->miss = 0;
-        }
-    }
-    return *this;
-}
-
-InstPageTable& InstPageTable::operator=(InstPageTable&& that) {
-    if (this != &that) {
-        delete[] this->table;
-        this->pageSize = that.pageSize;
-        this->pageEntry = that.pageEntry;
-        this->table = that.table;
-        that.table = nullptr;
-        this->hit = that.hit;
-        this->miss = that.miss;
-    }
-    return *this;
+    return this->entry;
 }
 
 } /* namespace inst */

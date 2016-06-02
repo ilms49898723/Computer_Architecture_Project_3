@@ -26,37 +26,40 @@ private:
     };
 
 public:
+    /**
+     * Default Constructor
+     */
     InstPageTable();
 
-    InstPageTable(const InstPageTable& that);
-
-    InstPageTable(InstPageTable&& that);
-
+    /**
+     * Default Destructor
+     */
     ~InstPageTable();
 
+    /**
+     * Initialize page table
+     *
+     * @param size page size(in bytes)
+     */
     void init(const unsigned pageSize);
 
-    void push(const unsigned vpn, const unsigned ppn);
+    void insert(const unsigned vpn, const unsigned ppn);
 
-    void remove(const unsigned vpn);
+    void erase(const unsigned vpn);
 
-    std::pair<unsigned, bool> lookup(const unsigned vpn);
+    std::pair<unsigned, bool> find(const unsigned vpn);
 
     unsigned getHit() const;
 
     unsigned getMiss() const;
 
-    unsigned getSize() const;
+    unsigned getPageSize() const;
 
     unsigned getEntry() const;
 
-    InstPageTable& operator=(const InstPageTable& that);
-
-    InstPageTable& operator=(InstPageTable&& that);
-
 private:
     unsigned pageSize;
-    unsigned pageEntry;
+    unsigned entry;
     PageTable* table;
 
 private:
