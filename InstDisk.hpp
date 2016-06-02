@@ -48,8 +48,9 @@ public:
      * Get data at specified address
      *
      * @param addr address to get
+     * @param size size
      */
-    unsigned getData(const unsigned addr) const;
+    unsigned getData(const unsigned addr, const unsigned size = 4) const;
 
     /**
      * Get instruction data at specified address(i-disk only)
@@ -63,8 +64,9 @@ public:
      *
      * @param addr address to set
      * @param val data to set
+     * @param size size
      */
-    void setData(const unsigned addr, const unsigned val);
+    void setData(const unsigned addr, const unsigned val, const unsigned size = 4);
 
     /**
      * Set instruction data at specified address

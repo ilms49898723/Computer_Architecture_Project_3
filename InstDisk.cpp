@@ -46,16 +46,34 @@ void InstDisk::init() {
     }
 }
 
-unsigned InstDisk::getData(const unsigned addr) const {
-    return this->data[addr >> 2];
+unsigned InstDisk::getData(const unsigned addr, const unsigned size) const {
+    if (size == 4) {
+        return this->data[addr >> 2];
+    }
+    else if (size == 2) {
+        return this->data[addr >> 2] & 0xFFFFu;
+    }
+    else {
+        return this->data[addr >> 2] & 0xFFu;
+    }
 }
 
 const InstDataBin& InstDisk::getInstruction(const unsigned addr) const {
     return this->instruction[addr >> 2];
 }
 
-void InstDisk::setData(const unsigned addr, const unsigned val) {
-    this->data[addr >> 2] = val;
+void InstDisk::setData(const unsigned addr, const unsigned val, const unsigned size) {
+    if (size == 4) {
+        this->data[addr >> 2] = val;
+    }
+    else if (size == 2) {
+        this->data[addr >> 2] &= 0xFFFF0000u;
+        this->data[addr >> 2] |= (val & 0xFFFFu);
+    }
+    else {
+        this->data[addr >> 2] &= 0xFFFFFF00u;
+        this->data[addr >> 2] |= (val & 0xFFu);
+    }
 }
 
 void InstDisk::setInstruction(const unsigned addr, const InstDataBin& val) {
