@@ -49,7 +49,7 @@ public:
 
     unsigned getMiss() const;
 
-    unsigned entry() const;
+    unsigned getEntry() const;
 
     InstTLB& operator=(const InstTLB& that);
 

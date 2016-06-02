@@ -111,7 +111,7 @@ unsigned InstTLB::getMiss() const {
     return this->miss;
 }
 
-unsigned InstTLB::entry() const {
+unsigned InstTLB::getEntry() const {
     return this->tlbEntry;
 }
 
