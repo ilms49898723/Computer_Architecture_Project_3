@@ -12,27 +12,27 @@ namespace inst {
 InstPageTable::InstPageTable() {
     this->pageSize = 0;
     this->pageEntry = 0;
-    this->data = nullptr;
+    this->table = nullptr;
     this->hit = 0;
     this->miss = 0;
 }
 
 InstPageTable::InstPageTable(const InstPageTable& that) {
     if (this != &that) {
-        if (that.data) {
+        if (that.table) {
             this->pageSize = that.pageSize;
             this->pageEntry = that.pageEntry;
-            this->data = new PageTableData[this->pageEntry];
+            this->table = new PageTable[this->pageEntry];
             this->hit = that.hit;
             this->miss = that.miss;
             for (unsigned i = 0; i < this->pageEntry; ++i) {
-                this->data[i] = that.data[i];
+                this->table[i] = that.table[i];
             }
         }
         else {
             this->pageSize = 0;
             this->pageEntry = 0;
-            this->data = nullptr;
+            this->table = nullptr;
             this->hit = 0;
             this->miss = 0;
         }
@@ -43,32 +43,32 @@ InstPageTable::InstPageTable(InstPageTable&& that) {
     if (this != &that) {
         this->pageSize = that.pageSize;
         this->pageEntry = that.pageEntry;
-        this->data = that.data;
-        that.data = nullptr;
+        this->table = that.table;
+        that.table = nullptr;
         this->hit = that.hit;
         this->miss = that.miss;
     }
 }
 
 InstPageTable::~InstPageTable() {
-    delete[] this->data;
+    delete[] this->table;
 }
 
 void InstPageTable::init(const unsigned pageSize) {
-    delete[] this->data;
+    delete[] this->table;
     this->pageSize = pageSize;
     this->pageEntry = 1024u / pageSize;
-    this->data = new PageTableData[this->pageEntry];
+    this->table = new PageTable[this->pageEntry];
     this->hit = 0;
     this->miss = 0;
 }
 
 void InstPageTable::push(const unsigned vpn, const unsigned ppn) {
-    data[vpn] = PageTableData(ppn, true);
+    table[vpn] = PageTable(ppn, true);
 }
 
 void InstPageTable::remove(const unsigned vpn) {
-    data[vpn].valid = false;
+    table[vpn].valid = false;
 }
 
 std::pair<unsigned, bool> InstPageTable::lookup(const unsigned vpn) {
@@ -76,13 +76,13 @@ std::pair<unsigned, bool> InstPageTable::lookup(const unsigned vpn) {
         ++miss;
         return std::make_pair(0, false);
     }
-    if (data[vpn].valid) {
+    if (table[vpn].valid) {
         ++hit;
     }
     else {
         ++miss;
     }
-    return std::make_pair(data[vpn].ppn, data[vpn].valid);
+    return std::make_pair(table[vpn].ppn, table[vpn].valid);
 }
 
 unsigned InstPageTable::getHit() const {
@@ -103,13 +103,13 @@ unsigned InstPageTable::entry() const {
 
 InstPageTable& InstPageTable::operator=(const InstPageTable& that) {
     if (this != &that) {
-        delete[] this->data;
-        if (that.data) {
+        delete[] this->table;
+        if (that.table) {
             this->pageSize = that.pageSize;
             this->pageEntry = that.pageEntry;
-            this->data = new PageTableData[this->pageEntry];
+            this->table = new PageTable[this->pageEntry];
             for (unsigned i = 0; i < this->pageEntry; ++i) {
-                this->data[i] = that.data[i];
+                this->table[i] = that.table[i];
             }
             this->hit = that.hit;
             this->miss = that.miss;
@@ -117,7 +117,7 @@ InstPageTable& InstPageTable::operator=(const InstPageTable& that) {
         else {
             this->pageSize = 0;
             this->pageEntry = 0;
-            this->data = nullptr;
+            this->table = nullptr;
             this->hit = 0;
             this->miss = 0;
         }
@@ -127,11 +127,11 @@ InstPageTable& InstPageTable::operator=(const InstPageTable& that) {
 
 InstPageTable& InstPageTable::operator=(InstPageTable&& that) {
     if (this != &that) {
-        delete[] this->data;
+        delete[] this->table;
         this->pageSize = that.pageSize;
         this->pageEntry = that.pageEntry;
-        this->data = that.data;
-        that.data = nullptr;
+        this->table = that.table;
+        that.table = nullptr;
         this->hit = that.hit;
         this->miss = that.miss;
     }

@@ -14,10 +14,10 @@ namespace inst {
 
 class InstPageTable {
 private:
-    struct PageTableData {
+    struct PageTable {
         unsigned ppn;
         bool valid;
-        PageTableData(const unsigned ppn = 0, const bool valid = false) :
+        PageTable(const unsigned ppn = 0, const bool valid = false) :
                 ppn(ppn), valid(valid) {}
     };
 
@@ -52,7 +52,7 @@ public:
 private:
     unsigned pageSize;
     unsigned pageEntry;
-    PageTableData* data;
+    PageTable* table;
 
 private:
     unsigned hit;
