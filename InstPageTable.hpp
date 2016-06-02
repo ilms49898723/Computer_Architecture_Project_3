@@ -46,9 +46,9 @@ public:
 
     unsigned getMiss() const;
 
-    unsigned size() const;
+    unsigned getSize() const;
 
-    unsigned entry() const;
+    unsigned getEntry() const;
 
     InstPageTable& operator=(const InstPageTable& that);
 

@@ -97,11 +97,11 @@ unsigned InstPageTable::getMiss() const {
     return this->miss;
 }
 
-unsigned InstPageTable::size() const {
+unsigned InstPageTable::getSize() const {
     return this->pageSize;
 }
 
-unsigned InstPageTable::entry() const {
+unsigned InstPageTable::getEntry() const {
     return this->pageEntry;
 }
 
