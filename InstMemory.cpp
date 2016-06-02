@@ -14,24 +14,7 @@ InstMemory::MemoryPage::MemoryPage() {
     this->size = 0;
     this->vpn = 0;
     this->data = nullptr;
-}
-
-InstMemory::MemoryPage::MemoryPage(const InstMemory::MemoryPage& that) {
-    if (this != &that) {
-        if (that.data) {
-            this->cycle = that.cycle;
-            this->size = that.size;
-            this->vpn = that.vpn;
-            this->data = new unsigned[this->size >> 2];
-            memcpy(this->data, that.data, sizeof(unsigned) * (this->size >> 2));
-        }
-        else {
-            this->cycle = 0;
-            this->size = 0;
-            this->vpn = 0;
-            this->data = nullptr;
-        }
-    }
+    this->valid = false;
 }
 
 InstMemory::MemoryPage::~MemoryPage() {
@@ -44,81 +27,71 @@ void InstMemory::MemoryPage::init(const unsigned size, const unsigned vpn) {
     this->size = size;
     this->vpn = vpn;
     this->data = new unsigned[this->size >> 2];
-}
-
-InstMemory::MemoryPage& InstMemory::MemoryPage::operator=(const InstMemory::MemoryPage& that) {
-    if (this != &that) {
-        delete[] this->data;
-        if (that.data) {
-            this->cycle = that.cycle;
-            this->size = that.size;
-            this->vpn = that.vpn;
-            this->data = new unsigned[this->size >> 2];
-            memcpy(this->data, that.data, sizeof(unsigned) * (this->size >> 2));
-        }
-        else {
-            this->cycle = 0;
-            this->size = 0;
-            this->vpn = 0;
-            this->data = nullptr;
-        }
-    }
-    return *this;
+    this->valid = true;
 }
 
 InstMemory::InstMemory() {
     this->size = 0;
     this->entry = 0;
     this->pageSize = 0;
-    this->valid = nullptr;
     this->page = nullptr;
 }
 
 InstMemory::~InstMemory() {
-    delete[] valid;
     delete[] page;
 }
 
 void InstMemory::init(const unsigned size, const unsigned pageSize) {
-    delete[] this->valid;
     delete[] this->page;
     this->size = size;
     this->entry = size / pageSize;
     this->pageSize = pageSize;
-    this->valid = new bool[this->entry];
     this->page = new MemoryPage[this->entry];
-    memset(this->valid, false, sizeof(bool) * this->entry);
 }
 
 void InstMemory::update(const unsigned ppn, const unsigned cycle) {
-    if (ppn >= entry || !valid[ppn]) {
+    if (ppn >= entry || !page[ppn].valid) {
         return;
     }
     page[ppn].cycle = cycle;
 }
 
-unsigned InstMemory::flushLeast(InstDisk& disk) {
+std::pair<unsigned, unsigned> InstMemory::eraseLeastUsed(InstDisk& disk) {
     unsigned index = 0;
     for (unsigned i = 0; i < entry; ++i) {
-        if (valid[i] && page[i].cycle < page[index].cycle) {
+        if (page[i].valid && page[i].cycle < page[index].cycle) {
             index = i;
         }
     }
-    for (unsigned i = 0; i < page[index].size; i += 4) {
-        disk.setData(page[index].vpn + i, page[index].data[i >> 2]);
+    for (unsigned i = 0; i < (page[index].size >> 2); ++i) {
+        disk.setData(page[index].vpn + (i << 2), page[index].data[i]);
     }
-    return index;
+    page[index].valid = false;
+    return std::make_pair(page[index].vpn, index * pageSize);
 }
 
 std::pair<unsigned, bool> InstMemory::requestPage(const unsigned vpn) {
     for (unsigned i = 0; i < entry; ++i) {
-        if (!valid[i]) {
-            valid[i] = true;
+        if (!page[i].valid) {
             page[i].init(pageSize, vpn);
             return std::make_pair(i * pageSize, true);
         }
     }
     return std::make_pair(0, false);
+}
+
+void InstMemory::setData(const unsigned ppn, const unsigned offset, const unsigned val) {
+    if (!this->page[ppn].valid) {
+        return;
+    }
+    this->page[ppn].data[offset >> 2] = val;
+}
+
+unsigned InstMemory::getData(const unsigned ppn, const unsigned offset) {
+    if (!this->page[ppn].valid) {
+        return 0;
+    }
+    return this->page[ppn].data[offset >> 2];
 }
 
 unsigned InstMemory::getSize() const {

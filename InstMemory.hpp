@@ -27,19 +27,16 @@ private:
     public:
         MemoryPage();
 
-        MemoryPage(const MemoryPage& that);
-
         ~MemoryPage();
 
         void init(const unsigned size, const unsigned vpn);
-
-        MemoryPage& operator=(const MemoryPage& that);
 
     public:
         unsigned cycle;
         unsigned size;
         unsigned vpn;
         unsigned* data;
+        bool valid;
     };
 
 public:
@@ -53,38 +50,52 @@ public:
      */
     ~InstMemory();
 
-public:
     /**
      * Initialize
      *
-     * @param size memory size(in bytes)
+     * @param size total memory size(in bytes)
      * @param pageSize page size(in bytes)
      */
     void init(const unsigned size, const unsigned pageSize);
 
-    // TODO add getData, setData
-
     /**
-     * Update LRU cycle in page number ppn
+     * Update LRU cycle in physical page number ppn
      *
-     * @param ppn physical-page-number to update
-     * @param cycle cycle
+     * @param ppn physical page number to update
+     * @param cycle cycle to update
      */
     void update(const unsigned ppn, const unsigned cycle);
 
     /**
-     * Flush Least recently used page to disk, return vpn flushed
+     * Flush least recently used page to disk
      *
      * @param disk disk
      */
-    unsigned flushLeast(InstDisk& disk);
+    std::pair<unsigned, unsigned> eraseLeastUsed(InstDisk& disk);
 
     /**
      * Request a Memory Page
      *
-     * Return a valid index only when there is empty space in memory
+     * Return a valid ppn only when there is empty space in memory
      */
     std::pair<unsigned, bool> requestPage(const unsigned vpn);
+
+    /**
+     * Set data at specified ppn, offset
+     *
+     * @param ppn physical page number
+     * @param offset page offset in bytes
+     * @param val value to set
+     */
+    void setData(const unsigned ppn, const unsigned offset, const unsigned val);
+
+    /**
+     * Get data at specified ppn, offset
+     *
+     * @param ppn physical page number
+     * @param offset page offset in bytes
+     */
+    unsigned getData(const unsigned ppn, const unsigned offset);
 
     /**
      * Get memory size in bytes
