@@ -37,7 +37,7 @@ private:
         unsigned cycle;
         unsigned size;
         unsigned vpn;
-        unsigned* data;
+        unsigned char* data;
         bool valid;
     };
 
@@ -88,8 +88,9 @@ public:
      * @param ppn physical page number
      * @param offset page offset in bytes
      * @param val value to set
+     * @param size size
      */
-    void setData(const unsigned ppn, const unsigned offset, const unsigned val);
+    void setData(const unsigned ppn, const unsigned offset, const unsigned val, const unsigned size = 4);
 
     /**
      * Get data at specified ppn, offset
@@ -97,7 +98,7 @@ public:
      * @param ppn physical page number
      * @param offset page offset in bytes
      */
-    unsigned getData(const unsigned ppn, const unsigned offset);
+    unsigned getData(const unsigned ppn, const unsigned offset, const unsigned size = 4);
 
     /**
      * Get memory size in bytes
@@ -118,7 +119,6 @@ private:
     unsigned size;
     unsigned entry;
     unsigned pageSize;
-    bool* valid;
     MemoryPage* page;
 };
 

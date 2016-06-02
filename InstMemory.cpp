@@ -24,7 +24,7 @@ InstMemory::MemoryPage::~MemoryPage() {
 void InstMemory::MemoryPage::allocate(const unsigned size) {
     delete[] this->data;
     this->size = size;
-    this->data = new unsigned[this->size >> 2];
+    this->data = new unsigned char[this->size];
 }
 
 void InstMemory::MemoryPage::init(const unsigned vpn) {
@@ -69,8 +69,8 @@ std::pair<unsigned, unsigned> InstMemory::eraseLeastUsed(InstDisk& disk) {
             index = i;
         }
     }
-    for (unsigned i = 0; i < (page[index].size >> 2); ++i) {
-        disk.setData(page[index].vpn + (i << 2), page[index].data[i]);
+    for (unsigned i = 0; i < page[index].size; ++i) {
+        disk.setData(page[index].vpn + i, page[index].data[i], 1);
     }
     page[index].valid = false;
     return std::make_pair(page[index].vpn, index * pageSize);
@@ -86,18 +86,42 @@ std::pair<unsigned, bool> InstMemory::requestPage(const unsigned vpn) {
     return std::make_pair(0, false);
 }
 
-void InstMemory::setData(const unsigned ppn, const unsigned offset, const unsigned val) {
+void InstMemory::setData(const unsigned ppn, const unsigned offset, const unsigned val, const unsigned size) {
     if (!this->page[ppn].valid) {
         return;
     }
-    this->page[ppn].data[offset >> 2] = val;
+    if (size == 4) {
+        this->page[ppn].data[offset] = static_cast<unsigned char>((val >> 24) & 0xFFu);
+        this->page[ppn].data[offset + 1] = static_cast<unsigned char>((val >> 16) & 0xFFu);
+        this->page[ppn].data[offset + 2] = static_cast<unsigned char>((val >> 8) & 0xFFu);
+        this->page[ppn].data[offset + 3] = static_cast<unsigned char>((val) & 0xFFu);
+    }
+    else if (size == 2) {
+        this->page[ppn].data[offset] = static_cast<unsigned char>((val >> 16) & 0xFFu);
+        this->page[ppn].data[offset + 1] = static_cast<unsigned char>((val) & 0xFFu);
+    }
+    else {
+        this->page[ppn].data[offset] = static_cast<unsigned char>((val) & 0xFFu);
+    }
 }
 
-unsigned InstMemory::getData(const unsigned ppn, const unsigned offset) {
+unsigned InstMemory::getData(const unsigned ppn, const unsigned offset, const unsigned size) {
     if (!this->page[ppn].valid) {
         return 0;
     }
-    return this->page[ppn].data[offset >> 2];
+    if (size == 4) {
+        return (this->page[ppn].data[offset] << 24) |
+               (this->page[ppn].data[offset + 1] << 16) |
+               (this->page[ppn].data[offset + 2] << 8) |
+               (this->page[ppn].data[offset + 3]);
+    }
+    else if (size == 2) {
+        return (this->page[ppn].data[offset] << 8) |
+               (this->page[ppn].data[offset + 1]);
+    }
+    else {
+        return (this->page[ppn].data[offset]);
+    }
 }
 
 unsigned InstMemory::getSize() const {
