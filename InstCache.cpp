@@ -85,15 +85,20 @@ void InstCache::eraseSpecified(const unsigned physicalAddr, InstMemory& memory) 
     unsigned index = getIndex(physicalAddr);
     const CacheData& targetSet = data[index];
     unsigned target = 0;
+    bool found = false;
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (targetSet.block[i].valid && targetSet.block[i].tag == tag) {
             target = i;
+            found = true;
+            break;
         }
     }
-    for (unsigned i = 0; i < blockSize; ++i) {
-        memory.setData(targetSet.block[target].ppn, i, targetSet.block[target].content[i], 1);
+    if (found) {
+        for (unsigned i = 0; i < blockSize; ++i) {
+            memory.setData(targetSet.block[target].ppn, i, targetSet.block[target].content[i], 1);
+        }
+        targetSet.block[target].valid = false;
     }
-    targetSet.block[target].valid = false;
 }
 
 unsigned InstCache::eraseLeastUsed(const unsigned physicalAddr, InstMemory& memory) {
@@ -107,7 +112,6 @@ unsigned InstCache::eraseLeastUsed(const unsigned physicalAddr, InstMemory& memo
         }
     }
     for (unsigned i = 0; i < blockSize; ++i) {
-        printf("\nwrite to mem %u", targetSet.block[target].ppn + i);
         memory.setData(targetSet.block[target].ppn, i, targetSet.block[target].content[i], 1);
     }
     targetSet.block[target].valid = false;
@@ -117,7 +121,7 @@ unsigned InstCache::eraseLeastUsed(const unsigned physicalAddr, InstMemory& memo
 bool InstCache::requestBlock(const unsigned physicalAddr, const unsigned ppn) {
     unsigned tag = getTag(physicalAddr);
     unsigned index = getIndex(physicalAddr);
-    const CacheData& targetSet = data[index];
+    CacheData& targetSet = data[index];
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (!targetSet.block[i].valid) {
             targetSet.block[i].init(tag, ppn);
@@ -233,12 +237,12 @@ unsigned InstCache::getMiss() const {
 }
 
 void InstCache::checkMRU(const unsigned index, const unsigned tag) {
-    bool isAllOne = false;
+    bool isAllTrue = true;
     CacheData& targetSet = data[index];
     for (unsigned i = 0; i < setAssociativity; ++i) {
-        isAllOne &= targetSet.block[i].mru;
+        isAllTrue &= targetSet.block[i].mru;
     }
-    if (isAllOne) {
+    if (isAllTrue) {
         for (unsigned i = 0; i < setAssociativity; ++i) {
             targetSet.block[i].mru = (targetSet.block[i].tag == tag);
         }

@@ -169,7 +169,6 @@ void InstSimulator::start() {
             currentPc += 4;
         }
         ++cycle;
-        printf("cycle %u: %s\n", cycle, InstDecoder::decodeInstStr(inst.getInst()).toString().c_str());
         dumpSnapshot(snapshot);
     }
     dumpCMP(report);
@@ -213,37 +212,34 @@ void InstSimulator::dumpCMP(FILE* fp) const {
     fprintf(fp, "\n");
 }
 
-void InstSimulator::search(const unsigned virtualAddr, const InstRoute type) {
-    const InstParameter& param = (type == InstRoute::INST) ? iParam : dParam;
-    InstTLB& tlb = (type == InstRoute::INST) ? iTLB : dTLB;
-    InstPageTable& pageTable = (type == InstRoute::INST) ? iPageTable : dPageTable;
-    InstMemory& memory = (type == InstRoute::INST) ? iMemory : dMemory;
-    InstCache& cache = (type == InstRoute::INST) ? iCache : dCache;
-    InstDisk& disk = (type == InstRoute::INST) ? iDisk : dDisk;
+void InstSimulator::search(const unsigned virtualAddr, const InstRoute route) {
+    const InstParameter& param = (route == InstRoute::INST) ? iParam : dParam;
+    InstTLB& tlb = (route == InstRoute::INST) ? iTLB : dTLB;
+    InstPageTable& pageTable = (route == InstRoute::INST) ? iPageTable : dPageTable;
+    InstMemory& memory = (route == InstRoute::INST) ? iMemory : dMemory;
+    InstCache& cache = (route == InstRoute::INST) ? iCache : dCache;
+    InstDisk& disk = (route == InstRoute::INST) ? iDisk : dDisk;
     unsigned vpn = virtualAddr / param.pageSize;
     unsigned ppn = 0;
     auto tlbResult = tlb.lookup(vpn);
     if (tlbResult.second) {
-        printf("tlb_hit ");
         ppn = tlbResult.first;
         tlb.update(vpn, cycle);
     }
     else {
-        printf("tlb_miss ");
         auto pageTableResult = pageTable.find(vpn);
         if (pageTableResult.second) {
-            printf("pagetable_hit ");
             ppn = pageTableResult.first;
             tlb.insert(vpn, ppn, cycle);
             memory.update(ppn, cycle);
         }
         else {
-            printf("pagetable_miss ");
-            // TODO recheck and complete it
             auto memoryResult = memory.requestPage(vpn);
             if (!memoryResult.second) {
                 auto replacedAddr = memory.getLeastUsed();
-                // TODO cache????????????????
+                for (unsigned i = 0; i < param.pageSize; ++i) {
+                    cache.eraseSpecified(ppn * param.pageSize + i, memory);
+                }
                 pageTable.erase(replacedAddr.first);
                 tlb.erase(replacedAddr.first);
                 memory.eraseLeastUsed(disk);
@@ -255,19 +251,14 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute type) {
             tlb.insert(vpn, ppn, cycle);
         }
     }
-    printf("pa_got ");
     unsigned physicalAddr = ppn * param.pageSize + virtualAddr % param.pageSize;
-    auto cacheResult = cache.search(ppn);
+    auto cacheResult = cache.search(physicalAddr);
     if (!cacheResult.second) {
         if (!cache.requestBlock(physicalAddr, ppn)) {
-            printf("cache_request_failed ");
             cache.eraseLeastUsed(physicalAddr, memory);
-            printf("cache_eraseLRU ");
+            cache.requestBlock(physicalAddr, ppn);
         }
-        cache.requestBlock(physicalAddr, ppn);
-        printf("cache_requested ");
     }
-    printf("\n");
 }
 
 unsigned InstSimulator::instALUR(const InstDataBin& inst) {

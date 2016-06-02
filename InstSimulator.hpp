@@ -90,7 +90,7 @@ private:
 
     void dumpCMP(FILE* fp) const;
 
-    void search(const unsigned virtualAddr, const InstRoute type);
+    void search(const unsigned virtualAddr, const InstRoute route);
 
     unsigned instALUR(const InstDataBin& inst);
 
