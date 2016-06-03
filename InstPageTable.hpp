@@ -75,18 +75,7 @@ public:
      */
     unsigned getMiss() const;
 
-    /**
-     * Get PageSize
-     */
-    unsigned getPageSize() const;
-
-    /**
-     * Get number of page table entry
-     */
-    unsigned getEntry() const;
-
 private:
-    unsigned pageSize;
     unsigned entry;
     PageTable* table;
 

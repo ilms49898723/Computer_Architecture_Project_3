@@ -19,7 +19,6 @@ InstPageTable::PageTable::~PageTable() {
 }
 
 InstPageTable::InstPageTable() {
-    this->pageSize = 0;
     this->entry = 0;
     this->table = nullptr;
     this->hit = 0;
@@ -32,7 +31,6 @@ InstPageTable::~InstPageTable() {
 
 void InstPageTable::init(const unsigned pageSize) {
     delete[] this->table;
-    this->pageSize = pageSize;
     this->entry = 1024u / pageSize;
     this->table = new PageTable[this->entry];
     this->hit = 0;
@@ -58,14 +56,6 @@ unsigned InstPageTable::getHit() const {
 
 unsigned InstPageTable::getMiss() const {
     return this->miss;
-}
-
-unsigned InstPageTable::getPageSize() const {
-    return this->pageSize;
-}
-
-unsigned InstPageTable::getEntry() const {
-    return this->entry;
 }
 
 } /* namespace inst */
