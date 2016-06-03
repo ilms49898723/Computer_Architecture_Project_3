@@ -237,10 +237,15 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute route) {
             auto memoryResult = memory.requestPage(vpn, cycle);
             if (!memoryResult.second) {
                 auto replacedAddr = memory.getLeastUsed();
+                if (route == InstRoute::DATA) {
+                    printf("replacing memory, to replaced ppn %u, vpn %u\n", replacedAddr.first, replacedAddr.second);
+                }
                 pageTable.erase(replacedAddr.first);
                 tlb.erase(replacedAddr.first);
                 for (unsigned i = 0; i < param.pageSize; ++i) {
-                    cache.eraseSpecified(ppn * param.pageSize + i);
+                    printf("erase pa = %u\n", replacedAddr.second * param.pageSize + i);
+                    printf("index %u, tag %u\n", cache.getIndex(replacedAddr.second * param.pageSize + i), cache.getTag(replacedAddr.second * param.pageSize + i));
+                    cache.eraseSpecified(replacedAddr.second * param.pageSize + i);
                 }
                 memory.eraseLeastUsed();
                 memoryResult = memory.requestPage(vpn, cycle);
@@ -254,12 +259,15 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute route) {
     unsigned physicalAddr = ppn * param.pageSize + virtualAddr % param.pageSize;
     if (route == InstRoute::DATA) {
         printf("\ncycle %u\n", cycle);
-        printf("PA = %u\n", physicalAddr);
+        printf("VA = %u, vpn = %u, PA = %u, ppn = %u\n", virtualAddr, vpn, physicalAddr, ppn);
         printf("index %u, tag %u\n", cache.getIndex(physicalAddr), cache.getTag(physicalAddr));
+        printf("\n%s\n", memory.toString().c_str());
     }
     bool cacheResult = cache.search(physicalAddr);
     if (route == InstRoute::DATA) {
+        printf("%s\n", cache.toString().c_str());
         printf("%s\n", cacheResult ? "HIT" : "MISS");
+
     }
     if (!cacheResult) {
         if (!cache.requestBlock(physicalAddr)) {

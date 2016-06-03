@@ -40,6 +40,7 @@ void InstMemory::init(const unsigned size, const unsigned pageSize) {
     this->size = size;
     this->entry = size / pageSize;
     this->page = new MemoryPage[this->entry];
+    printf("#memory entry %u\n", entry);
 }
 
 void InstMemory::update(const unsigned ppn, const unsigned cycle) {
@@ -73,6 +74,16 @@ std::pair<unsigned, bool> InstMemory::requestPage(const unsigned vpn, const unsi
         }
     }
     return std::make_pair(0, false);
+}
+
+std::string InstMemory::toString() const {
+    std::string content;
+    char temp[2048];
+    for (unsigned i = 0; i < entry; ++i) {
+        snprintf(temp, 2048, "ppn %u: valid %d, vpn %u\n", i, page[i].valid, page[i].vpn);
+        content += temp;
+    }
+    return content;
 }
 
 } /* namespace inst */

@@ -8,6 +8,7 @@
 #ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTCACHE_HPP_
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTCACHE_HPP_
 
+#include <string>
 #include <utility>
 
 namespace inst {
@@ -112,6 +113,11 @@ public:
      * Get miss
      */
     unsigned getMiss() const;
+
+    /**
+     * Get string representation of current state
+     */
+    std::string toString() const;
 
 private:
     void checkMRU(const unsigned index, const unsigned tag);

@@ -81,6 +81,11 @@ public:
      */
     std::pair<unsigned, bool> requestPage(const unsigned vpn, const unsigned cycle);
 
+    /**
+     * Get string representation of current state
+     */
+    std::string toString() const;
+
 private:
     unsigned size;
     unsigned entry;

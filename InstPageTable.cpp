@@ -35,6 +35,7 @@ void InstPageTable::init(const unsigned pageSize) {
     this->table = new PageTable[this->entry];
     this->hit = 0;
     this->miss = 0;
+    printf("#Pagetable entry %u\n", entry);
 }
 
 void InstPageTable::insert(const unsigned vpn, const unsigned ppn) {

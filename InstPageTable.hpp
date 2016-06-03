@@ -8,6 +8,7 @@
 #ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTPAGETABLE_HPP_
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTPAGETABLE_HPP_
 
+#include <cstdio>
 #include <utility>
 
 namespace inst {

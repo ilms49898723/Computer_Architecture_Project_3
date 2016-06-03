@@ -44,6 +44,7 @@ void InstTLB::init(const unsigned entry) {
     this->data = new TLBData[entry];
     this->hit = 0;
     this->miss = 0;
+    printf("#TLB entry %u\n", entry);
 }
 
 void InstTLB::insert(const unsigned vpn, const unsigned ppn, const unsigned cycle) {

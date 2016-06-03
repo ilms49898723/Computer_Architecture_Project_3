@@ -5,6 +5,7 @@
  *      Author: LittleBird
  */
 
+#include <c++/cstdio>
 #include "InstCache.hpp"
 
 namespace inst {
@@ -63,6 +64,7 @@ void InstCache::init(const unsigned cacheSize, const unsigned blockSize, const u
     }
     this->hit = 0;
     this->miss = 0;
+    printf("#cache entry(index) %u, set %u\n", entry, setAssociativity);
 }
 
 void InstCache::eraseSpecified(const unsigned physicalAddr) {
@@ -135,6 +137,19 @@ unsigned InstCache::getHit() const {
 
 unsigned InstCache::getMiss() const {
     return this->miss;
+}
+
+std::string InstCache::toString() const {
+    std::string content;
+    char temp[2048];
+    for (unsigned i = 0; i < entry; ++i) {
+        for (unsigned j = 0; j < setAssociativity; ++j) {
+            snprintf(temp, 2048, "[%u, %u] ", data[i].block[j].valid, data[i].block[j].tag);
+            content += temp;
+        }
+        content += "\n";
+    }
+    return content;
 }
 
 void InstCache::checkMRU(const unsigned index, const unsigned tag) {

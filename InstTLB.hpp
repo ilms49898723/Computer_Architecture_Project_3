@@ -8,6 +8,7 @@
 #ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTTLB_HPP_
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTTLB_HPP_
 
+#include <cstdio>
 #include <utility>
 
 namespace inst {
