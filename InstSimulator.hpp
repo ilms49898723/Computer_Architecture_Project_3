@@ -37,9 +37,29 @@ public:
     InstSimulator();
 
     /**
+     * Copy constructor
+     */
+    InstSimulator(const InstSimulator& that) = delete;
+
+    /**
+     * Move constructor
+     */
+    InstSimulator(InstSimulator&& that);
+
+    /**
      * Default destructor
      */
     ~InstSimulator();
+
+    /**
+     * Copy assignment
+     */
+    InstSimulator& operator=(const InstSimulator& that) = delete;
+
+    /**
+     * Move assignment
+     */
+    InstSimulator& operator=(InstSimulator&& that);
 
     /**
      * Initialize

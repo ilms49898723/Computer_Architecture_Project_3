@@ -13,8 +13,55 @@ InstSimulator::InstSimulator() {
     init();
 }
 
+InstSimulator::InstSimulator(InstSimulator&& that) {
+    if (this != &that) {
+        this->originalPc = that.originalPc;
+        this->currentPc = that.currentPc;
+        this->cycle = that.cycle;
+        this->snapshot = that.snapshot;
+        this->report = that.report;
+        this->reg = std::move(that.reg);
+        this->iParam = std::move(that.iParam);
+        this->dParam = std::move(that.dParam);
+        this->iTLB = std::move(that.iTLB);
+        this->dTLB = std::move(that.dTLB);
+        this->iPageTable = std::move(that.iPageTable);
+        this->dPageTable = std::move(that.dPageTable);
+        this->iMemory = std::move(that.iMemory);
+        this->dMemory = std::move(that.dMemory);
+        this->iCache = std::move(that.iCache);
+        this->dCache = std::move(that.dCache);
+        this->iDisk = std::move(that.iDisk);
+        this->dDisk = std::move(that.dDisk);
+    }
+}
+
 InstSimulator::~InstSimulator() {
 
+}
+
+InstSimulator& InstSimulator::operator=(InstSimulator&& that) {
+    if (this != &that) {
+        this->originalPc = that.originalPc;
+        this->currentPc = that.currentPc;
+        this->cycle = that.cycle;
+        this->snapshot = that.snapshot;
+        this->report = that.report;
+        this->reg = std::move(that.reg);
+        this->iParam = std::move(that.iParam);
+        this->dParam = std::move(that.dParam);
+        this->iTLB = std::move(that.iTLB);
+        this->dTLB = std::move(that.dTLB);
+        this->iPageTable = std::move(that.iPageTable);
+        this->dPageTable = std::move(that.dPageTable);
+        this->iMemory = std::move(that.iMemory);
+        this->dMemory = std::move(that.dMemory);
+        this->iCache = std::move(that.iCache);
+        this->dCache = std::move(that.dCache);
+        this->iDisk = std::move(that.iDisk);
+        this->dDisk = std::move(that.dDisk);
+    }
+    return *this;
 }
 
 void InstSimulator::init() {
