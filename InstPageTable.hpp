@@ -9,6 +9,7 @@
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTPAGETABLE_HPP_
 
 #include <cstdio>
+#include <string>
 #include <utility>
 
 namespace inst {
@@ -21,6 +22,8 @@ private:
 
         ~PageTable();
 
+        void init(const unsigned ppn);
+
     public:
         unsigned ppn;
         bool valid;
@@ -28,14 +31,34 @@ private:
 
 public:
     /**
-     * Default Constructor
+     * Default constructor
      */
     InstPageTable();
+
+    /**
+     * Copy constructor
+     */
+    InstPageTable(const InstPageTable& that);
+
+    /**
+     * Move constructor
+     */
+    InstPageTable(InstPageTable&& that);
 
     /**
      * Default Destructor
      */
     ~InstPageTable();
+
+    /**
+     * Copy assignment
+     */
+    InstPageTable& operator=(const InstPageTable& that);
+
+    /**
+     * Move assignment
+     */
+    InstPageTable& operator=(InstPageTable&& that);
 
     /**
      * Initialize page table
@@ -75,6 +98,11 @@ public:
      * Get PageTable miss
      */
     unsigned getMiss() const;
+
+    /**
+     * Get string representation of current state
+     */
+    std::string toString() const;
 
 private:
     unsigned entry;
