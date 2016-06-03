@@ -89,11 +89,6 @@ public:
      */
     unsigned getMiss() const;
 
-    /**
-     * Get number of TLB entry
-     */
-    unsigned getEntry() const;
-
 private:
     unsigned entry;
     TLBData* data;

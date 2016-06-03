@@ -92,8 +92,4 @@ unsigned InstTLB::getMiss() const {
     return this->miss;
 }
 
-unsigned InstTLB::getEntry() const {
-    return this->entry;
-}
-
 } /* namespace inst */
