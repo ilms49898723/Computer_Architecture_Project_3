@@ -4,14 +4,18 @@ CC := g++
 
 CXXFLAGS := -std=c++11 -Os -Wall -Wextra
 
-OBJS := InstDataBin.o \
+OBJS := InstCache.o \
+        InstDataBin.o \
         InstDataStr.o \
         InstDecoder.o \
+        InstDisk.o \
         InstImageReader.o \
         InstLookUp.o \
         InstMemory.o \
+        InstPageTable.o \
         InstRegister.o \
         InstSimulator.o \
+        InstTLB.o \
         InstUtility.o \
         main.o
 
