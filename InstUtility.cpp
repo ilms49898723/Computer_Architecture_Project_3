@@ -15,7 +15,7 @@ void parseArgument(InstParameter& iMemArgs, InstParameter& dMemArgs, const int a
         dMemArgs = InstParameter(32, 16, 16, 4, 1);
         return;
     }
-    if (argc != 10) {
+    if (argc != 11) {
         iMemArgs = InstParameter();
         dMemArgs = InstParameter();
         return;

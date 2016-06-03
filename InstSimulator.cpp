@@ -46,6 +46,12 @@ void InstSimulator::loadData(const unsigned* src, const unsigned len, const unsi
 void InstSimulator::setProperty(const InstParameter& iParam, const InstParameter& dParam) {
     this->iParam = iParam;
     this->dParam = dParam;
+    printf("%u %u %u %u %u %u %u %u %u %u\n",
+           iParam.memSize, dParam.memSize,
+           iParam.pageSize, dParam.pageSize,
+           iParam.cacheSize, iParam.cacheBlockSize, iParam.cacheSetAssociativity,
+           dParam.cacheSize, dParam.cacheBlockSize, dParam.cacheSetAssociativity
+    );
     this->iTLB.init((1024u / iParam.pageSize) >> 2);
     this->dTLB.init((1024u / dParam.pageSize) >> 2);
     this->iPageTable.init(iParam.pageSize);
