@@ -12,9 +12,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "InstDisk.hpp"
-#include "InstUtility.hpp"
-#include "InstType.hpp"
 
 namespace inst {
 
@@ -29,15 +26,11 @@ private:
 
         ~MemoryPage();
 
-        void allocate(const unsigned size);
-
-        void init(const unsigned vpn);
+        void init(const unsigned vpn, const unsigned cycle);
 
     public:
         unsigned cycle;
-        unsigned size;
         unsigned vpn;
-        unsigned char* data;
         bool valid;
     };
 
@@ -69,61 +62,28 @@ public:
     void update(const unsigned ppn, const unsigned cycle);
 
     /**
+     * Erase least recently used page
+     */
+    void eraseLeastUsed();
+
+    /**
      * Get least used page vpn, ppn
      */
     std::pair<unsigned, unsigned> getLeastUsed();
 
     /**
-     * Erase least recently used page, flush to disk
-     *
-     * @param disk disk
-     */
-    std::pair<unsigned, unsigned> eraseLeastUsed(InstDisk& disk);
-
-    /**
      * Request a Memory Page
      *
      * Return a valid ppn only when there is empty space in memory
-     */
-    std::pair<unsigned, bool> requestPage(const unsigned vpn);
-
-    /**
-     * Set data at specified ppn, offset
      *
-     * @param ppn physical page number
-     * @param offset page offset in bytes
-     * @param val value to set
-     * @param size size
+     * @param vpn virtual page number
+     * @param cycle cycle
      */
-    void setData(const unsigned ppn, const unsigned offset, const unsigned val, const unsigned size = 4);
-
-    /**
-     * Get data at specified ppn, offset
-     *
-     * @param ppn physical page number
-     * @param offset page offset in bytes
-     */
-    unsigned getData(const unsigned ppn, const unsigned offset, const unsigned size = 4);
-
-    /**
-     * Get memory size in bytes
-     */
-    unsigned getSize() const;
-
-    /**
-     * Get number of memory entry
-     */
-    unsigned getEntry() const;
-
-    /**
-     * Get page size
-     */
-    unsigned getPageSize() const ;
+    std::pair<unsigned, bool> requestPage(const unsigned vpn, const unsigned cycle);
 
 private:
     unsigned size;
     unsigned entry;
-    unsigned pageSize;
     MemoryPage* page;
 };
 

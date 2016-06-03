@@ -69,7 +69,7 @@ public:
     void eraseSpecified(const unsigned physicalAddr);
 
     /**
-     * Erase least recently used block, flush to memory
+     * Erase least recently used block
      *
      * @param physicalAddr physical address
      */
