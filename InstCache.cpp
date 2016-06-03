@@ -5,7 +5,6 @@
  *      Author: LittleBird
  */
 
-#include <c++/cstdio>
 #include "InstCache.hpp"
 
 namespace inst {
