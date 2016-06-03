@@ -30,7 +30,6 @@ int main(int argc, const char** argv) {
     // set simulator, start simulation
     inst::InstSimulator simulator;
     simulator.setProperty(iParam, dParam);
-    printf("HERE\n");
     simulator.setLogFile(snapshotFilename,reportFilename);
     simulator.loadInstruction(instructions, iLen, pc);
     simulator.loadData(memory, dLen, sp);

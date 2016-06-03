@@ -40,7 +40,6 @@ void InstMemory::init(const unsigned size, const unsigned pageSize) {
     this->size = size;
     this->entry = size / pageSize;
     this->page = new MemoryPage[this->entry];
-    printf("#memory entry %u\n", entry);
 }
 
 void InstMemory::update(const unsigned ppn, const unsigned cycle) {

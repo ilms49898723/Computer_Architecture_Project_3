@@ -63,7 +63,6 @@ void InstCache::init(const unsigned cacheSize, const unsigned blockSize, const u
     }
     this->hit = 0;
     this->miss = 0;
-    printf("#cache entry(index) %u, set %u\n", entry, setAssociativity);
 }
 
 void InstCache::eraseSpecified(const unsigned physicalAddr) {
