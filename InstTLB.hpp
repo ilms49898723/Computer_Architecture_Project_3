@@ -9,6 +9,7 @@
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTTLB_HPP_
 
 #include <cstdio>
+#include <string>
 #include <utility>
 
 namespace inst {
@@ -40,9 +41,29 @@ public:
     InstTLB();
 
     /**
+     * Copy constructor
+     */
+    InstTLB(const InstTLB& that);
+
+    /**
+     * Move constructor
+     */
+    InstTLB(InstTLB&& that);
+
+    /**
      * Default destructor
      */
     ~InstTLB();
+
+    /**
+     * Copy assignment
+     */
+    InstTLB& operator=(const InstTLB& that);
+
+    /**
+     * Move assignment
+     */
+    InstTLB& operator=(InstTLB&& that);
 
     /**
      * Initialize
@@ -84,6 +105,11 @@ public:
      * Get TLB miss
      */
     unsigned getMiss() const;
+
+    /**
+     * Get string representation of current state
+     */
+    std::string toString() const;
 
 private:
     unsigned entry;

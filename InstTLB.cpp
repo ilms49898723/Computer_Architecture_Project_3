@@ -34,8 +34,64 @@ InstTLB::InstTLB() {
     this->miss = 0;
 }
 
+InstTLB::InstTLB(const InstTLB& that) {
+    if (this != &that) {
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        if (that.data) {
+            this->data = new TLBData[this->entry];
+            for (unsigned i = 0; i < this->entry; ++i) {
+                this->data[i] = that.data[i];
+            }
+        }
+        else {
+            this->data = nullptr;
+        }
+    }
+}
+
+InstTLB::InstTLB(InstTLB&& that) {
+    if (this != &that) {
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        this->data = that.data;
+        that.data = nullptr;
+    }
+}
+
 InstTLB::~InstTLB() {
 
+}
+
+InstTLB& InstTLB::operator=(const InstTLB& that) {
+    if (this != &that) {
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        if (that.data) {
+            this->data = new TLBData[this->entry];
+            for (unsigned i = 0; i < this->entry; ++i) {
+                this->data[i] = that.data[i];
+            }
+        }
+        else {
+            this->data = nullptr;
+        }
+    }
+    return *this;
+}
+
+InstTLB& InstTLB::operator=(InstTLB&& that) {
+    if (this != &that) {
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        this->data = that.data;
+        that.data = nullptr;
+    }
+    return *this;
 }
 
 void InstTLB::init(const unsigned entry) {
@@ -89,6 +145,16 @@ unsigned InstTLB::getHit() const {
 
 unsigned InstTLB::getMiss() const {
     return this->miss;
+}
+
+std::string InstTLB::toString() const {
+    std::string content = "TLB\n";
+    char temp[2048];
+    for (unsigned i = 0; i < entry; ++i) {
+        snprintf(temp, 2048, "tag %u, ppn %u, valid %d\n", data[i].tag, data[i].ppn, data[i].valid);
+        content += temp;
+    }
+    return content;
 }
 
 } /* namespace inst */
