@@ -23,6 +23,8 @@ private:
 
         ~TLBData();
 
+        void init(const unsigned tag, const unsigned ppn, const unsigned cycle);
+
     public:
         unsigned tag;
         unsigned ppn;
@@ -56,14 +58,6 @@ public:
      * @param cycle cycle
      */
     void insert(const unsigned vpn, const unsigned ppn, const unsigned cycle);
-
-    /**
-     * Update vpn cycle recorded in table
-     *
-     * @param vpn virtual page number
-     * @param cycle cycle to update
-     */
-    void update(const unsigned vpn, const unsigned cycle);
 
     /**
      * Erase mapping of vpn

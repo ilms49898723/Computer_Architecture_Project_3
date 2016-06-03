@@ -20,6 +20,13 @@ InstTLB::TLBData::~TLBData() {
 
 }
 
+void InstTLB::TLBData::init(const unsigned tag, const unsigned ppn, const unsigned cycle) {
+    this->tag = tag;
+    this->ppn = ppn;
+    this->cycle = cycle;
+    this->valid = true;
+}
+
 InstTLB::InstTLB() {
     this->entry = 0;
     this->data = nullptr;
@@ -43,7 +50,7 @@ void InstTLB::insert(const unsigned vpn, const unsigned ppn, const unsigned cycl
     unsigned index = 0;
     for (unsigned i = 0; i < entry; ++i) {
         if (!data[i].valid) {
-            data[i] = TLBData(vpn, ppn, cycle, true);
+            data[i].init(vpn, ppn, cycle);
             return;
         }
         else {
@@ -52,16 +59,7 @@ void InstTLB::insert(const unsigned vpn, const unsigned ppn, const unsigned cycl
             }
         }
     }
-    data[index] = TLBData(vpn, ppn, cycle, true);
-}
-
-void InstTLB::update(const unsigned vpn, const unsigned cycle) {
-    for (unsigned i = 0; i < entry; ++i) {
-        if (data[i].valid && data[i].tag == vpn) {
-            data[i].cycle = cycle;
-            break;
-        }
-    }
+    data[index].init(vpn, ppn, cycle);
 }
 
 void InstTLB::erase(const unsigned vpn) {

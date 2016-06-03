@@ -78,6 +78,7 @@ void InstSimulator::start() {
     cycle = 0u;
     dumpSnapshot(snapshot);
     while (true) {
+        ++cycle;
         search(currentPc, InstRoute::INST);
         if (isHalt(iDisk.getInstruction(currentPc))) {
             break;
@@ -170,7 +171,6 @@ void InstSimulator::start() {
         if (!pcUpdated) {
             currentPc += 4;
         }
-        ++cycle;
         dumpSnapshot(snapshot);
     }
     dumpCMP(report);
@@ -253,7 +253,7 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute route) {
     }
     unsigned physicalAddr = ppn * param.pageSize + virtualAddr % param.pageSize;
     if (route == InstRoute::DATA) {
-        printf("\ncycle %u %s\n", cycle, "DATA");
+        printf("\ncycle %u\n", cycle);
         printf("PA = %u\n", physicalAddr);
         printf("index %u, tag %u\n", cache.getIndex(physicalAddr), cache.getTag(physicalAddr));
     }
