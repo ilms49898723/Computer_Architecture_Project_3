@@ -30,8 +30,56 @@ InstCache::CacheData::CacheData() {
     this->block = nullptr;
 }
 
+InstCache::CacheData::CacheData(const InstCache::CacheData& that) {
+    if (this != &that) {
+        this->size = that.size;
+        if (that.block) {
+            this->block = new CacheBlock[this->size];
+            for (unsigned i = 0; i < this->size; ++i) {
+                this->block[i] = that.block[i];
+            }
+        }
+        else {
+            this->block = nullptr;
+        }
+    }
+}
+
+InstCache::CacheData::CacheData(InstCache::CacheData&& that) {
+    if (this != &that) {
+        this->size = that.size;
+        this->block = that.block;
+        that.block = nullptr;
+    }
+}
+
 InstCache::CacheData::~CacheData() {
     delete[] this->block;
+}
+
+InstCache::CacheData& InstCache::CacheData::operator=(const InstCache::CacheData& that) {
+    if (this != &that) {
+        this->size = that.size;
+        if (that.block) {
+            this->block = new CacheBlock[this->size];
+            for (unsigned i = 0; i < this->size; ++i) {
+                this->block[i] = that.block[i];
+            }
+        }
+        else {
+            this->block = nullptr;
+        }
+    }
+    return *this;
+}
+
+InstCache::CacheData& InstCache::CacheData::operator=(InstCache::CacheData&& that) {
+    if (this != &that) {
+        this->size = that.size;
+        this->block = that.block;
+        that.block = nullptr;
+    }
+    return *this;
 }
 
 void InstCache::CacheData::init(const unsigned setAssociativity) {
@@ -49,8 +97,72 @@ InstCache::InstCache() {
     this->miss = 0;
 }
 
+InstCache::InstCache(const InstCache& that) {
+    if (this != &that) {
+        this->blockSize = that.blockSize;
+        this->setAssociativity = that.setAssociativity;
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        if (that.data) {
+            this->data = new CacheData[this->entry];
+            for (unsigned i = 0; i < this->entry; ++i) {
+                this->data[i] = that.data[i];
+            }
+        }
+        else {
+            this->data = nullptr;
+        }
+    }
+}
+
+InstCache::InstCache(InstCache&& that) {
+    if (this != &that) {
+        this->blockSize = that.blockSize;
+        this->setAssociativity = that.setAssociativity;
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        this->data = that.data;
+        that.data = nullptr;
+    }
+}
+
 InstCache::~InstCache() {
     delete[] this->data;
+}
+
+InstCache& InstCache::operator=(const InstCache& that) {
+    if (this != &that) {
+        this->blockSize = that.blockSize;
+        this->setAssociativity = that.setAssociativity;
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        if (that.data) {
+            this->data = new CacheData[this->entry];
+            for (unsigned i = 0; i < this->entry; ++i) {
+                this->data[i] = that.data[i];
+            }
+        }
+        else {
+            this->data = nullptr;
+        }
+    }
+    return *this;
+}
+
+InstCache& InstCache::operator=(InstCache&& that) {
+    if (this != &that) {
+        this->blockSize = that.blockSize;
+        this->setAssociativity = that.setAssociativity;
+        this->entry = that.entry;
+        this->hit = that.hit;
+        this->miss = that.miss;
+        this->data = that.data;
+        that.data = nullptr;
+    }
+    return *this;
 }
 
 void InstCache::init(const unsigned cacheSize, const unsigned blockSize, const unsigned setAssociativity) {
@@ -111,9 +223,9 @@ bool InstCache::search(const unsigned physicalAddr) {
     CacheData& targetSet = data[index];
     for (unsigned i = 0; i < setAssociativity; ++i) {
         if (targetSet.block[i].valid && targetSet.block[i].tag == tag) {
-            ++hit;
             targetSet.block[i].mru = true;
             checkMRU(index, tag);
+            ++hit;
             return true;
         }
     }
@@ -138,7 +250,7 @@ unsigned InstCache::getMiss() const {
 }
 
 std::string InstCache::toString() const {
-    std::string content;
+    std::string content = "Cache [valid, tag]\n";
     char temp[2048];
     for (unsigned i = 0; i < entry; ++i) {
         for (unsigned j = 0; j < setAssociativity; ++j) {
@@ -154,9 +266,6 @@ void InstCache::checkMRU(const unsigned index, const unsigned tag) {
     bool isAllTrue = true;
     CacheData& targetSet = data[index];
     for (unsigned i = 0; i < setAssociativity; ++i) {
-        if (!targetSet.block[i].valid) {
-            return;
-        }
         isAllTrue &= targetSet.block[i].mru;
     }
     if (isAllTrue) {

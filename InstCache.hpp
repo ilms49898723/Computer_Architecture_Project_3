@@ -34,7 +34,15 @@ private:
     public:
         CacheData();
 
+        CacheData(const CacheData& that);
+
+        CacheData(CacheData&& that);
+
         ~CacheData();
+
+        CacheData& operator=(const CacheData& that);
+
+        CacheData& operator=(CacheData&& that);
 
         void init(const unsigned int setAssociativity);
 
@@ -50,9 +58,29 @@ public:
     InstCache();
 
     /**
+     * Copy constructor
+     */
+    InstCache(const InstCache& that);
+
+    /**
+     * Move constructor
+     */
+    InstCache(InstCache&& that);
+
+    /**
      * Default destructor
      */
     ~InstCache();
+
+    /**
+     * Copy assignment
+     */
+    InstCache& operator=(const InstCache& that);
+
+    /**
+     * Move assignment
+     */
+    InstCache& operator=(InstCache&& that);
 
     /**
      * Initialize
