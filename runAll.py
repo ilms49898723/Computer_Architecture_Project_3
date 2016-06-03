@@ -9,12 +9,19 @@ import sys
 import argparse
 
 parser = argparse.ArgumentParser(description='Run all testcases with golden and your executables')
-parser.add_argument('--test', dest='testExeName', nargs='?', default='CMP', help='Your CMP executable filename')
-parser.add_argument('--golden', dest='goldenExeName', nargs='?', default='CMP_golden', help='Golden CMP executable filename')
-parser.add_argument('--testfolder', dest='testfolder', nargs='?', default='testcases', help='Testcases root folder')
+parser.add_argument('--test', dest='testExeName', nargs=None, default='CMP',
+                    help='Your CMP executable filename, default "CMP"')
+parser.add_argument('--golden', dest='goldenExeName', nargs=None, default='CMP_golden',
+                    help='Golden CMP executable filename, default "CMP_golden"')
+parser.add_argument('--testfolder', dest='testfolder', nargs=None, default='testcases',
+                    help='Testcases root folder, default "testcases"')
 parser.add_argument('parameters', nargs='*', help='CMP parameters, leave empty for default')
 
 args = parser.parse_args()
+
+if len(args.parameters) != 0 and len(args.parameters) != 10:
+    print('invalid parameter, number of parameter should be either 0 or 10')
+    sys.exit(1)
 
 testExeName = args.testExeName
 goldenExeName = args.goldenExeName
@@ -50,7 +57,7 @@ for root, dirs, files in os.walk(testfolder):
             os.system('cp ../../' + testExeName + ' ./ -f')
             goldenRunCommand = './' + goldenExeName
             testRunCommand = './' + testExeName
-            if args.parameters != None:
+            if len(args.parameters) != 0:
                 for param in args.parameters:
                     goldenRunCommand = goldenRunCommand + ' ' + str(param)
                     testRunCommand = testRunCommand + ' ' + str(param)
