@@ -8,6 +8,7 @@
 #ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTMEMORY_HPP_
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTMEMORY_HPP_
 
+#include <cstdio>
 #include <cstring>
 #include <string>
 #include <utility>
@@ -41,9 +42,29 @@ public:
     InstMemory();
 
     /**
+     * Copy constructor
+     */
+    InstMemory(const InstMemory& that);
+
+    /**
+     * Move constructor
+     */
+    InstMemory(InstMemory&& that);
+
+    /**
      * Default destructor
      */
     ~InstMemory();
+
+    /**
+     * Copy assignment
+     */
+    InstMemory& operator=(const InstMemory& that);
+
+    /**
+     * Move assignment
+     */
+    InstMemory& operator=(InstMemory&& that);
 
     /**
      * Initialize
