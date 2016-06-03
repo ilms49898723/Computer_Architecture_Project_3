@@ -39,6 +39,32 @@ InstDisk::~InstDisk() {
     delete[] this->instruction;
 }
 
+InstDisk& InstDisk::operator=(const InstDisk& that) {
+    if (this != &that) {
+        delete[] this->data;
+        delete[] this->instruction;
+        this->data = new unsigned char[1024];
+        memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
+        this->instruction = new InstDataBin[1024 >> 2];
+        for (int i = 0; i < (1024 >> 2); ++i) {
+            this->instruction[i] = that.instruction[i];
+        }
+    }
+    return *this;
+}
+
+InstDisk& InstDisk::operator=(InstDisk&& that) {
+    if (this != &that) {
+        delete[] this->data;
+        delete[] this->instruction;
+        this->data = that.data;
+        that.data = nullptr;
+        this->instruction = that.instruction;
+        that.instruction = nullptr;
+    }
+    return *this;
+}
+
 void InstDisk::init() {
     memset(this->data, 0, sizeof(unsigned char) * 1024);
     for (int i = 0; i < (1024 >> 2); ++i) {
@@ -90,30 +116,14 @@ void InstDisk::setInstruction(const unsigned addr, InstDataBin&& val) {
     this->instruction[addr >> 2] = std::move(val);
 }
 
-InstDisk& InstDisk::operator=(const InstDisk& that) {
-    if (this != &that) {
-        delete[] this->data;
-        delete[] this->instruction;
-        this->data = new unsigned char[1024];
-        memcpy(this->data, that.data, sizeof(unsigned char) * 1024);
-        this->instruction = new InstDataBin[1024 >> 2];
-        for (int i = 0; i < (1024 >> 2); ++i) {
-            this->instruction[i] = that.instruction[i];
-        }
+std::string InstDisk::toString() const {
+    std::string content = "Disk [addr content]\n";
+    char temp[2048];
+    for (unsigned i = 0; i < 1024; i += 4) {
+        snprintf(temp, 2048, "%5u: %02X%02X%02X%02X\n", i, data[i], data[i + 1], data[i + 2], data[i + 3]);
+        content += temp;
     }
-    return *this;
-}
-
-InstDisk& InstDisk::operator=(InstDisk&& that) {
-    if (this != &that) {
-        delete[] this->data;
-        delete[] this->instruction;
-        this->data = that.data;
-        that.data = nullptr;
-        this->instruction = that.instruction;
-        that.instruction = nullptr;
-    }
-    return *this;
+    return content;
 }
 
 }

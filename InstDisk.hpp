@@ -8,6 +8,7 @@
 #ifndef COMPUTER_ARCHITECTURE_PROJECT_3_INSTDISK_HPP_
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTDISK_HPP_
 
+#include <cstdio>
 #include <cstring>
 #include "InstDataBin.hpp"
 #include "InstDecoder.hpp"
@@ -38,6 +39,16 @@ public:
      * Default destructor
      */
     ~InstDisk();
+
+    /**
+     * Copy assignment
+     */
+    InstDisk& operator=(const InstDisk& that);
+
+    /**
+     * Move assignment
+     */
+    InstDisk& operator=(InstDisk&& that);
 
     /**
      * Initialize
@@ -85,14 +96,9 @@ public:
     void setInstruction(const unsigned addr, InstDataBin&& val);
 
     /**
-     * Copy assignment
+     * Get string representation of current state
      */
-    InstDisk& operator=(const InstDisk& that);
-
-    /**
-     * Move assignment
-     */
-    InstDisk& operator=(InstDisk&& that);
+    std::string toString() const;
 
 private:
     unsigned char* data;
