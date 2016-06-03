@@ -37,8 +37,12 @@ set(SOURCE_FILES
     InstUtility.hpp
     main.cpp)
 
+set(TEST_GEN_SOURCE_FILES
+    testGenerator.cpp)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/release")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
 add_executable(CMP ${SOURCE_FILES})
+add_executable(testGen ${TEST_GEN_SOURCE_FILES})

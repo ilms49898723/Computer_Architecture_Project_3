@@ -25,9 +25,10 @@ int main(int args, char const** argv) {
             return EXIT_FAILURE;
         }
     }
-    std::minstd_rand0 generator(std::chrono::system_clock::now().time_since_epoch().count());
+    unsigned seed = static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count());
+    std::minstd_rand0 generator(seed);
     for (int i = 0; i < 200; ++i) {
-        fprintf(fp, "lb $5, %lu($0)\n", generator() % 1024);
+        fprintf(fp, "lb $0, %u($0)\n", generator() % 1024);
     }
     fprintf(fp, "halt\n");
     fclose(fp);
