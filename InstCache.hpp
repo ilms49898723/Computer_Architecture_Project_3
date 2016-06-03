@@ -9,7 +9,6 @@
 #define COMPUTER_ARCHITECTURE_PROJECT_3_INSTCACHE_HPP_
 
 #include <utility>
-#include "InstMemory.hpp"
 
 namespace inst {
 
@@ -21,14 +20,10 @@ private:
 
         ~CacheBlock();
 
-        void allocate(const unsigned size);
-
-        void init(const unsigned tag, const unsigned ppn);
+        void init(const unsigned tag);
 
     public:
         unsigned tag;
-        unsigned ppn;
-        unsigned char* content;
         bool valid;
         bool mru;
     };
@@ -39,11 +34,10 @@ private:
 
         ~CacheData();
 
-        void init(const unsigned setAssociativity, const unsigned blockSize);
+        void init(const unsigned int setAssociativity);
 
     public:
         unsigned size;
-        unsigned blockSize;
         CacheBlock* block;
     };
 
@@ -72,68 +66,42 @@ public:
      *
      * @param physicalAddr physical address
      */
-    void eraseSpecified(const unsigned physicalAddr, InstMemory& memory);
+    void eraseSpecified(const unsigned physicalAddr);
 
     /**
      * Erase least recently used block, flush to memory
      *
      * @param physicalAddr physical address
-     * @param memory memory
      */
-    unsigned eraseLeastUsed(const unsigned physicalAddr, InstMemory& memory);
+    void eraseLeastUsed(const unsigned physicalAddr);
 
     /**
      * Request a cache block
      *
      * @param physicalAddr physical address
-     * @param ppn physical page number of the address
      */
-    bool requestBlock(const unsigned physicalAddr, const unsigned ppn);
+    bool requestBlock(const unsigned int physicalAddr);
 
     /**
      * Search data in cache at physical address
      *
      * @param physicalAddr physical address to search
-     * @param size size
      */
-    std::pair<unsigned, bool> search(const unsigned physicalAddr, const unsigned size = 4);
+    bool search(const unsigned int physicalAddr);
 
     /**
-     * Set value to the block in cache relative to physical address
+     * Get tag of physical address
      *
      * @param physicalAddr physical address
-     * @param val value to set
-     * @param size size
      */
-    void setData(const unsigned physicalAddr, const unsigned val, const unsigned size = 4);
+    unsigned getTag(const unsigned physicalAddr) const;
 
     /**
-     * Get value at the block in cache relative to physical address
+     * Get index of physical address
      *
      * @param physicalAddr physical address
-     * @param size size
      */
-    unsigned getData(const unsigned physicalAddr, const unsigned size = 4);
-
-    /**
-     * Get cache size in bytes
-     */
-    unsigned getCacheSize() const;
-
-    /**
-     * Get cache block size in bytes
-     */
-    unsigned getBlockSize() const;
-
-    /**
-     * Get set associativity
-     */
-    unsigned getSetAssociativity() const;
-
-    /**
-     * Get number of cache entry
-     */
-    unsigned getEntry() const;
+    unsigned getIndex(const unsigned physicalAddr) const;
 
     /**
      * Get hit
@@ -148,14 +116,7 @@ public:
 private:
     void checkMRU(const unsigned index, const unsigned tag);
 
-    unsigned getTag(const unsigned physicalAddr) const;
-
-    unsigned getIndex(const unsigned physicalAddr) const;
-
-    unsigned getOffset(const unsigned physicalAddr) const;
-
 private:
-    unsigned cacheSize;
     unsigned blockSize;
     unsigned setAssociativity;
     unsigned entry;
