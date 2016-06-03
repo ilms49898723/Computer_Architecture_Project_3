@@ -38,7 +38,16 @@ public:
      */
     ~InstRegister();
 
-public:
+    /**
+     * Copy assignment
+     */
+    InstRegister& operator=(const InstRegister& that);
+
+    /**
+     * Move assignment
+     */
+    InstRegister& operator=(InstRegister&& that);
+
     /**
      * Initialize
      */
@@ -77,16 +86,6 @@ public:
      * @param size size to set
      */
     void setRegister(const unsigned addr, const unsigned val, const InstSize& type);
-
-    /**
-     * Copy assignment
-     */
-    InstRegister& operator=(const InstRegister& that);
-
-    /**
-     * Move assignment
-     */
-    InstRegister& operator=(InstRegister&& that);
 
 private:
     unsigned* reg;
