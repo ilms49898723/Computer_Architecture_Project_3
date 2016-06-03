@@ -24,15 +24,24 @@ OUTPUT := CMP
 .SUFFIXS:
 .SUFFIXS: .cpp .o
 
-.PHONY: all CMP clean
+.PHONY: all CMP testGen help clean
 
 all: CMP
 
 CMP: ${OBJS}
 	${CC} ${CXXFLAGS} -o $@ ${OBJS}
 
+testGen: testGenerator.cpp
+	${CC} ${CXXFLAGS} -o $@ $<
+
 .cpp.o:
 	${CC} ${CXXFLAGS} -c $<
 
+help:
+	@echo '"make" to build CMP'
+	@echo '"make testGen" to build testGenerator'
+	@echo '"make clean" to clean working directory'
+
 clean:
-	-rm -f ${OBJS} ${OUTPUT}
+	-rm -f ${OBJS} ${OUTPUT} testGen
+
