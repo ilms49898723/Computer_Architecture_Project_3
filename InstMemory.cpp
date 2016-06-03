@@ -52,7 +52,7 @@ InstMemory::InstMemory(InstMemory&& that) {
         this->size = that.size;
         this->entry = that.entry;
         this->page = that.page;
-        this->page = nullptr;
+        that.page = nullptr;
     }
 }
 
@@ -82,7 +82,7 @@ InstMemory& InstMemory::operator=(InstMemory&& that) {
         this->size = that.size;
         this->entry = that.entry;
         this->page = that.page;
-        this->page = nullptr;
+        that.page = nullptr;
     }
     return *this;
 }
