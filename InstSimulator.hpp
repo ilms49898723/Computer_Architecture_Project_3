@@ -104,13 +104,9 @@ private:
 
     bool isMemoryStore(const InstDataBin& inst) const;
 
-    bool isBranch(const InstDataBin& inst) const;
-
     bool isBranchR(const InstDataBin& inst) const;
 
     bool isBranchI(const InstDataBin& inst) const;
-
-    bool isBranchJ(const InstDataBin& inst) const;
 
 private:
     unsigned originalPc;

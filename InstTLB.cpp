@@ -73,9 +73,10 @@ void InstTLB::erase(const unsigned vpn) {
     }
 }
 
-std::pair<unsigned, bool> InstTLB::lookup(const unsigned vpn) {
+std::pair<unsigned, bool> InstTLB::search(const unsigned vpn, const unsigned cycle) {
     for (unsigned i = 0; i < entry; ++i) {
         if (data[i].valid && data[i].tag == vpn) {
+            data[i].cycle = cycle;
             ++hit;
             return std::make_pair(data[i].ppn, data[i].valid);
         }

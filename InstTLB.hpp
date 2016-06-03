@@ -73,11 +73,12 @@ public:
     void erase(const unsigned vpn);
 
     /**
-     * Find vpn in table
+     * Find vpn in table, if found, update cycle
      *
      * @param vpn virtual page number
+     * @param cycle cycle
      */
-    std::pair<unsigned, bool> lookup(const unsigned vpn);
+    std::pair<unsigned, bool> search(const unsigned vpn, const unsigned cycle);
 
     /**
      * Get TLB hit

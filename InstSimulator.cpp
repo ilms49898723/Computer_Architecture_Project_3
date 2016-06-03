@@ -85,7 +85,10 @@ void InstSimulator::start() {
         const InstDataBin& inst = iDisk.getInstruction(currentPc);
         bool pcUpdated = false;
         if (inst.getInstType() == InstType::R) {
-            if (isBranchR(inst)) {
+            if (isNop(inst)) {
+
+            }
+            else if (isBranchR(inst)) {
                 currentPc = reg.getRegister(inst.getRs());
                 pcUpdated = true;
             }
@@ -219,10 +222,9 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute route) {
     InstCache& cache = (route == InstRoute::INST) ? iCache : dCache;
     unsigned vpn = virtualAddr / param.pageSize;
     unsigned ppn = 0;
-    auto tlbResult = tlb.lookup(vpn);
+    auto tlbResult = tlb.search(vpn, cycle);
     if (tlbResult.second) {
         ppn = tlbResult.first;
-        tlb.update(vpn, cycle);
     }
     else {
         auto pageTableResult = pageTable.find(vpn);
@@ -235,11 +237,11 @@ void InstSimulator::search(const unsigned virtualAddr, const InstRoute route) {
             auto memoryResult = memory.requestPage(vpn, cycle);
             if (!memoryResult.second) {
                 auto replacedAddr = memory.getLeastUsed();
+                pageTable.erase(replacedAddr.first);
+                tlb.erase(replacedAddr.first);
                 for (unsigned i = 0; i < param.pageSize; ++i) {
                     cache.eraseSpecified(ppn * param.pageSize + i);
                 }
-                pageTable.erase(replacedAddr.first);
-                tlb.erase(replacedAddr.first);
                 memory.eraseLeastUsed();
                 memoryResult = memory.requestPage(vpn, cycle);
             }
@@ -376,12 +378,6 @@ bool InstSimulator::isMemoryStore(const InstDataBin& inst) const {
     }
 }
 
-bool InstSimulator::isBranch(const InstDataBin& inst) const {
-    return isBranchR(inst) ||
-           isBranchI(inst) ||
-           isBranchJ(inst);
-}
-
 bool InstSimulator::isBranchR(const InstDataBin& inst) const {
     return inst.getInstType() == InstType::R && inst.getFunct() == 0x08u;
 }
@@ -391,13 +387,6 @@ bool InstSimulator::isBranchI(const InstDataBin& inst) const {
         return false;
     }
     return inst.getOpcode() == 0x04u || inst.getOpcode() == 0x05u || inst.getOpcode() == 0x07u;
-}
-
-bool InstSimulator::isBranchJ(const InstDataBin& inst) const {
-    if (inst.getInstType() != InstType::J) {
-        return false;
-    }
-    return inst.getOpcode() == 0x02u || inst.getOpcode() == 0x03u;
 }
 
 } /* namespace inst */
