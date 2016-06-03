@@ -96,6 +96,10 @@ private:
 
     unsigned instALUI(const InstDataBin& inst);
 
+    void instMemoryLoad(const InstDataBin& inst, unsigned addr);
+
+    void instMemoryStore(const InstDataBin& inst, unsigned addr);
+
     bool isNop(const InstDataBin& inst) const;
 
     bool isHalt(const InstDataBin& inst) const;

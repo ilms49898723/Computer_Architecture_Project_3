@@ -86,10 +86,7 @@ void InstSimulator::start() {
         const InstDataBin& inst = iDisk.getInstruction(currentPc);
         bool pcUpdated = false;
         if (inst.getInstType() == InstType::R) {
-            if (isNop(inst)) {
-
-            }
-            else if (isBranchR(inst)) {
+            if (isBranchR(inst)) {
                 currentPc = reg.getRegister(inst.getRs());
                 pcUpdated = true;
             }
@@ -99,8 +96,7 @@ void InstSimulator::start() {
         }
         else if (inst.getInstType() == InstType::I) {
             if (isBranchI(inst)) {
-                unsigned result = instALUI(inst);
-                if (result) {
+                if (instALUI(inst)) {
                     int newPc = static_cast<int>(currentPc) + 4 + 4 * toSigned(inst.getC(), 16);
                     currentPc = static_cast<unsigned>(newPc);
                     pcUpdated = true;
@@ -108,47 +104,13 @@ void InstSimulator::start() {
             }
             else if (isMemoryLoad(inst)) {
                 unsigned addr = instALUI(inst);
-                unsigned loadedData;
                 search(addr, InstRoute::DATA);
-                switch (inst.getOpcode()) {
-                    case 0x23u:
-                        loadedData = dDisk.getData(addr);
-                        break;
-                    case 0x21u:
-                        loadedData = toUnsigned(toSigned(dDisk.getData(addr, 2), InstSize::HALF));
-                        break;
-                    case 0x25u:
-                        loadedData = dDisk.getData(addr, 2);
-                        break;
-                    case 0x20u:
-                        loadedData = toUnsigned(toSigned(dDisk.getData(addr, 1), InstSize::BYTE));
-                        break;
-                    case 0x24u:
-                        loadedData = dDisk.getData(addr, 1);
-                        break;
-                    default:
-                        loadedData = 0;
-                        break;
-                }
-                reg.setRegister(inst.getRt(), loadedData);
+                instMemoryLoad(inst, addr);
             }
             else if (isMemoryStore(inst)) {
                 unsigned addr = instALUI(inst);
-                unsigned savedData = reg.getRegister(inst.getRt());
                 search(addr, InstRoute::DATA);
-                switch (inst.getOpcode()) {
-                    case 0x2Bu:
-                        dDisk.setData(addr, savedData, 4);
-                        break;
-                    case 0x29u:
-                        dDisk.setData(addr, savedData, 2);
-                        break;
-                    case 0x28u:
-                        dDisk.setData(addr, savedData, 1);
-                        break;
-                    default:
-                        break;
-                }
+                instMemoryStore(inst, addr);
             }
             else {
                 reg.setRegister(inst.getRt(), instALUI(inst));
@@ -331,6 +293,48 @@ unsigned InstSimulator::instALUI(const InstDataBin& inst) {
             return static_cast<unsigned>(toSigned(valRs) > 0);
         default:
             return 0u;
+    }
+}
+
+void InstSimulator::instMemoryLoad(const InstDataBin& inst, unsigned addr) {
+    unsigned loadedData;
+    switch (inst.getOpcode()) {
+        case 0x23u:
+            loadedData = dDisk.getData(addr);
+            break;
+        case 0x21u:
+            loadedData = toUnsigned(toSigned(dDisk.getData(addr, 2), InstSize::HALF));
+            break;
+        case 0x25u:
+            loadedData = dDisk.getData(addr, 2);
+            break;
+        case 0x20u:
+            loadedData = toUnsigned(toSigned(dDisk.getData(addr, 1), InstSize::BYTE));
+            break;
+        case 0x24u:
+            loadedData = dDisk.getData(addr, 1);
+            break;
+        default:
+            loadedData = 0;
+            break;
+    }
+    reg.setRegister(inst.getRt(), loadedData);
+}
+
+void InstSimulator::instMemoryStore(const InstDataBin& inst, unsigned addr) {
+    unsigned savedData = reg.getRegister(inst.getRt());
+    switch (inst.getOpcode()) {
+        case 0x2Bu:
+            dDisk.setData(addr, savedData, 4);
+            break;
+        case 0x29u:
+            dDisk.setData(addr, savedData, 2);
+            break;
+        case 0x28u:
+            dDisk.setData(addr, savedData, 1);
+            break;
+        default:
+            break;
     }
 }
 
