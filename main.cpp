@@ -17,8 +17,8 @@ int main(int argc, const char** argv) {
     // constant string filename
     const std::string iimageFilename = "iimage.bin";
     const std::string dimageFilename = "dimage.bin";
-    const std::string snapshotFilename = "ssnapshot.rpt";
-    const std::string reportFilename = "rreport.rpt";
+    const std::string snapshotFilename = "snapshot.rpt";
+    const std::string reportFilename = "report.rpt";
     // command line argument
     inst::InstParameter iParam, dParam;
     inst::parseArgument(iParam, dParam, argc, argv);
