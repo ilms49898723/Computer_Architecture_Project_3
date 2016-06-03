@@ -27,9 +27,6 @@ namespace inst {
  * Simulator
  */
 class InstSimulator {
-private:
-    constexpr static int MAXN = 4096;
-
 public:
     /**
      * Default constructor
@@ -119,8 +116,6 @@ private:
     void instMemoryLoad(const InstDataBin& inst, unsigned addr);
 
     void instMemoryStore(const InstDataBin& inst, unsigned addr);
-
-    bool isNop(const InstDataBin& inst) const;
 
     bool isHalt(const InstDataBin& inst) const;
 

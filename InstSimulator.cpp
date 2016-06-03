@@ -385,14 +385,6 @@ void InstSimulator::instMemoryStore(const InstDataBin& inst, unsigned addr) {
     }
 }
 
-bool InstSimulator::isNop(const InstDataBin& inst) const {
-    return !inst.getOpcode() &&
-           !inst.getRt() &&
-           !inst.getRd() &&
-           !inst.getC() &&
-           !inst.getFunct();
-}
-
 bool InstSimulator::isHalt(const InstDataBin& inst) const {
     return inst.getOpcode() == 0x3Fu;
 }
