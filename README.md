@@ -5,5 +5,3 @@ Computer Architecture Project 3
 An easy MIPS Simulator(school mini project)
 
 CMP
-
-not completed
